@@ -1,14 +1,16 @@
 // src/app/AppProviders.jsx
 "use client";
 
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
+import { system } from "@/theme/system";
 import AuthProvider from "./AuthProvider";
-//import NavBar from "./components/NavBar";
+import { UserMenuFloating } from "@/components/UserMenuFloating";
 
 export default function AppProviders({ children }) {
   return (
-    <ChakraProvider value={defaultSystem}>
+    <ChakraProvider value={system}>
       <AuthProvider>
+        <UserMenuFloating />
         {/*       <NavBar /> */}
         {children}
       </AuthProvider>

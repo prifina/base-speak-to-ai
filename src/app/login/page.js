@@ -28,7 +28,7 @@ import {
 
 import { AuthContext } from "@/app/providers/AuthProvider";
 import { configureAmplify } from "@/lib/amplify";
-import CustomPINInput from "@/app/_components/CustomPINInput";
+import CustomPINInput from "@/components/CustomPINInput";
 
 import { useShallow } from "zustand/react/shallow";
 import useStore from "@/lib/sessionStore";
