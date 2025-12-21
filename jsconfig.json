@@ -1,0 +1,13 @@
+{
+  "exclude": [
+    "**/*.stories.tsx",
+    "**/*.stories.ts",
+    "**/*.stories.jsx",
+    "**/*.stories.js"
+  ],
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
