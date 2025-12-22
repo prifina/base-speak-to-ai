@@ -50,6 +50,14 @@ const config = defineConfig({
       mobileMenuButton: mobileMenuButtonRecipe,
       userMenuAvatar: userMenuAvatarRecipe,
     },
+    textStyles: {
+      fieldDescription: {
+        value: {
+          color: "#929496",
+          marginBottom: "8px",
+        },
+      },
+    },
     slotRecipes: {
       field: {
         slots: ["label"],

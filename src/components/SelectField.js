@@ -7,8 +7,6 @@ import {
   Portal,
 } from "@chakra-ui/react";
 
-const TEXT_COLOR = "#929496";
-
 export const SelectField = ({
   title,
   description,
@@ -25,7 +23,7 @@ export const SelectField = ({
   return (
     <Field.Root style="bold">
       <Field.Label>{title}</Field.Label>
-      <Text color={TEXT_COLOR} mb="8px">
+      <Text textStyle="fieldDescription">
         {description}
       </Text>
       <Select.Root
