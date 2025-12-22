@@ -6,3 +6,6 @@ coverage/
 *.log
 .env.local
 .DS_Store
+
+next-cognito-nav-src-example/
+chakra-nextjs-sidemenu-example/
