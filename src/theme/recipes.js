@@ -33,16 +33,6 @@ export const navItemRecipe = defineRecipe({
       true: {
         bg: "nav.activeBg",
         color: "nav.activeFg",
-        _before: {
-          content: '""',
-          position: "absolute",
-          left: "0",
-          top: "3",
-          bottom: "3",
-          width: "2px",
-          borderRadius: "full",
-          bg: "nav.activeStripe",
-        },
       },
     },
     collapsed: {
@@ -80,6 +70,7 @@ export const sideNavHeaderRecipe = defineRecipe({
     collapsed: {
       true: {
         justifyContent: "center",
+        px: "2",
       },
     },
   },

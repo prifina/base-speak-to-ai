@@ -1,87 +1,94 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { usePathname, useRouter } from "next/navigation"
+import * as React from "react";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Box,
   Flex,
   HStack,
   Icon,
   IconButton,
+  Image,
   Separator,
   Stack,
   Drawer,
   Text,
   Tooltip,
-} from "@chakra-ui/react"
-import { NavItem, SideNavHeader, SideNavRoot, MobileMenuButtonWrap } from "./Styled"
-import { LuChevronLeft, LuChevronRight, LuMenu } from "react-icons/lu"
+} from "@chakra-ui/react";
+import {
+  NavItem,
+  SideNavHeader,
+  SideNavRoot,
+  MobileMenuButtonWrap,
+} from "./Styled";
+import { LuChevronLeft, LuChevronRight, LuMenu } from "react-icons/lu";
+import { UI_TEXT } from "@/lib/uiStrings";
 
 function useLocalStorageBool(key, initialValue) {
-  const [value, setValue] = React.useState(initialValue)
+  const [value, setValue] = React.useState(initialValue);
 
   React.useEffect(() => {
     try {
-      const raw = window.localStorage.getItem(key)
-      if (raw === null) return
-      setValue(raw === "true")
+      const raw = window.localStorage.getItem(key);
+      if (raw === null) return;
+      setValue(raw === "true");
     } catch {}
-  }, [key])
+  }, [key]);
 
   React.useEffect(() => {
     try {
-      window.localStorage.setItem(key, String(value))
+      window.localStorage.setItem(key, String(value));
     } catch {}
-  }, [key, value])
+  }, [key, value]);
 
-  return [value, setValue]
+  return [value, setValue];
 }
 
 function SideNavContent({ items, collapsed, onToggleCollapsed, onNavigate }) {
-  const router = useRouter()
-  const pathname = usePathname()
+  const router = useRouter();
+  const pathname = usePathname();
 
   const go = (href) => {
-    if (onNavigate) onNavigate()
-    router.push(href)
-  }
+    if (onNavigate) onNavigate();
+    router.push(href);
+  };
 
   return (
     <Flex direction="column" h="100dvh">
       <SideNavHeader collapsed={collapsed}>
-        <Text fontWeight="semibold" fontSize="sm" truncate>
-          {collapsed ? "⋯" : "Example App"}
-        </Text>
-
-        {!collapsed && (
-          <IconButton
-            aria-label="Collapse sidebar"
-            variant="ghost"
-            size="sm"
-            onClick={onToggleCollapsed}
-          >
-            <Icon as={LuChevronLeft} />
-          </IconButton>
-        )}
-
-        {collapsed && (
-          <IconButton
-            aria-label="Expand sidebar"
-            variant="ghost"
-            size="sm"
-            onClick={onToggleCollapsed}
-          >
-            <Icon as={LuChevronRight} />
-          </IconButton>
+        {collapsed ? (
+          <Flex w="full" justify="center" cursor="pointer" onClick={onToggleCollapsed}>
+            <Image src="/assets/base_icon.svg" alt="Logo" boxSize="6" />
+          </Flex>
+        ) : (
+          <>
+            <HStack gap="2">
+              <Image src="/assets/base_icon.svg" alt="Logo" boxSize="8" />
+              <Text fontSize="20px" fontWeight={600} color="white">
+                {UI_TEXT.app.title}
+              </Text>
+            </HStack>
+            <IconButton
+              aria-label="Collapse sidebar"
+              variant="ghost"
+              size="sm"
+              onClick={onToggleCollapsed}
+              color="white"
+            >
+              <Icon as={LuChevronLeft} />
+            </IconButton>
+          </>
         )}
       </SideNavHeader>
 
       <Separator />
 
-      <Stack gap="1" p="2" flex="1" overflowY="auto">
+      <Box h="30px" />
+
+      <Stack gap="5" p="2" flex="1" overflowY="auto">
         {items.map((it) => {
           const active =
-            pathname === it.href || (pathname || "").startsWith(it.href + "/")
+            pathname === it.href || (pathname || "").startsWith(it.href + "/");
 
           const itemNode = (
             <NavItem
@@ -92,15 +99,19 @@ function SideNavContent({ items, collapsed, onToggleCollapsed, onNavigate }) {
               collapsed={collapsed}
               onClick={() => go(it.href)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") go(it.href)
+                if (e.key === "Enter" || e.key === " ") go(it.href);
               }}
             >
-              <HStack gap="3" w="full" justify={collapsed ? "center" : "flex-start"}>
-                <Icon as={it.icon} />
+              <HStack
+                gap="3"
+                w="full"
+                justify={collapsed ? "center" : "flex-start"}
+              >
+                <Icon as={it.icon} boxSize="30px" />
                 {!collapsed && <Text truncate>{it.label}</Text>}
               </HStack>
             </NavItem>
-          )
+          );
 
           // Tooltip only when collapsed (desktop)
           return (
@@ -115,24 +126,24 @@ function SideNavContent({ items, collapsed, onToggleCollapsed, onNavigate }) {
                 <Tooltip.Content>{it.label}</Tooltip.Content>
               </Tooltip.Positioner>
             </Tooltip.Root>
-          )
+          );
         })}
       </Stack>
 
-      <Box px="3" py="3">
+      {/*   <Box px="3" py="3">
         <Text fontSize="xs" color="app.muted" textAlign={collapsed ? "center" : "left"}>
           {collapsed ? "v1" : "Demo UI · v1.0"}
         </Text>
-      </Box>
+      </Box> */}
     </Flex>
-  )
+  );
 }
 
 export function SideNav({ items, storageKey = "sidebar-collapsed" }) {
-  const [collapsed, setCollapsed] = useLocalStorageBool(storageKey, false)
-  const [mobileOpen, setMobileOpen] = React.useState(false)
+  const [collapsed, setCollapsed] = useLocalStorageBool(storageKey, false);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
 
-  const sidebarW = collapsed ? "sidebarCollapsed" : "sidebarExpanded"
+  const sidebarW = collapsed ? "sidebarCollapsed" : "sidebarExpanded";
 
   return (
     <>
@@ -157,10 +168,10 @@ export function SideNav({ items, storageKey = "sidebar-collapsed" }) {
         >
           <Drawer.Backdrop />
           <Drawer.Positioner>
-            <Drawer.Content>
-              <Drawer.Header>
-                <Drawer.Title>Menu</Drawer.Title>
-                <Drawer.CloseTrigger />
+            <Drawer.Content bg="#1e1e23" color="#7c7c7c">
+              <Drawer.Header borderBottomWidth="1px" borderBottomColor="black">
+                <Drawer.Title color="white">Menu</Drawer.Title>
+                <Drawer.CloseTrigger color="white" />
               </Drawer.Header>
               <Drawer.Body p="0">
                 <SideNavContent
@@ -175,11 +186,14 @@ export function SideNav({ items, storageKey = "sidebar-collapsed" }) {
         </Drawer.Root>
 
         <MobileMenuButtonWrap>
-          <IconButton aria-label="Open menu" onClick={() => setMobileOpen(true)}>
+          <IconButton
+            aria-label="Open menu"
+            onClick={() => setMobileOpen(true)}
+          >
             <Icon as={LuMenu} />
           </IconButton>
         </MobileMenuButtonWrap>
       </Box>
     </>
-  )
+  );
 }

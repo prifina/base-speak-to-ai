@@ -8,16 +8,19 @@ const bundleAnalyzer = withBundleAnalyzer({
 });
 
 const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: false,
+  },
   webpack: (config, { isServer, dev }) => {
     if (dev) {
       config.cache = {
-        type: 'filesystem',
-        compression: 'gzip',
+        type: "filesystem",
+        compression: "gzip",
         maxAge: 1000 * 60 * 60 * 24 * 7,
       };
     }
     config.infrastructureLogging = {
-      level: 'error',
+      level: "error",
     };
     return config;
   },

@@ -1,17 +1,32 @@
 "use client";
 
 import { AppShell } from "@/components/app-shell/AppShell";
-import { LuBookOpen, LuUsers, LuFileText } from "react-icons/lu";
+import {
+  ProfileIcon,
+  KnowledgeBaseIcon,
+  InsightsIcon,
+} from "@/components/CustomIcons";
+import { UI_TEXT } from "@/lib/uiStrings";
 
 const navItems = [
   {
-    key: "dash",
-    label: "Dashboard",
-    href: "/dashboard",
-    icon: LuBookOpen,
+    key: "profile",
+    label: UI_TEXT.profile.sectionTitle,
+    href: "/home",
+    icon: ProfileIcon,
   },
-  { key: "users", label: "Users", href: "/users", icon: LuUsers },
-  { key: "reports", label: "Reports", href: "/reports", icon: LuFileText },
+  {
+    key: "knowledge",
+    label: UI_TEXT.knowledgeBase.sectionTitle,
+    href: "/knowledge",
+    icon: KnowledgeBaseIcon,
+  },
+  {
+    key: "insights",
+    label: UI_TEXT.insights.sectionTitle,
+    href: "/insights",
+    icon: InsightsIcon,
+  },
 ];
 
 export default function BaseLayout({ children }) {

@@ -14,14 +14,8 @@ import {
 } from "aws-amplify/auth";
 
 import { configureAmplify } from "./amplify";
+import { checkLng } from "@/utils";
 
-function getUrl() {
-  let url = "http://localhost:3331/api/";
-  if (typeof window !== "undefined") {
-    url = window.location.origin + "/api/";
-  }
-  return url;
-}
 // Configure Amplify on store initialization
 configureAmplify();
 
@@ -32,13 +26,17 @@ const usePersistentStore = create((set, get) => {
     idToken: {},
     jwtIdToken: "",
     groups: [],
-    api: getUrl(),
     activeGroup: "",
     isSuper: false,
     isAdmin: [],
     loginName: "",
+    knowledgebaseId: "",
+    language: checkLng(),
     setLoginName: (name) => {
       set({ loginName: name });
+    },
+    setKnowledgebaseId: (id) => {
+      set({ knowledgebaseId: id });
     },
     getJWTIdToken: () => {
       return get().jwtIdToken;
@@ -112,13 +110,19 @@ const usePersistentStore = create((set, get) => {
         // const session = await currentSession()
         const { tokens } = await fetchAuthSession({ forceRefresh: true });
         if (!tokens) {
-          set({ isAuthenticated: false, idToken: "" });
+          set({
+            isAuthenticated: false,
+            idToken: "",
+            cognitoId: "",
+            knowledgebaseId: "",
+            loginName: "",
+          });
           // set({ user: initUser });
           return Promise.resolve(false);
         }
         console.log("TOKENS ", tokens);
         // const jwtIdToken = tokens.idToken;
-        const jwtIdToken = tokens.idToken.toString();
+        //const jwtIdToken = tokens.idToken.toString();
         const idToken = tokens.idToken.payload;
         console.log("ID TOKEN ", idToken);
         let activeGroup = get().getActiveGroup();
@@ -147,15 +151,15 @@ const usePersistentStore = create((set, get) => {
         }
 
         console.log("STORE ACTIVE GROUP END ", activeGroup);
-        const authStatus = activeGroup === "" ? false : true;
+        //const authStatus = activeGroup === "" ? false : true;
 
         set({
           isSuper,
           isAdmin,
           cognitoId: idToken["cognito:username"],
-          isAuthenticated: authStatus,
-          idToken: idToken,
-          jwtIdToken,
+          //isAuthenticated: authStatus,
+          //idToken: idToken,
+          //jwtIdToken,
           groups: idToken?.["cognito:groups"] || [],
           activeGroup,
         });
@@ -243,6 +247,7 @@ const usePersistentStore = create((set, get) => {
         getJWTIdToken,
         getActiveGroup,
         setActiveGroup,
+        setKnowledgebaseId,
         ...stateToSave
       } = state;
       sessionStorage.setItem("prifina-base", JSON.stringify(stateToSave));
@@ -273,6 +278,7 @@ if (typeof window !== "undefined") {
       getJWTIdToken,
       getActiveGroup,
       setActiveGroup,
+      setKnowledgebaseId,
       ...stateToSave
     } = state;
     sessionStorage.setItem("prifina-base", JSON.stringify(stateToSave));

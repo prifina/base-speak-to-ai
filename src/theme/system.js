@@ -28,11 +28,11 @@ const config = defineConfig({
         "app.muted": { value: { base: "#64748B", _dark: "#94A3B8" } },
 
         // Sidebar
-        "sidebar.bg": { value: { base: "white", _dark: "#0E1526" } },
-        "sidebar.border": { value: { base: "#E2E8F0", _dark: "#1F2A44" } },
+        "sidebar.bg": { value: "#1e1e23" },
+        "sidebar.border": { value: "black" },
 
         // Nav items
-        "nav.fg": { value: { base: "#0F172A", _dark: "#E5E7EB" } },
+        "nav.fg": { value: "#7c7c7c" },
         "nav.hoverBg": { value: { base: "#F1F5F9", _dark: "#121C33" } },
         "nav.activeBg": { value: { base: "#E2E8F0", _dark: "#182447" } },
         "nav.activeFg": { value: { base: "#0F172A", _dark: "#FFFFFF" } },
@@ -49,6 +49,22 @@ const config = defineConfig({
       floatingMenuWrap: floatingMenuWrapRecipe,
       mobileMenuButton: mobileMenuButtonRecipe,
       userMenuAvatar: userMenuAvatarRecipe,
+    },
+    slotRecipes: {
+      field: {
+        slots: ["label"],
+        base: {},
+        variants: {
+          style: {
+            bold: {
+              label: {
+                fontWeight: 700,
+                fontSize: "16px",
+              },
+            },
+          },
+        },
+      },
     },
   },
   globalCss: {

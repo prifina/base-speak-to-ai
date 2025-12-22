@@ -36,26 +36,26 @@ import useStore from "@/lib/sessionStore";
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/about";
-  console.log("REDIRECT ", redirect);
+  const redirect = searchParams.get("redirect") || "/home";
+  console.log("ROUTER REDIRECT ", redirect);
   const { user, loaded, setUser } = useContext(AuthContext);
   const {
-    api,
     signIn,
     confirmSignIn,
     getJWTIdToken,
     usernameAvailable,
     isLoggedIn,
     setLoginName,
+    setKnowledgebaseId,
   } = useStore(
     useShallow((state) => ({
-      api: state.api,
       signIn: state.signIn,
       confirmSignIn: state.confirmSignIn,
       getJWTIdToken: state.getJWTIdToken,
       usernameAvailable: state.usernameAvailable,
       isLoggedIn: state.isLoggedIn,
       setLoginName: state.setLoginName,
+      setKnowledgebaseId: state.setKnowledgebaseId,
     }))
   );
 
@@ -82,8 +82,9 @@ export default function LoginPage() {
 
   const verify = useCallback(
     async (code) => {
-      console.log("CODE ", code);
+      console.log("VERIFY CODE ", code);
       setLoginName(state.loginName);
+      setKnowledgebaseId(state.knowledgebaseId);
       //state.username
       const signInResponse = await signIn(state.username);
       console.log("SIGN IN RESPONSE ", signInResponse);
@@ -103,24 +104,6 @@ export default function LoginPage() {
       }
       router.replace(redirect);
       return true;
-      /*  console.log("ID TOKEN ", getJWTIdToken());
-      const res = await fetch("/api/auth/set-cookie", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ idToken: getJWTIdToken() }),
-      });
-      if (!res.ok) {
-        throw new Error("Failed to set auth cookie");
-      } else {
-        router.replace(redirect);
-      } */
-
-      // should not be here...
-      //await new Promise((resolve) => setTimeout(resolve, 2000));
-      //setError("Invalid PIN code, try again");
-      //return false;
     },
     [
       signIn,
@@ -130,6 +113,8 @@ export default function LoginPage() {
       router,
       state.loginName,
       setLoginName,
+      state.knowledgebaseId,
+      setKnowledgebaseId,
     ]
   );
 
@@ -153,9 +138,11 @@ export default function LoginPage() {
         return false;
       }
 
+      console.log("LOGIN DATA ", data.login);
       setState({
         knowledgebaseId: data.login.knowledgebaseId,
         username: data.login.username,
+        //otpValidated: true,
       });
       return true;
     },
