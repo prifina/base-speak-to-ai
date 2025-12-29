@@ -20,6 +20,7 @@ const PROTECTED_API_PATHS = [
   "/api/get-live-feed",
   "/api/list-message-objects",
   "/api/update-user",
+  "/api/get-network-config",
 ];
 const PUBLIC_API_PATHS = ["/api/auth"];
 
