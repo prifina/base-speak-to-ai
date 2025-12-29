@@ -76,7 +76,7 @@ const BehaviorSection = ({
       <Box>
         {}
         <HStack>
-          <Text fontWeight={"bolder"}>
+          <Text textStyle="fieldLabel">
             {UI_TEXT.personalization.behavior.sectionTitle}
           </Text>
           <Link

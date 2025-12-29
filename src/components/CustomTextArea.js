@@ -54,7 +54,6 @@ const CustomTextArea = ({
         />
       ) : (
         <Textarea
-          noOfLines={noOfLines}
           value={value}
           onChange={handleChange}
           minHeight="20"

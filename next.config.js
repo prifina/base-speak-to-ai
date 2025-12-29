@@ -111,6 +111,8 @@ const nextConfig = {
   },
   env: {
     MY_REGION: process.env.MY_REGION,
+    SPEAK_TO_CDN: process.env.SPEAK_TO_CDN,
+    UPLOAD_BUCKET: process.env.UPLOAD_BUCKET,
     // AI_BUCKET: process.env.AI_BUCKET,
     // NEXT_PUBLIC_APP_ID: process.env.APP_ID,
     // WEB_SOCKET_URL: process.env.WEB_SOCKET_URL,

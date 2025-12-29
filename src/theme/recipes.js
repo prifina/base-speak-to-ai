@@ -17,6 +17,7 @@ export const navItemRecipe = defineRecipe({
     gap: "3",
     fontWeight: "medium",
     color: "nav.fg",
+    cursor: "pointer",
     transitionProperty: "background, color",
     transitionDuration: "fast",
     _hover: {

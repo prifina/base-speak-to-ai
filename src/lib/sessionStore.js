@@ -32,6 +32,9 @@ const usePersistentStore = create((set, get) => {
     loginName: "",
     knowledgebaseId: "",
     language: checkLng(),
+    socketUpdate: {},
+    connectionId: "",
+    queueStatus: undefined,
     setLoginName: (name) => {
       set({ loginName: name });
     },
@@ -233,6 +236,16 @@ const usePersistentStore = create((set, get) => {
         }
       }
     },
+    setQueueStatus: (obj) => {
+      set(() => ({ queueStatus: obj }));
+    },
+    setConnectionId: (str) => {
+      set(() => ({ connectionId: str }));
+    },
+
+    setSocketUpdate: (obj) => {
+      set(() => ({ socketUpdate: obj }));
+    },
   };
 
   // Function to save the state to sessionStorage
@@ -248,6 +261,9 @@ const usePersistentStore = create((set, get) => {
         getActiveGroup,
         setActiveGroup,
         setKnowledgebaseId,
+        setSocketUpdate,
+        setConnectionId,
+        setQueueStatus,
         ...stateToSave
       } = state;
       sessionStorage.setItem("prifina-base", JSON.stringify(stateToSave));

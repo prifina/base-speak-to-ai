@@ -1,11 +1,15 @@
 export const UI_TEXT = {
   app: {
     title: "Base",
+    menu: "Menu",
+    help: "Help",
   },
 
   qrCode: {
     title: "Your AI Twin QR Code",
     shareMessage: "Share Your AI Twin",
+    defaultShareMessage:
+      "The next step in my evolution: My AI twin. Ask me anything! ",
   },
 
   unsavedChangesWarning: {
@@ -21,7 +25,9 @@ export const UI_TEXT = {
       title: "Disclaimer and Example Questions",
       disclaimer: {
         text: "Disclaimer shown to User",
+        textPlaceholder: "Your disclaimer shown to user",
         link: "Additional URL for more details about you (You can add optional link - shown in disclaimer)",
+        linkPlaceholder: "Enter the url here",
       },
       examples: {
         title: "Example Question",
@@ -29,6 +35,26 @@ export const UI_TEXT = {
         types: "Categories of example questions",
         listHeader: "Example Questions for User Prompt",
         addButton: "Add New",
+        tooltip: {
+          automated: {
+            title: "Automated Questions:",
+            description: "Questions generated from your knowledge base",
+          },
+          manual: {
+            title: "Manual Questions:",
+            description: "Predefined questions you create",
+          },
+          mix: {
+            title: "1:1 Mix:",
+            description: "Alternates between manual and automated questions",
+          },
+        },
+        modal: {
+          title: "Example Question",
+          placeholder: "e.g., What are your thoughts on digital marketing?",
+          cancel: "Cancel",
+          save: "Save",
+        },
       },
     },
 
@@ -101,6 +127,9 @@ export const UI_TEXT = {
         textLabel: "Text shown",
         linkLabel: "Add Link",
         optionalLink: "(You can add optional link)",
+        defaultText: "Default",
+        defaultTextValue: "Get your own digital AI twin.",
+        defaultLinkValue: "https://www.prifina.com/",
       },
     },
   },
@@ -117,10 +146,34 @@ export const UI_TEXT = {
     reports: {
       active: "Daily Report Active",
       emailPrompt: "Email address for Daily Report",
+      invalidEmail: "Invalid email address",
     },
     sessions: {
       title: "Sessions",
       dateRange: "Date Range",
+      dateRangeOr: "or",
+      dateRangeOptions: {
+        last7Days: "Last 7 days",
+        last30Days: "Last 30 days",
+        last90Days: "Last 90 days",
+        last6Months: "Last 6 months",
+        lastYear: "Last year",
+        allTime: "All time",
+      },
+      duration: "Duration",
+      messages: "Messages",
+      avgScore: "Avg Score",
+      noContentFound: "No content found/used",
+      exampleQuestion: "(example question)",
+      score: "Score",
+      quality: "Quality",
+      noMessages: "No messages found",
+      exportButton: "Export JSON",
+      itemsPerPage: "Items per page",
+      showingText: "Showing",
+      ofText: "of",
+      sessionsText: "sessions",
+      pageText: "Page",
       table: {
         messageTime: "Time",
         sessionDuration: "Duration",
@@ -139,6 +192,9 @@ export const UI_TEXT = {
 
   knowledgeBase: {
     sectionTitle: "Knowledge Base",
+    quota: {
+      label: "Upload Quota Used",
+    },
     fileTable: {
       title: "Files in Knowledge Base",
       fileName: "File",
@@ -168,10 +224,43 @@ export const UI_TEXT = {
 
     fileDrag: {
       instructions:
-        "Drag and drop files here, or click to select. Maximum file size: 5 MB. You can upload up to 5 files at a time.",
+        "Drag and drop files here, or click to select. Maximum file size: 500 MB. You can upload up to 5 files at a time.",
       activeInstructions: "Drop the files here ...",
       supportedFormats:
         "Supported files: .txt, .md, .pdf, .docx, .rtf, .odt and .epub",
+    },
+    uploadErrors: {
+      tooManyFiles: {
+        title: "Too many files",
+        description: "Maximum 5 files allowed at a time",
+      },
+      duplicateFile: {
+        title: "Duplicate file",
+        description: "File already exists in the list",
+      },
+      quotaExceeded: {
+        title: "Quota exceeded",
+        description: "Total file size exceeds the 500MB limit",
+      },
+    },
+    uploadSuccess: {
+      title: "Upload successful",
+      description: (count) => `${count} file(s) uploaded`,
+    },
+    uploadFailed: {
+      title: "Upload failed",
+    },
+    processingTimeline: {
+      titleSuccess: "Processing Status",
+      titleFailed: "Processing Failed",
+      uploadFailed: "Upload Failed",
+      processingStarted: "Uploaded Content Processing Started",
+      existingFilesNote: (count) => `Note: ${count} file${count > 1 ? "s" : ""} already existed in the knowledge base`,
+      duplicateFilesLabel: "Duplicate files:",
+      chunkingComplete: "Chunking of Uploaded Documents is Complete",
+      knowledgeBaseReady: "Knowledge Base Ready",
+      readyDescription: "Processing still continues in background, but knowledge base is ready to be used.",
+      closeButton: "Close",
     },
   },
 
@@ -186,13 +275,62 @@ export const UI_TEXT = {
     invisibleDescription: "Link Sharing Preview",
     avatar: {
       notAnImage: "Not an image.",
-      allowedSize: "Allowed size is <150Kb.",
+      allowedSize: "Allowed size is <5M.",
       selectedImage: "Selected image was: ",
       squareImage: "Please select a square image.",
       imageFailed: "Failed to load image.",
       editText: "Edit Picture",
       helpText:
-        "Use a square image (e.g., 300×300 px). Max file size 150 KB (e.g., .png .jpg).",
+        "Use a square image (e.g., 300×300 px). Max file size 5 M (e.g., .png .jpg).",
+    },
+  },
+
+  account: {
+    sectionTitle: "Account",
+    givenName: "First Name",
+    familyName: "Last Name",
+    email: "Email",
+    username: "Login Username",
+    usernameMissing: "Login username not created yet",
+    usernameHelper: "10-30 characters, no spaces or special characters",
+    usernameErrors: {
+      length: "Username must be 10-30 characters",
+      spaces: "Username cannot contain spaces",
+      email: "Username cannot be an email address",
+      exists: "Username already exists",
+    },
+    emailErrors: {
+      invalid: "Invalid email address",
+      exists: "Email already exists",
+    },
+    emailVerified: "Email Verified",
+    emailNotVerified: "Email Not Verified",
+    verifyEmail: "Verify Email",
+    verificationCodeSent: "Verification code sent to your email",
+    enterVerificationCode: "Enter the 6-digit code sent to your email",
+    resendCode: "Resend Code",
+    verifyButton: "Verify",
+    verificationSuccess: "Email verified successfully",
+    verificationFailed: "Invalid verification code",
+    emailMustBeVerified: "Email must be verified before making other changes",
+    saveSuccess: "Account information updated successfully",
+    saveFailed: "Failed to update account information",
+    mfa: {
+      title: "Multi-Factor Authentication (MFA)",
+      connectAuthenticator: "Connect Your Authenticator",
+      reconnectAuthenticator: "Reconnect Your Authenticator",
+      scanQrCode: "Scan QR Code",
+      openAuthenticator: "Open",
+      authenticatorApp: "Authenticator",
+      scanInstruction: "on your mobile phone and scan this QR code",
+      manualSetupInstruction: "If you can't connect using QR code, touch",
+      connectManually: "CONNECT MANUALLY",
+      manualSetupInstructionEnd: "on your mobile phone and type this code.",
+      next: "Next",
+      verifyCode: "Verify Code",
+      enterVerificationCode: "Enter the 6-digit code from your authenticator app",
+      setupSuccess: "Authenticator connected successfully",
+      setupFailed: "Failed to connect authenticator",
     },
   },
 

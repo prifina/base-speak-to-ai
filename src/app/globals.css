@@ -1,4 +1,9 @@
 /* Keep this minimal. Chakra's preflight + theme globalCss handle most base styling. */
 html, body {
   height: 100%;
+  overflow: hidden;
+}
+
+#__next {
+  height: 100%;
 }

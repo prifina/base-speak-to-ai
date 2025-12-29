@@ -51,10 +51,35 @@ const config = defineConfig({
       userMenuAvatar: userMenuAvatarRecipe,
     },
     textStyles: {
+      pageTitle: {
+        value: {
+          color: "#212529",
+          fontWeight: 600,
+          fontSize: "24px",
+        },
+      },
       fieldDescription: {
         value: {
           color: "#929496",
           marginBottom: "8px",
+        },
+      },
+      fieldLabel: {
+        value: {
+          fontWeight: 700,
+          fontSize: "16px",
+        },
+      },
+      tooltipTerm: {
+        value: {
+          fontWeight: 600,
+          display: "inline",
+        },
+      },
+      tooltipDescription: {
+        value: {
+          fontSize: "sm",
+          lineHeight: "1.5",
         },
       },
     },

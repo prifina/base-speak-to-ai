@@ -7,6 +7,9 @@ import {
   InsightsIcon,
 } from "@/components/CustomIcons";
 import { UI_TEXT } from "@/lib/uiStrings";
+//import { useWebSocket } from "@/hooks/useWebSocket";
+
+//import useStore from "@/lib/sessionStore";
 
 const navItems = [
   {
@@ -24,12 +27,28 @@ const navItems = [
   {
     key: "insights",
     label: UI_TEXT.insights.sectionTitle,
-    href: "/insights",
+    href: "/insights/daily-report",
     icon: InsightsIcon,
   },
 ];
 
 export default function BaseLayout({ children }) {
+  /*
+  const { setSocketUpdate, setConnectionId } = useStore((s) => ({
+    setSocketUpdate: s.setSocketUpdate,
+    setConnectionId: s.setConnectionId,
+  }));
+
+    
+    useWebSocket({
+      site,
+      enabled: allowWebSocket,
+      setConnectionId: setConnectionId,
+      onSocketUpdate: setSocketUpdate,
+      // onUploadOK: stableOnUploadOK,
+      // onUploadError: stableOnUploadError
+    });
+*/
   return (
     <AppShell navItems={navItems} storageKey="sidebar-collapsed-admin">
       {children}

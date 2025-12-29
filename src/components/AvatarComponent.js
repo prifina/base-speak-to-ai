@@ -26,14 +26,16 @@ export const AvatarComponent = ({
   size = "150px",
 }) => {
   return (
-    <Container
-      cursor={disabled ? "not-allowed" : changeImage ? "pointer" : "default"}
-      onClick={() => {
-        if (disabled || changeImage === undefined) return;
-        changeImage();
-      }}
-    >
-      <Box position="relative">
+    <Container>
+      <Box
+        position="relative"
+        cursor={disabled ? "not-allowed" : changeImage ? "pointer" : "default"}
+        onClick={() => {
+          if (disabled || changeImage === undefined) return;
+          changeImage();
+        }}
+        width="fit-content"
+      >
         <Avatar.Root boxSize={size} size="2xl">
           <Avatar.Image objectFit="cover" src={avatar || imagePlaceholder} />
         </Avatar.Root>

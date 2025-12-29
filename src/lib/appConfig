@@ -38,3 +38,22 @@ export const EVALS = {
   uploadQuota: 5 * 1024 * 1024,
   newInteractionStyleRequest: "https://www.prifina.com/ai-twin-styles.html",
 };
+
+export const fileSupport = {
+  "text/markdown": [".md", ".markdown"],
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
+    ".docx",
+  ],
+  "application/epub+zip": [".epub"],
+  "application/vnd.oasis.opendocument.text": [".odt"],
+  "application/pdf": [".pdf"],
+  "application/rtf": [".rtf"],
+  "text/plain": [".txt"],
+  "text/html": [".html", ".htm"],
+};
+
+export const imageFileSupport = {
+  "image/png": [".png"],
+  "image/jpeg": [".jpeg"],
+  "image/jpg": [".jpg"],
+};

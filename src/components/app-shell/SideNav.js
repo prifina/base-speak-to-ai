@@ -21,8 +21,14 @@ import {
   SideNavRoot,
   MobileMenuButtonWrap,
 } from "./Styled";
-import { LuChevronLeft, LuChevronRight, LuMenu } from "react-icons/lu";
+import {
+  LuChevronLeft,
+  LuChevronRight,
+  LuMenu,
+  LuCircleHelp,
+} from "react-icons/lu";
 import { UI_TEXT } from "@/lib/uiStrings";
+import { EVALS } from "@/lib/appConfig";
 
 function useLocalStorageBool(key, initialValue) {
   const [value, setValue] = React.useState(initialValue);
@@ -51,13 +57,19 @@ function SideNavContent({ items, collapsed, onToggleCollapsed, onNavigate }) {
   const go = (href) => {
     if (onNavigate) onNavigate();
     router.push(href);
+    router.refresh();
   };
 
   return (
     <Flex direction="column" h="100dvh">
       <SideNavHeader collapsed={collapsed}>
         {collapsed ? (
-          <Flex w="full" justify="center" cursor="pointer" onClick={onToggleCollapsed}>
+          <Flex
+            w="full"
+            justify="center"
+            cursor="pointer"
+            onClick={onToggleCollapsed}
+          >
             <Image src="/assets/base_icon.svg" alt="Logo" boxSize="6" />
           </Flex>
         ) : (
@@ -85,7 +97,7 @@ function SideNavContent({ items, collapsed, onToggleCollapsed, onNavigate }) {
 
       <Box h="30px" />
 
-      <Stack gap="5" p="2" flex="1" overflowY="auto">
+      <Stack gap="5" p="2" overflowY="auto">
         {items.map((it) => {
           const active =
             pathname === it.href || (pathname || "").startsWith(it.href + "/");
@@ -130,11 +142,33 @@ function SideNavContent({ items, collapsed, onToggleCollapsed, onNavigate }) {
         })}
       </Stack>
 
-      {/*   <Box px="3" py="3">
-        <Text fontSize="xs" color="app.muted" textAlign={collapsed ? "center" : "left"}>
-          {collapsed ? "v1" : "Demo UI · v1.0"}
-        </Text>
-      </Box> */}
+      <Box px="2" py="3">
+        <Separator />
+      </Box>
+
+      <Box px="2" pb="3">
+        <NavItem
+          role="button"
+          tabIndex={0}
+          collapsed={collapsed}
+          onClick={() => window.open(EVALS.generalGuideDoc, "_blank")}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ")
+              window.open(EVALS.generalGuideDoc, "_blank");
+          }}
+        >
+          <HStack
+            gap="3"
+            w="full"
+            justify={collapsed ? "center" : "flex-start"}
+          >
+            <Icon as={LuCircleHelp} boxSize="30px" />
+            {!collapsed && <Text truncate>{UI_TEXT.app.help}</Text>}
+          </HStack>
+        </NavItem>
+      </Box>
+
+      <Box flex="1" />
     </Flex>
   );
 }
@@ -170,7 +204,7 @@ export function SideNav({ items, storageKey = "sidebar-collapsed" }) {
           <Drawer.Positioner>
             <Drawer.Content bg="#1e1e23" color="#7c7c7c">
               <Drawer.Header borderBottomWidth="1px" borderBottomColor="black">
-                <Drawer.Title color="white">Menu</Drawer.Title>
+                <Drawer.Title color="white">{UI_TEXT.app.menu}</Drawer.Title>
                 <Drawer.CloseTrigger color="white" />
               </Drawer.Header>
               <Drawer.Body p="0">

@@ -5,12 +5,22 @@ const PROTECTED_PATHS = [
   "/dashboard",
   "/account",
   "/settings",
+  "/subscription",
   "/about",
   "/home",
   "/knowledge",
   "/insights",
 ];
-const PROTECTED_API_PATHS = ["/api/protected", "/api/user-health"];
+const PROTECTED_API_PATHS = [
+  "/api/delete-doc-item",
+  "/api/get-config",
+  "/api/get-presigned-url",
+  "/api/process-upload",
+  "/api/user-knowledgebase",
+  "/api/get-live-feed",
+  "/api/list-message-objects",
+  "/api/update-user",
+];
 const PUBLIC_API_PATHS = ["/api/auth"];
 
 export function middleware(req) {
