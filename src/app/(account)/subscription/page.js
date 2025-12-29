@@ -41,6 +41,8 @@ export default function SubscriptionPage() {
         const res = await fetch(`/api/get-network-config?networkId=${networkId}&env=${env}`);
         const data = await res.json();
         
+        console.log("Network Config:", data.networkConfig);
+        
         setState({ 
           networkConfig: data.networkConfig,
           loading: false 
