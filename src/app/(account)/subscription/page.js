@@ -23,6 +23,7 @@ export default function SubscriptionPage() {
       loading: true,
       networkConfig: null,
       subscription: null,
+      userInfo: null,
     }
   );
 
@@ -41,20 +42,24 @@ export default function SubscriptionPage() {
         console.log("Environment:", env);
         console.log("Knowledgebase ID:", knowledgebaseId);
 
-        const [networkRes, subscriptionRes] = await Promise.all([
+        const [networkRes, subscriptionRes, userInfoRes] = await Promise.all([
           fetch(`/api/get-network-config?networkId=${networkId}&env=${env}`),
           knowledgebaseId ? fetch(`/api/get-subscription?knowledgebaseId=${knowledgebaseId}`) : Promise.resolve(null),
+          knowledgebaseId ? fetch(`/api/user-knowledgebase?knowledgebaseId=${knowledgebaseId}&opt=STATUS`) : Promise.resolve(null),
         ]);
 
         const networkData = await networkRes.json();
         const subscriptionData = subscriptionRes ? await subscriptionRes.json() : null;
+        const userInfoData = userInfoRes ? await userInfoRes.json() : null;
         
         console.log("Network Config:", networkData.networkConfig);
         console.log("Subscription:", subscriptionData?.subscription);
+        console.log("User Info:", userInfoData);
         
         setState({ 
           networkConfig: networkData.networkConfig,
           subscription: subscriptionData?.subscription || null,
+          userInfo: userInfoData?.user || null,
           loading: false 
         });
       } catch (error) {
@@ -95,6 +100,23 @@ export default function SubscriptionPage() {
             <Text fontSize="sm" color="gray.600">
               Plan: {state.subscription.plan}
             </Text>
+          </Box>
+        )}
+        {state.userInfo && (
+          <Box>
+            <Text fontSize="sm" color="gray.600">
+              User Status: {state.userInfo.status}
+            </Text>
+            {state.userInfo.trialEnds && (
+              <Text fontSize="sm" color="gray.600">
+                Trial Ends: {state.userInfo.trialEnds}
+              </Text>
+            )}
+            {state.userInfo.statusChanged && (
+              <Text fontSize="sm" color="gray.600">
+                Status Changed: {new Date(state.userInfo.statusChanged).toLocaleDateString()}
+              </Text>
+            )}
           </Box>
         )}
       </VStack>

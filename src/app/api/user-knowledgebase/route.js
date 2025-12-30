@@ -52,6 +52,18 @@ export async function GET(request) {
           }
         }
       `;
+    } else if (opt === "STATUS") {
+      query = `
+        query GetUserKnowledgebase($knowledgebaseId: ID!) {
+          getUserKnowledgebase(knowledgebaseId: $knowledgebaseId) {
+            user {
+              status
+              trialEnds
+              statusChanged
+            }
+          }
+        }
+      `;
     } else if (opt === "DOCS") {
       query = `
         query ListDocfiles($knowledgebaseId: ID!, $limit: Int, $nextToken: String) {
@@ -103,7 +115,7 @@ export async function GET(request) {
       return NextResponse.json({ knowledgeBaseDocs: allItems });
     }
 
-    if (opt === "EMAIL") {
+    if (opt === "EMAIL" || opt === "STATUS") {
       return NextResponse.json(data.getUserKnowledgebase);
     }
 
