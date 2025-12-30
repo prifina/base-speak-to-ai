@@ -102,6 +102,21 @@ export default function SubscriptionPage() {
           "[SUBSCRIPTION] Subscription:",
           subscriptionData?.subscription
         );
+        /* 
+        {
+    "subscriptionId": "sub_1Sk3Z4Q7ZJ2BotyW7YesnmMY",
+    "cognitoId": "4cd55fd1-4831-4d90-a4e3-4f77d4fcb59d",
+    "currentPeriodEnd": 1798639580,
+    "currentPeriodStart": 1767103580,
+    "customerId": "cus_ThST76vomHGUvx",
+    "knowledgebaseId": "0466833b-b476-4c2a-959e-9c62ef469035",
+    "paymentStatus": "paid",
+    "plan": "price_1ROGKzQ7ZJ2BotyWRwqAJkNK",
+    "productId": "prod_SIs5LiXY47C4OC",
+    "stage": "dev",
+    "status": "active",
+    "updated": "2025-12-30T14:06:24.596Z"
+} */
         console.log("[SUBSCRIPTION] User Info:", userInfoData);
         let subscribed = "";
         if (
