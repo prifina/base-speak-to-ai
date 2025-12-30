@@ -6,10 +6,12 @@ import { AuthContext } from "@/app/providers/AuthProvider";
 import { Loading } from "@/components/Loading";
 import { useShallow } from "zustand/react/shallow";
 import useStore from "@/lib/sessionStore";
+import { useAuthFetch } from "@/lib/useAuthFetch";
 
 export default function SubscriptionPage() {
   const { loaded: authLoaded } = useContext(AuthContext);
   const effectCalled = useRef(false);
+  const authFetch = useAuthFetch();
   const { activeGroup, knowledgebaseId } = useStore(
     useShallow((state) => ({
       activeGroup: state.activeGroup,
@@ -43,9 +45,9 @@ export default function SubscriptionPage() {
         console.log("Knowledgebase ID:", knowledgebaseId);
 
         const [networkRes, subscriptionRes, userInfoRes] = await Promise.all([
-          fetch(`/api/get-network-config?networkId=${networkId}&env=${env}`),
-          knowledgebaseId ? fetch(`/api/get-subscription?knowledgebaseId=${knowledgebaseId}`) : Promise.resolve(null),
-          knowledgebaseId ? fetch(`/api/user-knowledgebase?knowledgebaseId=${knowledgebaseId}&opt=STATUS`) : Promise.resolve(null),
+          authFetch(`/api/get-network-config?networkId=${networkId}&env=${env}`),
+          knowledgebaseId ? authFetch(`/api/get-subscription?knowledgebaseId=${knowledgebaseId}`) : Promise.resolve(null),
+          knowledgebaseId ? authFetch(`/api/user-knowledgebase?knowledgebaseId=${knowledgebaseId}&opt=STATUS`) : Promise.resolve(null),
         ]);
 
         const networkData = await networkRes.json();
