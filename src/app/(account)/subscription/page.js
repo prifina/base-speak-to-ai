@@ -18,7 +18,12 @@ export default function SubscriptionPage() {
       knowledgebaseId: state.knowledgebaseId,
     }))
   );
-
+  const billingModalEventTypes = {
+    NONE: 0,
+    SUCCESS: 1,
+    FAILURE: 2,
+    CANCEL: 3,
+  };
   const [state, setState] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
@@ -101,6 +106,14 @@ export default function SubscriptionPage() {
               subscribed = pp.prices[0].priceId;
             }
           }
+        }
+
+        if (
+          ["incomplete_expired", "past_due", "unpaid"].includes(
+            subscriptionData?.subscription?.status
+          )
+        ) {
+          //changeModalEvent(billingModalEventTypes.FAILURE);
         }
 
         setState({
