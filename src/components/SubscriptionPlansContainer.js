@@ -1,7 +1,7 @@
 "use client";
 import { SimpleGrid, Wrap, WrapItem } from "@chakra-ui/react";
 
-import SubscriptionPlanCard from "@/components/StripeSubscriptionPlanCard2";
+import SubscriptionPlanCard from "@/components/StripeSubscriptionPlanCard";
 import {
   formatCurrencyFromMinorUnit,
   formatSubscriptionPlanTitle,
@@ -15,18 +15,6 @@ const SubscriptionPlansContainer = ({
   isProcessing = false,
   openCustomerPortal,
 }) => {
-  /*
-  const showAllPlans =
-    !state.subscribed ||
-    state.subscribed === "" ||
-    (state.subscription?.status === "canceled" &&
-      state.subscription.currentPeriodEnd * 1000 < Date.now());
-
-  console.log({
-    periodEndDate: state.subscription.currentPeriodEnd * 1000,
-    now: Date.now(),
-  });
-*/
   const showAllPlans =
     !state.subscribed ||
     state.subscribed === "" ||
