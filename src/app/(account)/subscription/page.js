@@ -70,13 +70,15 @@ export default function SubscriptionPage() {
 
         console.log(
           "[SUBSCRIPTION] Network Config:",
-          networkData.networkConfig
+          networkData.networkConfig,
+          networkData.plans
         );
         console.log(
           "[SUBSCRIPTION] Subscription:",
           subscriptionData?.subscription
         );
         console.log("[SUBSCRIPTION] User Info:", userInfoData);
+
         /* 
           let subscribed = "";
               if (Array.isArray(cfg?.plans) && cfg.plans.length > 0) {
