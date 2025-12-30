@@ -92,11 +92,11 @@ export default function HomePage() {
       console.log("RES ", data);
       setState({ loading: false, user: data.user, editedUser: data.user });
     }
-    if (!effectCalled.current) {
+    if (!effectCalled.current && authLoaded && knowledgebaseId) {
       fetchData();
       effectCalled.current = true;
     }
-  }, [cognitoId, authFetch, knowledgebaseId]);
+  }, [cognitoId, authFetch, knowledgebaseId, authLoaded]);
 
   const loading = !authLoaded || state.loading;
 
