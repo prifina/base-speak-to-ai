@@ -34,6 +34,7 @@ const usePersistentStore = create((set, get) => {
     language: checkLng(),
     socketUpdate: {},
     connectionId: "",
+    verifiedEmail: "",
     queueStatus: undefined,
     setLoginName: (name) => {
       set({ loginName: name });
@@ -159,6 +160,7 @@ const usePersistentStore = create((set, get) => {
         set({
           isSuper,
           isAdmin,
+          verifiedEmail: idToken.email || "",
           cognitoId: idToken["cognito:username"],
           knowledgebaseId: idToken["custom:knowledgebaseId"] || "",
           //isAuthenticated: authStatus,
