@@ -53,6 +53,13 @@ export function middleware(req) {
     return NextResponse.redirect(loginUrl);
   }
 
+  const knowledgebaseId = cookies.knowledgebaseId;
+  if (!knowledgebaseId) {
+    const initUrl = new URL("/api/auth/init-session", req.url);
+    initUrl.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(initUrl);
+  }
+
   return NextResponse.next();
 }
 

@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { verifyJwtFromCognito } from "@/lib/auth-helpers";
+import { graphqlRequestUserPool } from "@/lib/graphqlRequestUserPool";
+import { jwtDecode } from "jwt-decode";
 
 export async function POST(req) {
   try {
@@ -21,6 +23,31 @@ export async function POST(req) {
       );
     }
 
+    const decoded = jwtDecode(idToken);
+    const cognitoId = decoded.sub;
+
+    const query = `
+      query GetCognitoUserKnowledgebase($cognitoId: ID!) {
+        getCognitoUserKnowledgebase(cognitoId: $cognitoId) {
+          user {
+            knowledgebaseId
+          }
+        }
+      }
+    `;
+
+    let knowledgebaseId = null;
+    try {
+      const data = await graphqlRequestUserPool({
+        query,
+        variables: { cognitoId },
+      });
+      const users = data.getCognitoUserKnowledgebase?.user;
+      knowledgebaseId = Array.isArray(users) && users.length > 0 ? users[0].knowledgebaseId : null;
+    } catch (err) {
+      console.error("Failed to fetch knowledgebaseId:", err);
+    }
+
     const res = NextResponse.json({ ok: true });
 
     res.cookies.set("cognitoIdToken", idToken, {
@@ -30,6 +57,16 @@ export async function POST(req) {
       path: "/",
       maxAge: 60 * 60
     });
+
+    if (knowledgebaseId) {
+      res.cookies.set("knowledgebaseId", knowledgebaseId, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 30
+      });
+    }
 
     return res;
   } catch (err) {
