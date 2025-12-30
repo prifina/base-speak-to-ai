@@ -19,12 +19,17 @@ export async function GET(request) {
     const idTokenKey = `CognitoIdentityServiceProvider.${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}.${lastAuthUser}.idToken`;
     const token = cookies[idTokenKey];
 
+    console.log("Init session - lastAuthUser:", lastAuthUser);
+    console.log("Init session - token exists:", !!token);
+
     if (!token) {
+      console.log("Init session - No token, redirecting to login");
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
     const decoded = decodeJwt(token);
     const cognitoId = decoded.sub;
+    console.log("Init session - cognitoId:", cognitoId);
 
     const query = `
       query GetCognitoUserKnowledgebase($cognitoId: ID!) {
@@ -42,10 +47,15 @@ export async function GET(request) {
       variables: { cognitoId },
     });
 
+    console.log("Init session - GraphQL response:", JSON.stringify(data));
+
     const users = data.getCognitoUserKnowledgebase?.user;
     const knowledgebaseId = Array.isArray(users) && users.length > 0 ? users[0].knowledgebaseId : null;
 
+    console.log("Init session - knowledgebaseId:", knowledgebaseId);
+
     if (!knowledgebaseId) {
+      console.log("Init session - No knowledgebaseId found");
       return NextResponse.json(
         { error: "No knowledgebase found for user" },
         { status: 404 }
@@ -61,9 +71,14 @@ export async function GET(request) {
       path: "/",
     });
 
+    console.log("Init session - Success, redirecting to:", redirect);
     return response;
   } catch (error) {
     console.error("Init session error:", error);
-    return NextResponse.redirect(new URL("/login", request.url));
+    console.error("Init session error stack:", error.stack);
+    return NextResponse.json(
+      { error: "Failed to initialize session", details: error.message },
+      { status: 500 }
+    );
   }
 }
