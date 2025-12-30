@@ -33,37 +33,56 @@ export default function SubscriptionPage() {
     async function fetchData() {
       try {
         const host = window.location.hostname;
-        const env = host === "localhost" && !process.env.NEXT_PUBLIC_ENV 
-          ? "dev" 
-          : process.env.NEXT_PUBLIC_ENV || "dev";
-        
+        const env =
+          host === "localhost" && !process.env.NEXT_PUBLIC_ENV
+            ? "dev"
+            : process.env.NEXT_PUBLIC_ENV || "dev";
+
         const networkId = activeGroup || "x_prifina";
-        
+
         console.log("[SUBSCRIPTION] Active Group:", activeGroup);
         console.log("[SUBSCRIPTION] Network ID:", networkId);
         console.log("[SUBSCRIPTION] Environment:", env);
         console.log("[SUBSCRIPTION] Knowledgebase ID:", knowledgebaseId);
-        console.log("[SUBSCRIPTION] All cookies:", document.cookie);
+        //console.log("[SUBSCRIPTION] All cookies:", document.cookie);
 
         const [networkRes, subscriptionRes, userInfoRes] = await Promise.all([
-          authFetch(`/api/get-network-config?networkId=${networkId}&env=${env}`),
-          knowledgebaseId ? authFetch(`/api/get-subscription?knowledgebaseId=${knowledgebaseId}`) : Promise.resolve(null),
-          knowledgebaseId ? authFetch(`/api/user-knowledgebase?knowledgebaseId=${knowledgebaseId}&opt=STATUS`) : Promise.resolve(null),
+          authFetch(
+            `/api/get-network-config?networkId=${networkId}&env=${env}`
+          ),
+          knowledgebaseId
+            ? authFetch(
+                `/api/get-subscription?knowledgebaseId=${knowledgebaseId}`
+              )
+            : Promise.resolve(null),
+          knowledgebaseId
+            ? authFetch(
+                `/api/user-knowledgebase?knowledgebaseId=${knowledgebaseId}&opt=STATUS`
+              )
+            : Promise.resolve(null),
         ]);
 
         const networkData = await networkRes.json();
-        const subscriptionData = subscriptionRes ? await subscriptionRes.json() : null;
+        const subscriptionData = subscriptionRes
+          ? await subscriptionRes.json()
+          : null;
         const userInfoData = userInfoRes ? await userInfoRes.json() : null;
-        
-        console.log("[SUBSCRIPTION] Network Config:", networkData.networkConfig);
-        console.log("[SUBSCRIPTION] Subscription:", subscriptionData?.subscription);
+
+        console.log(
+          "[SUBSCRIPTION] Network Config:",
+          networkData.networkConfig
+        );
+        console.log(
+          "[SUBSCRIPTION] Subscription:",
+          subscriptionData?.subscription
+        );
         console.log("[SUBSCRIPTION] User Info:", userInfoData);
-        
-        setState({ 
+
+        setState({
           networkConfig: networkData.networkConfig,
           subscription: subscriptionData?.subscription || null,
           userInfo: userInfoData?.user || null,
-          loading: false 
+          loading: false,
         });
       } catch (error) {
         console.error("[SUBSCRIPTION] Failed to fetch data:", error);
@@ -117,7 +136,8 @@ export default function SubscriptionPage() {
             )}
             {state.userInfo.statusChanged && (
               <Text fontSize="sm" color="gray.600">
-                Status Changed: {new Date(state.userInfo.statusChanged).toLocaleDateString()}
+                Status Changed:{" "}
+                {new Date(state.userInfo.statusChanged).toLocaleDateString()}
               </Text>
             )}
           </Box>
