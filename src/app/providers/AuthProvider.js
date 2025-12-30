@@ -3,7 +3,6 @@
 import { createContext, useState, useEffect } from "react";
 import { getCurrentUser } from "aws-amplify/auth";
 import { configureAmplify } from "@/lib/amplify";
-import { parse } from "cookie";
 import useStore from "@/lib/sessionStore";
 
 export const AuthContext = createContext(null);
@@ -21,10 +20,10 @@ export default function AuthProvider({ children }) {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
         
-        const cookies = parse(document.cookie);
-        const knowledgebaseId = cookies.knowledgebaseId;
-        if (knowledgebaseId) {
-          setKnowledgebaseId(knowledgebaseId);
+        const response = await fetch("/api/auth/get-knowledgebase-id");
+        const data = await response.json();
+        if (data.knowledgebaseId) {
+          setKnowledgebaseId(data.knowledgebaseId);
         }
       } catch (err) {
         setUser(null);
