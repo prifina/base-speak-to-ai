@@ -153,11 +153,85 @@ export default function SubscriptionPage() {
 
   const onSubscribe = (e) => {
     const planIdx = parseInt(e.target.dataset.planidx);
-    const plan = state.planDetails[planIdx];
-    if (plan?.prices?.[0]?.paymentLink) {
-      window.open(plan.prices[0].paymentLink, "_blank");
+
+    if (
+      !state.planDetails ||
+      !Array.isArray(state.planDetails) ||
+      !state.planDetails[idx] ||
+      !state.planDetails[idx].prices ||
+      !state.planDetails[idx].prices[0] ||
+      !state.portalConfigurationId
+    ) {
+      console.error("Unable to subscribe: Invalid plan selection or state.");
+      return;
+    }
+    if (state.paymentLinks[planIdx]) {
+      let paymentLink = `${state.paymentLinks[planidx].url}?client_reference_id=${cognitoId}_${site}&locale=${language}`;
+      if (verifiedEmail !== "") {
+        paymentLink += `&prefilled_email=${encodeURIComponent(verifiedEmail)}`;
+      }
     }
   };
+
+  const xonSubscribe = useCallback(
+    async (e) => {
+      if (isProcessing) return; // Early return if already processing!
+      setIsProcessing(true); // <--- Set as soon as user clicks
+      try {
+        //const token = await getIDToken();
+        //console.log(`${window.location.origin}${pathname}`);
+        // Defensive check
+        const idx = e.target.dataset.planidx;
+
+        if (
+          !state.planDetails ||
+          !Array.isArray(state.planDetails) ||
+          !state.planDetails[idx] ||
+          !state.planDetails[idx].prices ||
+          !state.planDetails[idx].prices[0] ||
+          !state.portalConfigurationId
+        ) {
+          console.error(
+            "Unable to subscribe: Invalid plan selection or state."
+          );
+          return;
+        }
+
+        if (state.paymentLinks[e.target.dataset.planidx]) {
+          // https://buy.stripe.com/test_aFa00l1xbad56GW7xWgEg0b?prefilled_email=eee%40eee.com
+          let paymentLink = `${
+            state.paymentLinks[e.target.dataset.planidx].url
+          }?client_reference_id=${cognitoId}_${site}&locale=${language}`;
+          if (verifiedEmail !== "") {
+            paymentLink += `&prefilled_email=${encodeURIComponent(
+              verifiedEmail
+            )}`;
+          }
+          // we may need to update the existing payment link to include the return url or try to include it in admin app...
+          //paymentLink +="&after_completion[type]=redirect&after_completion[redirect][url]=${encodeURIComponent(window.location.origin + pathname?session_id={CHECKOUT_SESSION_ID})}`;"
+          console.log("PAYMENT LINK ", paymentLink);
+
+          openStripeLink(paymentLink);
+        }
+      } catch (err) {
+        console.error("Subscription error", err);
+      } finally {
+        setIsProcessing(false); // <--- Always re-enable
+      }
+    },
+    [
+      state.planDetails,
+      state.portalConfigurationId,
+      state.paymentLinks,
+      cognitoId,
+      site,
+      language,
+      verifiedEmail,
+      openStripeLink,
+      isProcessing,
+      // getIDToken
+    ]
+  );
 
   const openCustomerPortal = () => {
     if (state.paymentLinks?.customerPortal) {
