@@ -2,10 +2,9 @@
 import {
   Button,
   Flex,
-  ListItem,
   Spacer,
   Text,
-  UnorderedList,
+  List,
 } from "@chakra-ui/react";
 
 const SubscriptionPlanCard = ({
@@ -65,11 +64,11 @@ const SubscriptionPlanCard = ({
               )}
             </Flex>
 
-            <UnorderedList spacing={"12px"} color={"#767676"}>
+            <List.Root spacing={"12px"} color={"#767676"}>
               {list.map((item, key) => {
-                return <ListItem key={key}>{item}</ListItem>;
+                return <List.Item key={key}>{item}</List.Item>;
               })}
-            </UnorderedList>
+            </List.Root>
             <Spacer />
             {active === true ? (
               <Button
@@ -85,7 +84,7 @@ const SubscriptionPlanCard = ({
                 mt={"auto"}
                 backgroundColor={"#0d776e"}
                 color={"white"}
-                isDisabled={active || disabled}
+                disabled={active || disabled}
                 onClick={
                   active !== true && disabled !== true ? onClick : undefined
                 }
