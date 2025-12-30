@@ -57,11 +57,8 @@ export async function GET(request) {
     console.log("Init session - knowledgebaseId:", knowledgebaseId);
 
     if (!knowledgebaseId) {
-      console.log("Init session - No knowledgebaseId found");
-      return NextResponse.json(
-        { error: "No knowledgebase found for user" },
-        { status: 404 }
-      );
+      console.log("Init session - No knowledgebaseId found, redirecting to login");
+      return NextResponse.redirect(new URL("/login", request.url));
     }
 
     const response = NextResponse.redirect(new URL(redirect, request.url));
