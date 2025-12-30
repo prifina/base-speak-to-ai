@@ -30,7 +30,10 @@ export async function POST(req) {
       query GetCognitoUserKnowledgebase($cognitoId: ID!) {
         getCognitoUserKnowledgebase(cognitoId: $cognitoId) {
           user {
+            cognitoId
             knowledgebaseId
+            created_at
+            modified_at
           }
         }
       }
@@ -42,8 +45,7 @@ export async function POST(req) {
         query,
         variables: { cognitoId },
       });
-      const users = data.getCognitoUserKnowledgebase?.user;
-      knowledgebaseId = Array.isArray(users) && users.length > 0 ? users[0].knowledgebaseId : null;
+      knowledgebaseId = data.getCognitoUserKnowledgebase?.user?.knowledgebaseId;
     } catch (err) {
       console.error("Failed to fetch knowledgebaseId:", err);
     }
