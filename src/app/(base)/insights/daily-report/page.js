@@ -78,11 +78,11 @@ export default function DailyReportPage() {
         initialData,
       });
     }
-    if (!effectCalled.current) {
+    if (!effectCalled.current && authLoaded && knowledgebaseId) {
       fetchData();
       effectCalled.current = true;
     }
-  }, [authFetch, knowledgebaseId]);
+  }, [authFetch, knowledgebaseId, authLoaded]);
 
   const handleEmailChange = (e) => {
     const value = e.target.value;
