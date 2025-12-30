@@ -48,3 +48,31 @@ export async function isUrlOnline(url) {
     return false;
   }
 }
+
+export function formatCurrencyFromMinorUnit(
+  amountInMinor,
+  currency = "USD",
+  locale = "en-US"
+) {
+  // Currencies without minor units
+  const noMinorUnit = ["JPY", "KRW", "VND", "IDR"];
+
+  // Decide the divisor
+  const divisor = noMinorUnit.includes(currency.toUpperCase()) ? 1 : 100;
+
+  const amountInMajor = amountInMinor / divisor;
+
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amountInMajor);
+}
+
+export const formatSubscriptionPlanTitle = (obj) => {
+  if (!obj) return "";
+  const productName = obj.productName || "";
+  const pricing = obj.metadata?.pricing || "";
+  return `${productName}${pricing ? " - " + pricing : ""}`;
+};
