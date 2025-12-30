@@ -103,6 +103,15 @@ export default function LoginPage() {
             if (Array.isArray(data) && data.length > 0) {
               knowledgebaseId = data[0].knowledgebaseId;
               console.log("Fetched knowledgebaseId:", knowledgebaseId);
+              
+              const updateRes = await fetch("/api/auth/update-knowledgebase-id", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ knowledgebaseId }),
+              });
+              if (updateRes.ok) {
+                console.log("Updated Cognito custom:knowledgebaseId");
+              }
             }
           }
           
