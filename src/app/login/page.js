@@ -10,6 +10,7 @@ import {
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { fetchAuthSession /*, signIn */ } from "aws-amplify/auth";
+import { updateUserProfile } from "@/lib/userAttributes";
 
 import {
   Carousel,
@@ -104,14 +105,8 @@ export default function LoginPage() {
               knowledgebaseId = data[0].knowledgebaseId;
               console.log("Fetched knowledgebaseId:", knowledgebaseId);
               
-              const updateRes = await fetch("/api/auth/update-knowledgebase-id", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ knowledgebaseId }),
-              });
-              if (updateRes.ok) {
-                console.log("Updated Cognito custom:knowledgebaseId");
-              }
+              await updateUserProfile({ "custom:knowledgebaseId": knowledgebaseId });
+              console.log("Updated Cognito custom:knowledgebaseId");
             }
           }
           

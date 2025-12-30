@@ -42,6 +42,9 @@ export async function updateUserProfile(updates) {
     if (updates["custom:authenticator_secret"] !== undefined) {
       attributesToUpdate["custom:authenticator_secret"] = updates["custom:authenticator_secret"];
     }
+    if (updates["custom:knowledgebaseId"] !== undefined) {
+      attributesToUpdate["custom:knowledgebaseId"] = updates["custom:knowledgebaseId"];
+    }
 
     await updateUserAttributes({ userAttributes: attributesToUpdate });
     return { success: true };
