@@ -160,7 +160,7 @@ const usePersistentStore = create((set, get) => {
           isSuper,
           isAdmin,
           cognitoId: idToken["cognito:username"],
-          knowledgebaseId: idToken["custom:knowledgebase_id"] || "",
+          knowledgebaseId: idToken["custom:knowledgebaseId"] || "",
           //isAuthenticated: authStatus,
           //idToken: idToken,
           //jwtIdToken,

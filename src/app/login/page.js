@@ -84,14 +84,19 @@ export default function LoginPage() {
     async (code) => {
       console.log("VERIFY CODE ", code);
       setLoginName(state.loginName);
-      setKnowledgebaseId(state.knowledgebaseId);
-      //state.username
       const signInResponse = await signIn(state.username);
       console.log("SIGN IN RESPONSE ", signInResponse);
       if (signInResponse) {
         const confirmSignInResponse = await confirmSignIn(code);
         if (confirmSignInResponse) {
           console.log("LOGIN SUCCESS");
+          
+          const { tokens } = await fetchAuthSession();
+          const idToken = tokens.idToken.payload;
+          const knowledgebaseId = idToken["custom:knowledgebaseId"] || "";
+          if (knowledgebaseId) {
+            setKnowledgebaseId(knowledgebaseId);
+          }
         } else {
           console.log("LOGIN CONFIRM FAILED ", confirmSignInResponse);
           setError("Invalid PIN code, try again");
@@ -113,7 +118,6 @@ export default function LoginPage() {
       router,
       state.loginName,
       setLoginName,
-      state.knowledgebaseId,
       setKnowledgebaseId,
     ]
   );
