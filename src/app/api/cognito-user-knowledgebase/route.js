@@ -20,12 +20,10 @@ export async function GET(request) {
     const query = `
       query GetCognitoUserKnowledgebase($cognitoId: ID!) {
         getCognitoUserKnowledgebase(cognitoId: $cognitoId) {
-          user {
-            cognitoId
-            knowledgebaseId
-            created_at
-            modified_at
-          }
+          cognitoId
+          knowledgebaseId
+          created_at
+          modified_at
         }
       }
     `;
@@ -35,7 +33,7 @@ export async function GET(request) {
       variables: { cognitoId },
     });
 
-    return NextResponse.json(data.getCognitoUserKnowledgebase || null);
+    return NextResponse.json(data.getCognitoUserKnowledgebase || []);
   } catch (err) {
     return handleApiError(err, "get cognito user knowledgebase failed");
   }

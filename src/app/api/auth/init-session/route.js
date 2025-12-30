@@ -34,12 +34,10 @@ export async function GET(request) {
     const query = `
       query GetCognitoUserKnowledgebase($cognitoId: ID!) {
         getCognitoUserKnowledgebase(cognitoId: $cognitoId) {
-          user {
-            cognitoId
-            knowledgebaseId
-            created_at
-            modified_at
-          }
+          cognitoId
+          knowledgebaseId
+          created_at
+          modified_at
         }
       }
     `;
@@ -51,7 +49,7 @@ export async function GET(request) {
 
     console.log("Init session - GraphQL response:", JSON.stringify(data, null, 2));
 
-    const users = data?.getCognitoUserKnowledgebase?.user;
+    const users = data?.getCognitoUserKnowledgebase;
     const knowledgebaseId = Array.isArray(users) && users.length > 0 ? users[0].knowledgebaseId : null;
 
     console.log("Init session - knowledgebaseId:", knowledgebaseId);
