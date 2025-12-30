@@ -53,22 +53,33 @@ export async function GET(request) {
 
     const networkConfig = networkData.getNetworkConfig || null;
     if (networkConfig) {
-      if (networkConfig.paymentLinks && typeof networkConfig.paymentLinks === 'string') {
+      if (
+        networkConfig.paymentLinks &&
+        typeof networkConfig.paymentLinks === "string"
+      ) {
         networkConfig.paymentLinks = JSON.parse(networkConfig.paymentLinks);
       }
-      if (networkConfig.products && typeof networkConfig.products === 'string') {
+      if (
+        networkConfig.products &&
+        typeof networkConfig.products === "string"
+      ) {
         networkConfig.products = JSON.parse(networkConfig.products);
       }
     }
 
-    const plans = (productsData.getStripeProducts || []).map(group => ({
+    console.log("PLANS ", productsData.getStripeProducts);
+    const plans = (productsData.getStripeProducts || []).map((group) => ({
       name: group.name,
-      items: Array.isArray(group.items) 
-        ? group.items.map(item => typeof item === 'string' ? JSON.parse(item) : item)
-        : (typeof group.items === 'string' ? JSON.parse(group.items) : group.items),
+      items: Array.isArray(group.items)
+        ? group.items.map((item) =>
+            typeof item === "string" ? JSON.parse(item) : item
+          )
+        : typeof group.items === "string"
+        ? JSON.parse(group.items)
+        : group.items,
     }));
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       networkConfig,
       plans,
     });
