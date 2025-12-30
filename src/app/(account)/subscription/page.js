@@ -246,6 +246,16 @@ export default function SubscriptionPage() {
         isProcessing={state.isProcessing}
         openCustomerPortal={openCustomerPortal}
       />
+      {/* 
+       {((state.subscribed && state.subscribed !== "") ||
+        state.kbStatus.status !== "Free") &&
+        state.kbStatus.status !== "" && (
+          <BillingInformation
+            isMobile={isMobile}
+            state={state}
+            openCustomerPortal={openCustomerPortal}
+          />
+        )} */}
     </Flex>
   );
 }
