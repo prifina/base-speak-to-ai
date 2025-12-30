@@ -39,7 +39,7 @@ const SubscriptionPlansContainer = ({
         key={`card-${index}`}
         price={formatCurrencyFromMinorUnit(price0.unitAmount || 0)}
         isMobile={isMobile}
-        title={formatSubscriptionPlanTitle(obj)}
+        title={formatSubscriptionPlanTitle(obj, (name = state.productName))}
         list={obj.marketingFeatures}
         interval={price0.recurring}
         active={!showAllPlans}

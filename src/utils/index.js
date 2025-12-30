@@ -70,10 +70,10 @@ export function formatCurrencyFromMinorUnit(
   }).format(amountInMajor);
 }
 
-export const formatSubscriptionPlanTitle = (obj) => {
-  console.log("FORMAT SUBSCRIPTION PLAN TITLE", obj);
+export const formatSubscriptionPlanTitle = (obj, productName) => {
+  //console.log("FORMAT SUBSCRIPTION PLAN TITLE", obj);
   if (!obj) return "";
-  const productName = obj.productName || "";
+  //const productName = obj.productName || "";
   const pricing = obj.metadata?.pricing || "";
   return `${productName}${pricing ? " - " + pricing : ""}`;
 };
