@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { parse } from "cookie";
-import { jwtDecode } from "jwt-decode";
+import { decodeJwt } from "jose";
 import { graphqlRequestUserPool } from "@/lib/graphqlRequestUserPool";
 
 export const runtime = "nodejs";
@@ -23,7 +23,7 @@ export async function GET(request) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    const decoded = jwtDecode(token);
+    const decoded = decodeJwt(token);
     const cognitoId = decoded.sub;
 
     const query = `

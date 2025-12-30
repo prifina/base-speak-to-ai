@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { verifyJwtFromCognito } from "@/lib/auth-helpers";
 import { graphqlRequestUserPool } from "@/lib/graphqlRequestUserPool";
-import { jwtDecode } from "jwt-decode";
+import { decodeJwt } from "jose";
 
 export async function POST(req) {
   try {
@@ -23,7 +23,7 @@ export async function POST(req) {
       );
     }
 
-    const decoded = jwtDecode(idToken);
+    const decoded = decodeJwt(idToken);
     const cognitoId = decoded.sub;
 
     const query = `
