@@ -65,16 +65,6 @@ export function middleware(req) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const knowledgebaseId = cookies.knowledgebaseId;
-  console.log("[MIDDLEWARE] Has knowledgebaseId:", !!knowledgebaseId);
-  
-  if (!knowledgebaseId) {
-    console.log("[MIDDLEWARE] No knowledgebaseId, redirecting to init-session");
-    const initUrl = new URL("/api/auth/init-session", req.url);
-    initUrl.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(initUrl);
-  }
-
   console.log("[MIDDLEWARE] All checks passed, allowing");
   return NextResponse.next();
 }

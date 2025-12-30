@@ -93,7 +93,19 @@ export default function LoginPage() {
           
           const { tokens } = await fetchAuthSession();
           const idToken = tokens.idToken.payload;
-          const knowledgebaseId = idToken["custom:knowledgebaseId"] || "";
+          const cognitoId = idToken["cognito:username"];
+          let knowledgebaseId = idToken["custom:knowledgebaseId"] || "";
+          
+          if (!knowledgebaseId) {
+            console.log("No knowledgebaseId in token, fetching from API");
+            const res = await fetch(`/api/cognito-user-knowledgebase?cognitoId=${cognitoId}`);
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+              knowledgebaseId = data[0].knowledgebaseId;
+              console.log("Fetched knowledgebaseId:", knowledgebaseId);
+            }
+          }
+          
           if (knowledgebaseId) {
             setKnowledgebaseId(knowledgebaseId);
           }
