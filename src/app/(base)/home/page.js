@@ -76,6 +76,7 @@ export default function HomePage() {
 
   useEffect(() => {
     async function fetchData() {
+      console.log("[HOME] Fetching data with knowledgebaseId:", knowledgebaseId);
       const res = await authFetch(
         `/api/user-knowledgebase?knowledgebaseId=${knowledgebaseId}`,
         {
@@ -92,6 +93,7 @@ export default function HomePage() {
       console.log("RES ", data);
       setState({ loading: false, user: data.user, editedUser: data.user });
     }
+    console.log("[HOME] Effect check - authLoaded:", authLoaded, "knowledgebaseId:", knowledgebaseId, "effectCalled:", effectCalled.current);
     if (!effectCalled.current && authLoaded && knowledgebaseId) {
       fetchData();
       effectCalled.current = true;
