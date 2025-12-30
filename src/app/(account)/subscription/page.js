@@ -15,14 +15,16 @@ export default function SubscriptionPage() {
   const effectCalled = useRef(false);
   const authFetch = useAuthFetch();
   const [isMobile] = useMediaQuery("(max-width: 992px)");
-  const { activeGroup, knowledgebaseId, cognitoId, language } = useStore(
-    useShallow((state) => ({
-      activeGroup: state.activeGroup,
-      knowledgebaseId: state.knowledgebaseId,
-      cognitoId: state.cognitoId,
-      language: state.language,
-    }))
-  );
+  const { activeGroup, knowledgebaseId, cognitoId, language, verifiedEmail } =
+    useStore(
+      useShallow((state) => ({
+        activeGroup: state.activeGroup,
+        knowledgebaseId: state.knowledgebaseId,
+        cognitoId: state.cognitoId,
+        language: state.language,
+        verifiedEmail: state.verifiedEmail,
+      }))
+    );
   const billingModalEventTypes = {
     NONE: 0,
     SUCCESS: 1,
@@ -198,7 +200,7 @@ export default function SubscriptionPage() {
       return;
     }
     if (state.paymentLinks[planIdx]) {
-      let paymentLink = `${state.paymentLinks[planidx].url}?client_reference_id=${cognitoId}_${knowledgebaseId}&locale=${language}`;
+      let paymentLink = `${state.paymentLinks[planIdx].url}?client_reference_id=${cognitoId}_${knowledgebaseId}&locale=${language}`;
       if (verifiedEmail !== "") {
         paymentLink += `&prefilled_email=${encodeURIComponent(verifiedEmail)}`;
       }
