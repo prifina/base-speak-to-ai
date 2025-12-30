@@ -28,7 +28,7 @@ export async function GET(request) {
     }
 
     const decoded = decodeJwt(token);
-    const cognitoId = decoded.sub;
+    const cognitoId = decoded["cognito:username"];
     console.log("Init session - cognitoId:", cognitoId);
 
     const query = `

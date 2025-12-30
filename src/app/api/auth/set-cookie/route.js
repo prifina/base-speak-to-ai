@@ -24,7 +24,7 @@ export async function POST(req) {
     }
 
     const decoded = decodeJwt(idToken);
-    const cognitoId = decoded.sub;
+    const cognitoId = decoded["cognito:username"];
 
     const query = `
       query GetCognitoUserKnowledgebase($cognitoId: ID!) {
