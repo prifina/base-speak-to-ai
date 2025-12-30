@@ -70,7 +70,7 @@ export default function SubscriptionPage() {
       }
     }
 
-    if (!effectCalled.current && authLoaded && knowledgebaseId) {
+    if (!effectCalled.current && authLoaded) {
       fetchData();
       effectCalled.current = true;
     }
