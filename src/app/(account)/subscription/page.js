@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useRef, useReducer } from "react";
+import { useContext, useEffect, useRef, useReducer, useCallback } from "react";
 import { Box, Text, Flex, VStack } from "@chakra-ui/react";
 import { AuthContext } from "@/app/providers/AuthProvider";
 import { Loading } from "@/components/Loading";
@@ -189,16 +189,16 @@ export default function SubscriptionPage() {
     if (
       !state.planDetails ||
       !Array.isArray(state.planDetails) ||
-      !state.planDetails[idx] ||
-      !state.planDetails[idx].prices ||
-      !state.planDetails[idx].prices[0] ||
+      !state.planDetails[planIdx] ||
+      !state.planDetails[planIdx].prices ||
+      !state.planDetails[planIdx].prices[0] ||
       !state.portalConfigurationId
     ) {
       console.error("Unable to subscribe: Invalid plan selection or state.");
       return;
     }
     if (state.paymentLinks[planIdx]) {
-      let paymentLink = `${state.paymentLinks[planidx].url}?client_reference_id=${cognitoId}_${site}&locale=${language}`;
+      let paymentLink = `${state.paymentLinks[planidx].url}?client_reference_id=${cognitoId}_${knowledgebaseId}&locale=${language}`;
       if (verifiedEmail !== "") {
         paymentLink += `&prefilled_email=${encodeURIComponent(verifiedEmail)}`;
       }
