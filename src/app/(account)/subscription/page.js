@@ -10,9 +10,10 @@ import useStore from "@/lib/sessionStore";
 export default function SubscriptionPage() {
   const { loaded: authLoaded } = useContext(AuthContext);
   const effectCalled = useRef(false);
-  const { activeGroup } = useStore(
+  const { activeGroup, knowledgebaseId } = useStore(
     useShallow((state) => ({
       activeGroup: state.activeGroup,
+      knowledgebaseId: state.knowledgebaseId,
     }))
   );
 
@@ -21,6 +22,7 @@ export default function SubscriptionPage() {
     {
       loading: true,
       networkConfig: null,
+      subscription: null,
     }
   );
 
@@ -37,18 +39,26 @@ export default function SubscriptionPage() {
         console.log("Active Group:", activeGroup);
         console.log("Network ID:", networkId);
         console.log("Environment:", env);
+        console.log("Knowledgebase ID:", knowledgebaseId);
 
-        const res = await fetch(`/api/get-network-config?networkId=${networkId}&env=${env}`);
-        const data = await res.json();
+        const [networkRes, subscriptionRes] = await Promise.all([
+          fetch(`/api/get-network-config?networkId=${networkId}&env=${env}`),
+          knowledgebaseId ? fetch(`/api/get-subscription?knowledgebaseId=${knowledgebaseId}`) : Promise.resolve(null),
+        ]);
+
+        const networkData = await networkRes.json();
+        const subscriptionData = subscriptionRes ? await subscriptionRes.json() : null;
         
-        console.log("Network Config:", data.networkConfig);
+        console.log("Network Config:", networkData.networkConfig);
+        console.log("Subscription:", subscriptionData?.subscription);
         
         setState({ 
-          networkConfig: data.networkConfig,
+          networkConfig: networkData.networkConfig,
+          subscription: subscriptionData?.subscription || null,
           loading: false 
         });
       } catch (error) {
-        console.error("Failed to fetch network config:", error);
+        console.error("Failed to fetch data:", error);
         setState({ loading: false });
       }
     }
@@ -57,7 +67,7 @@ export default function SubscriptionPage() {
       fetchData();
       effectCalled.current = true;
     }
-  }, [authLoaded, activeGroup]);
+  }, [authLoaded, activeGroup, knowledgebaseId]);
 
   if (!authLoaded || state.loading) {
     return <Loading />;
@@ -74,6 +84,16 @@ export default function SubscriptionPage() {
           <Box>
             <Text fontSize="sm" color="gray.600">
               Network: {state.networkConfig.networkId}
+            </Text>
+          </Box>
+        )}
+        {state.subscription && (
+          <Box>
+            <Text fontSize="sm" color="gray.600">
+              Status: {state.subscription.status}
+            </Text>
+            <Text fontSize="sm" color="gray.600">
+              Plan: {state.subscription.plan}
             </Text>
           </Box>
         )}
