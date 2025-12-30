@@ -7,9 +7,11 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET(request) {
+  console.log("[INIT-SESSION] Starting init-session endpoint");
   try {
     const { searchParams } = new URL(request.url);
     const redirect = searchParams.get("redirect") || "/home";
+    console.log("[INIT-SESSION] Redirect target:", redirect);
 
     const cookies = parse(request.headers.get("cookie") || "");
     const lastAuthUser =
@@ -19,17 +21,17 @@ export async function GET(request) {
     const idTokenKey = `CognitoIdentityServiceProvider.${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}.${lastAuthUser}.idToken`;
     const token = cookies[idTokenKey];
 
-    console.log("Init session - lastAuthUser:", lastAuthUser);
-    console.log("Init session - token exists:", !!token);
+    console.log("[INIT-SESSION] lastAuthUser:", lastAuthUser);
+    console.log("[INIT-SESSION] token exists:", !!token);
 
     if (!token) {
-      console.log("Init session - No token, redirecting to login");
+      console.log("[INIT-SESSION] No token, redirecting to login");
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
     const decoded = decodeJwt(token);
     const cognitoId = decoded["cognito:username"];
-    console.log("Init session - cognitoId:", cognitoId);
+    console.log("[INIT-SESSION] cognitoId:", cognitoId);
 
     const query = `
       query GetCognitoUserKnowledgebase($cognitoId: ID!) {
@@ -47,15 +49,15 @@ export async function GET(request) {
       variables: { cognitoId },
     });
 
-    console.log("Init session - GraphQL response:", JSON.stringify(data, null, 2));
+    console.log("[INIT-SESSION] GraphQL response:", JSON.stringify(data, null, 2));
 
     const users = data?.getCognitoUserKnowledgebase;
     const knowledgebaseId = Array.isArray(users) && users.length > 0 ? users[0].knowledgebaseId : null;
 
-    console.log("Init session - knowledgebaseId:", knowledgebaseId);
+    console.log("[INIT-SESSION] knowledgebaseId:", knowledgebaseId);
 
     if (!knowledgebaseId) {
-      console.log("Init session - No knowledgebaseId found, redirecting to login");
+      console.log("[INIT-SESSION] No knowledgebaseId found, redirecting to login");
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
@@ -68,11 +70,11 @@ export async function GET(request) {
       path: "/",
     });
 
-    console.log("Init session - Success, redirecting to:", redirect);
+    console.log("[INIT-SESSION] Success, setting cookie and redirecting to:", redirect);
     return response;
   } catch (error) {
-    console.error("Init session error:", error);
-    console.error("Init session error stack:", error.stack);
+    console.error("[INIT-SESSION] Error:", error);
+    console.error("[INIT-SESSION] Error stack:", error.stack);
     return NextResponse.redirect(new URL("/login", request.url));
   }
 }
