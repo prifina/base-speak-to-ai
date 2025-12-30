@@ -73,9 +73,6 @@ export async function GET(request) {
   } catch (error) {
     console.error("Init session error:", error);
     console.error("Init session error stack:", error.stack);
-    return NextResponse.json(
-      { error: "Failed to initialize session", details: error.message },
-      { status: 500 }
-    );
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 }
