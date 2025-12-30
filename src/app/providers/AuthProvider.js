@@ -10,7 +10,6 @@ export const AuthContext = createContext(null);
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loaded, setLoaded] = useState(false);
-  const setKnowledgebaseId = useStore((state) => state.setKnowledgebaseId);
 
   useEffect(() => {
     configureAmplify();
@@ -19,12 +18,6 @@ export default function AuthProvider({ children }) {
       try {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
-        
-        const response = await fetch("/api/auth/get-knowledgebase-id");
-        const data = await response.json();
-        if (data.knowledgebaseId) {
-          setKnowledgebaseId(data.knowledgebaseId);
-        }
       } catch (err) {
         setUser(null);
       } finally {
@@ -33,7 +26,7 @@ export default function AuthProvider({ children }) {
     }
 
     loadUser();
-  }, [setKnowledgebaseId]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, setUser, loaded }}>
