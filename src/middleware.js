@@ -35,7 +35,11 @@ export function middleware(req) {
   );
   const isPublicApi = PUBLIC_API_PATHS.some((p) => pathname.startsWith(p));
 
-  if (isPublicApi || isProtectedApi || !isProtectedPage) {
+  if (isPublicApi) {
+    return NextResponse.next();
+  }
+
+  if (!isProtectedPage && !isProtectedApi) {
     return NextResponse.next();
   }
 
