@@ -8,19 +8,6 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 
-/**
- * Subscription Plan Card component.
- *
- * @param {object} props - Subscription Plan Card properties.
- * @param {number} [props.price=0] - The price of the Subscription Plan. The default is 0.
- * @param {string} [props.title] - The title of the Subscription Plan.
- * @param {string} [props.interval] - The interval of the payment of the Subscription Plan.
- * @param {[string]} [props.list] - The list of features to the Subscription Plan.
- * @param {'info' | undefined} [props.type] - Type of Card.
- * @param {boolean} [props.active=false] - Whether the Subscription Plan is active. The default is false.
- * @param {string} [props.details] - Additional Details.
- * @returns {JSX.Element} The rendered Subscription Plan Card component.
- */
 const SubscriptionPlanCard = ({
   price = "$0",
   title,
