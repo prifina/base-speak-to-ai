@@ -28,6 +28,7 @@ const PUBLIC_API_PATHS = ["/api/auth"];
 
 export function middleware(req) {
   const { pathname } = req.nextUrl;
+  console.log("[MIDDLEWARE] Checking path:", pathname);
 
   const isProtectedPage = PROTECTED_PATHS.some((p) => pathname.startsWith(p));
   const isProtectedApi = PROTECTED_API_PATHS.some((p) =>
@@ -35,11 +36,15 @@ export function middleware(req) {
   );
   const isPublicApi = PUBLIC_API_PATHS.some((p) => pathname.startsWith(p));
 
+  console.log("[MIDDLEWARE] isProtectedPage:", isProtectedPage, "isProtectedApi:", isProtectedApi, "isPublicApi:", isPublicApi);
+
   if (isPublicApi) {
+    console.log("[MIDDLEWARE] Public API, allowing");
     return NextResponse.next();
   }
 
   if (!isProtectedPage && !isProtectedApi) {
+    console.log("[MIDDLEWARE] Not protected, allowing");
     return NextResponse.next();
   }
 
@@ -51,19 +56,26 @@ export function middleware(req) {
   const idToken = `CognitoIdentityServiceProvider.${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}.${lastAuthUser}.idToken`;
   const token = cookies[idToken];
 
+  console.log("[MIDDLEWARE] Has token:", !!token);
+
   if (!token) {
+    console.log("[MIDDLEWARE] No token, redirecting to login");
     const loginUrl = new URL("/login", req.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
   const knowledgebaseId = cookies.knowledgebaseId;
+  console.log("[MIDDLEWARE] Has knowledgebaseId:", !!knowledgebaseId);
+  
   if (!knowledgebaseId) {
+    console.log("[MIDDLEWARE] No knowledgebaseId, redirecting to init-session");
     const initUrl = new URL("/api/auth/init-session", req.url);
     initUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(initUrl);
   }
 
+  console.log("[MIDDLEWARE] All checks passed, allowing");
   return NextResponse.next();
 }
 
