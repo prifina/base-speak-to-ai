@@ -126,6 +126,7 @@ export default function SubscriptionPage() {
           userInfo: userInfoData?.user || null,
           loading: false,
           subscribed,
+          productName: networkData.plans[0].name,
           planDetails: networkData.plans[0].items, // one plan for now
           paymentLinks: networkData.networkConfig.paymentLinks,
           portalConfigurationId:

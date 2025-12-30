@@ -71,6 +71,7 @@ export function formatCurrencyFromMinorUnit(
 }
 
 export const formatSubscriptionPlanTitle = (obj) => {
+  console.log("FORMAT SUBSCRIPTION PLAN TITLE", obj);
   if (!obj) return "";
   const productName = obj.productName || "";
   const pricing = obj.metadata?.pricing || "";
