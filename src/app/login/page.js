@@ -126,6 +126,7 @@ export default function LoginPage() {
     async (user) => {
       const available = await usernameAvailable(user);
       if (!available) {
+        setState({ username: user });
         return true;
       }
 
