@@ -32,13 +32,10 @@ export async function GET(request) {
     `;
 
     const productsQuery = `
-      query GetStripeProducts {
-        getStripeProducts {
-          id
+      query GetStripeProducts($networkId: String!, $env: String!) {
+        getStripeProducts(networkId: $networkId, env: $env) {
           name
-          description
-          active
-          metadata
+          items
         }
       }
     `;
@@ -50,6 +47,7 @@ export async function GET(request) {
       }),
       graphqlRequestUserPool({
         query: productsQuery,
+        variables: { networkId, env },
       }),
     ]);
 
