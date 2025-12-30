@@ -51,7 +51,8 @@ export async function GET(request) {
 
     console.log("Init session - GraphQL response:", JSON.stringify(data, null, 2));
 
-    const knowledgebaseId = data?.getCognitoUserKnowledgebase?.user?.knowledgebaseId;
+    const users = data?.getCognitoUserKnowledgebase?.user;
+    const knowledgebaseId = Array.isArray(users) && users.length > 0 ? users[0].knowledgebaseId : null;
 
     console.log("Init session - knowledgebaseId:", knowledgebaseId);
 
