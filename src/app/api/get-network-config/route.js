@@ -25,6 +25,8 @@ export async function GET(request) {
           business_profile
           modifiedAt
           portalConfigurationId
+          paymentLinks
+          products
         }
       }
     `;
