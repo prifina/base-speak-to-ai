@@ -104,6 +104,9 @@ export default function LoginPage() {
             if (Array.isArray(data) && data.length > 0) {
               knowledgebaseId = data[0].knowledgebaseId;
               console.log("Fetched knowledgebaseId:", knowledgebaseId);
+              
+              await updateUserProfile({ "custom:knowledgebaseId": knowledgebaseId });
+              console.log("Updated Cognito custom:knowledgebaseId");
             }
           }
           
