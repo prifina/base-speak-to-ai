@@ -70,11 +70,11 @@ export default function SubscriptionPage() {
       }
     }
 
-    if (!effectCalled.current && authLoaded) {
+    if (!effectCalled.current && authLoaded && knowledgebaseId) {
       fetchData();
       effectCalled.current = true;
     }
-  }, [authLoaded, activeGroup, knowledgebaseId]);
+  }, [authLoaded, activeGroup, knowledgebaseId, authFetch]);
 
   if (!authLoaded || state.loading) {
     return <Loading />;
