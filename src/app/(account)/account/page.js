@@ -13,10 +13,12 @@ import { toaster } from "@/components/ui/toaster";
 import { isEmail } from "@/utils";
 import VerifyEmailDialog from "@/components/Modals/VerifyEmailDialog";
 import ConnectAuthenticatorDialog from "@/components/Modals/ConnectAuthenticatorDialog";
+import { useAuthFetch } from "@/lib/useAuthFetch";
 
 export default function AccountPage() {
   const { loaded: authLoaded } = useContext(AuthContext);
   const effectCalled = useRef(false);
+  const authFetch = useAuthFetch();
   const { usernameAvailable } = useStore(
     useShallow((state) => ({
       usernameAvailable: state.usernameAvailable,
@@ -87,7 +89,7 @@ export default function AccountPage() {
         return UI_TEXT.account.emailErrors.invalid;
       }
       
-      const res = await fetch(`/api/check-email?email=${encodeURIComponent(email)}`);
+      const res = await authFetch(`/api/check-email?email=${encodeURIComponent(email)}`);
       const data = await res.json();
       
       if (!data.available) {
@@ -96,7 +98,7 @@ export default function AccountPage() {
       
       return "";
     },
-    [state.initialData.email]
+    [state.initialData.email, authFetch]
   );
 
   const handleEmailChange = useCallback(
