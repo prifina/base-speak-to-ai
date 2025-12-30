@@ -7,11 +7,14 @@ import { Loading } from "@/components/Loading";
 import { useShallow } from "zustand/react/shallow";
 import useStore from "@/lib/sessionStore";
 import { useAuthFetch } from "@/lib/useAuthFetch";
+import { useMediaQuery } from "@/lib/useMediaQuery";
+import SubscriptionPlansContainer from "@/components/SubscriptionPlansContainer";
 
 export default function SubscriptionPage() {
   const { loaded: authLoaded } = useContext(AuthContext);
   const effectCalled = useRef(false);
   const authFetch = useAuthFetch();
+  const [isMobile] = useMediaQuery("(max-width: 992px)");
   const { activeGroup, knowledgebaseId } = useStore(
     useShallow((state) => ({
       activeGroup: state.activeGroup,
@@ -39,6 +42,8 @@ export default function SubscriptionPage() {
       networkId: "x_prifina",
       currentStatus: "",
       kbStatus: {},
+      stripeUpdate: false,
+      isProcessing: false,
     }
   );
 
@@ -145,6 +150,20 @@ export default function SubscriptionPage() {
     }
   }, [authLoaded, activeGroup, knowledgebaseId, authFetch]);
 
+  const onSubscribe = (e) => {
+    const planIdx = parseInt(e.target.dataset.planidx);
+    const plan = state.planDetails[planIdx];
+    if (plan?.prices?.[0]?.paymentLink) {
+      window.open(plan.prices[0].paymentLink, "_blank");
+    }
+  };
+
+  const openCustomerPortal = () => {
+    if (state.paymentLinks?.customerPortal) {
+      window.open(state.paymentLinks.customerPortal, "_blank");
+    }
+  };
+
   if (!authLoaded || state.loading) {
     return <Loading />;
   }
@@ -154,44 +173,14 @@ export default function SubscriptionPage() {
       <Box pl={{ base: "42px", md: "0" }}>
         <Text textStyle="pageTitle">Subscription</Text>
       </Box>
-      <VStack align="stretch" gap="6">
-        <Text>Subscription details and management will be displayed here.</Text>
-        {state.networkConfig && (
-          <Box>
-            <Text fontSize="sm" color="gray.600">
-              Network: {state.networkConfig.networkId}
-            </Text>
-          </Box>
-        )}
-        {state.subscription && (
-          <Box>
-            <Text fontSize="sm" color="gray.600">
-              Status: {state.subscription.status}
-            </Text>
-            <Text fontSize="sm" color="gray.600">
-              Plan: {state.subscription.plan}
-            </Text>
-          </Box>
-        )}
-        {state.userInfo && (
-          <Box>
-            <Text fontSize="sm" color="gray.600">
-              User Status: {state.userInfo.status}
-            </Text>
-            {state.userInfo.trialEnds && (
-              <Text fontSize="sm" color="gray.600">
-                Trial Ends: {state.userInfo.trialEnds}
-              </Text>
-            )}
-            {state.userInfo.statusChanged && (
-              <Text fontSize="sm" color="gray.600">
-                Status Changed:{" "}
-                {new Date(state.userInfo.statusChanged).toLocaleDateString()}
-              </Text>
-            )}
-          </Box>
-        )}
-      </VStack>
+      <SubscriptionPlansContainer
+        state={state}
+        isMobile={isMobile}
+        stripeUpdate={state.stripeUpdate}
+        onSubscribe={onSubscribe}
+        isProcessing={state.isProcessing}
+        openCustomerPortal={openCustomerPortal}
+      />
     </Flex>
   );
 }
