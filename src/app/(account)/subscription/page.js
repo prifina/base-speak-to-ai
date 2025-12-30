@@ -171,7 +171,7 @@ export default function SubscriptionPage() {
   return (
     <Flex flexDir="column" gap="40px" p="28px">
       <Box pl={{ base: "42px", md: "0" }}>
-        <Text textStyle="pageTitle">Subscription</Text>
+        <Text textStyle="pageTitle">Subscription plans for AI Twin</Text>
       </Box>
       <SubscriptionPlansContainer
         state={state}
