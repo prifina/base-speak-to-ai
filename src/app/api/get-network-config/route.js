@@ -63,7 +63,9 @@ export async function GET(request) {
 
     const plans = (productsData.getStripeProducts || []).map(group => ({
       name: group.name,
-      items: typeof group.items === 'string' ? JSON.parse(group.items) : group.items,
+      items: Array.isArray(group.items) 
+        ? group.items.map(item => typeof item === 'string' ? JSON.parse(item) : item)
+        : (typeof group.items === 'string' ? JSON.parse(group.items) : group.items),
     }));
 
     return NextResponse.json({ 
