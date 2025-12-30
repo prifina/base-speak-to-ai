@@ -26,6 +26,14 @@ export default function SubscriptionPage() {
       networkConfig: null,
       subscription: null,
       userInfo: null,
+      subscribed: "",
+      planName: "",
+      planDetails: [],
+      paymentLinks: [],
+      portalConfigurationId: "",
+      networkId: "x_prifina",
+      currentStatus: "",
+      kbStatus: {},
     }
   );
 
@@ -78,28 +86,39 @@ export default function SubscriptionPage() {
           subscriptionData?.subscription
         );
         console.log("[SUBSCRIPTION] User Info:", userInfoData);
+        let subscribed = "";
+        if (
+          Array.isArray(networkData?.plans) &&
+          networkData.plans[0].items.length > 0
+        ) {
+          for (const pp of networkData.plans[0].items) {
+            if (
+              subscriptionData?.subscription !== null &&
+              Array.isArray(pp.prices) &&
+              pp.prices.length > 0 &&
+              pp.prices[0].priceId === subscriptionData?.subscription.plan
+            ) {
+              subscribed = pp.prices[0].priceId;
+            }
+          }
+        }
 
-        /* 
-          let subscribed = "";
-              if (Array.isArray(cfg?.plans) && cfg.plans.length > 0) {
-                for (const pp of cfg.plans) {
-                  if (
-                    currentSubscription?.subscription !== undefined &&
-                    Array.isArray(pp.prices) &&
-                    pp.prices.length > 0 &&
-                    pp.prices[0].priceId ===
-                      currentSubscription?.subscription.plan
-                  ) {
-                    subscribed = pp.prices[0].priceId;
-                  }
-                }
-              }
- */
         setState({
-          networkConfig: networkData.networkConfig,
           subscription: subscriptionData?.subscription || null,
           userInfo: userInfoData?.user || null,
           loading: false,
+          subscribed,
+          planDetails: networkData.plans[0].items, // one plan for now
+          paymentLinks: networkData.networkConfig.paymentLinks,
+          portalConfigurationId:
+            networkData.networkConfig.portalConfigurationId,
+          networkId,
+          currentStatus: subscriptionData?.subscription?.status,
+          kbStatus: {
+            status: userInfoData.user?.status || "",
+            trialEnds: userInfoData.user?.trialEnds,
+            statusChanged: userInfoData.user?.statusChanged,
+          },
         });
       } catch (error) {
         console.error("[SUBSCRIPTION] Failed to fetch data:", error);
