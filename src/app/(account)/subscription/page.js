@@ -77,7 +77,22 @@ export default function SubscriptionPage() {
           subscriptionData?.subscription
         );
         console.log("[SUBSCRIPTION] User Info:", userInfoData);
-
+        /* 
+          let subscribed = "";
+              if (Array.isArray(cfg?.plans) && cfg.plans.length > 0) {
+                for (const pp of cfg.plans) {
+                  if (
+                    currentSubscription?.subscription !== undefined &&
+                    Array.isArray(pp.prices) &&
+                    pp.prices.length > 0 &&
+                    pp.prices[0].priceId ===
+                      currentSubscription?.subscription.plan
+                  ) {
+                    subscribed = pp.prices[0].priceId;
+                  }
+                }
+              }
+ */
         setState({
           networkConfig: networkData.networkConfig,
           subscription: subscriptionData?.subscription || null,
