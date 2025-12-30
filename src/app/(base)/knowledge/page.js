@@ -464,11 +464,11 @@ export default function KnowledgePage() {
         },
       });
     }
-    if (!effectCalled.current) {
+    if (!effectCalled.current && authLoaded && knowledgebaseId) {
       fetchData();
       effectCalled.current = true;
     }
-  }, [authFetch, knowledgebaseId]);
+  }, [authFetch, knowledgebaseId, authLoaded]);
 
   if (loading) {
     return <Loading />;
