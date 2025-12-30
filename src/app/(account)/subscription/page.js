@@ -39,10 +39,11 @@ export default function SubscriptionPage() {
         
         const networkId = activeGroup || "x_prifina";
         
-        console.log("Active Group:", activeGroup);
-        console.log("Network ID:", networkId);
-        console.log("Environment:", env);
-        console.log("Knowledgebase ID:", knowledgebaseId);
+        console.log("[SUBSCRIPTION] Active Group:", activeGroup);
+        console.log("[SUBSCRIPTION] Network ID:", networkId);
+        console.log("[SUBSCRIPTION] Environment:", env);
+        console.log("[SUBSCRIPTION] Knowledgebase ID:", knowledgebaseId);
+        console.log("[SUBSCRIPTION] All cookies:", document.cookie);
 
         const [networkRes, subscriptionRes, userInfoRes] = await Promise.all([
           authFetch(`/api/get-network-config?networkId=${networkId}&env=${env}`),
@@ -54,9 +55,9 @@ export default function SubscriptionPage() {
         const subscriptionData = subscriptionRes ? await subscriptionRes.json() : null;
         const userInfoData = userInfoRes ? await userInfoRes.json() : null;
         
-        console.log("Network Config:", networkData.networkConfig);
-        console.log("Subscription:", subscriptionData?.subscription);
-        console.log("User Info:", userInfoData);
+        console.log("[SUBSCRIPTION] Network Config:", networkData.networkConfig);
+        console.log("[SUBSCRIPTION] Subscription:", subscriptionData?.subscription);
+        console.log("[SUBSCRIPTION] User Info:", userInfoData);
         
         setState({ 
           networkConfig: networkData.networkConfig,
@@ -65,7 +66,7 @@ export default function SubscriptionPage() {
           loading: false 
         });
       } catch (error) {
-        console.error("Failed to fetch data:", error);
+        console.error("[SUBSCRIPTION] Failed to fetch data:", error);
         setState({ loading: false });
       }
     }
