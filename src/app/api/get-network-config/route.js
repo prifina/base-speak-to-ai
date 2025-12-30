@@ -18,7 +18,7 @@ export async function GET(request) {
       );
     }
 
-    const query = `
+    const networkQuery = `
       query GetNetworkConfig($networkId: ID!, $env: String!) {
         getNetworkConfig(networkId: $networkId, env: $env) {
           networkId
@@ -31,12 +31,32 @@ export async function GET(request) {
       }
     `;
 
-    const data = await graphqlRequestUserPool({
-      query,
-      variables: { networkId, env },
-    });
+    const productsQuery = `
+      query GetStripeProducts {
+        getStripeProducts {
+          id
+          name
+          description
+          active
+          metadata
+        }
+      }
+    `;
 
-    return NextResponse.json({ networkConfig: data.getNetworkConfig || null });
+    const [networkData, productsData] = await Promise.all([
+      graphqlRequestUserPool({
+        query: networkQuery,
+        variables: { networkId, env },
+      }),
+      graphqlRequestUserPool({
+        query: productsQuery,
+      }),
+    ]);
+
+    return NextResponse.json({ 
+      networkConfig: networkData.getNetworkConfig || null,
+      plans: productsData.getStripeProducts || [],
+    });
   } catch (err) {
     return handleApiError(err, "get network config failed");
   }
