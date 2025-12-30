@@ -51,9 +51,24 @@ export async function GET(request) {
       }),
     ]);
 
+    const networkConfig = networkData.getNetworkConfig || null;
+    if (networkConfig) {
+      if (networkConfig.paymentLinks && typeof networkConfig.paymentLinks === 'string') {
+        networkConfig.paymentLinks = JSON.parse(networkConfig.paymentLinks);
+      }
+      if (networkConfig.products && typeof networkConfig.products === 'string') {
+        networkConfig.products = JSON.parse(networkConfig.products);
+      }
+    }
+
+    const plans = (productsData.getStripeProducts || []).map(group => ({
+      name: group.name,
+      items: typeof group.items === 'string' ? JSON.parse(group.items) : group.items,
+    }));
+
     return NextResponse.json({ 
-      networkConfig: networkData.getNetworkConfig || null,
-      plans: productsData.getStripeProducts || [],
+      networkConfig,
+      plans,
     });
   } catch (err) {
     return handleApiError(err, "get network config failed");
