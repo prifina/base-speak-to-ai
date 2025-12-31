@@ -148,10 +148,11 @@ export default function SignupPage() {
   return (
     <AbsoluteCenter>
       <Box
-        w={"520px"}
+        w={{ base: "90%", md: "520px" }}
+        maxW="520px"
         mx="auto"
         mt={5}
-        px={8}
+        px={{ base: 4, md: 8 }}
         py={3}
         borderWidth="1px"
         borderRadius="lg"
@@ -169,8 +170,8 @@ export default function SignupPage() {
         </Flex>
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} align="stretch">
-            <Flex gap={4}>
-              <Field.Root invalid={!!errors.firstName} flex={0.4}>
+            <Flex gap={4} direction={{ base: "column", sm: "row" }}>
+              <Field.Root invalid={!!errors.firstName} flex={{ base: 1, sm: 0.4 }}>
                 <Field.Label>First Name</Field.Label>
                 <Input
                   name="firstName"
@@ -183,7 +184,7 @@ export default function SignupPage() {
                 )}
               </Field.Root>
 
-              <Field.Root invalid={!!errors.lastName} flex={0.6}>
+              <Field.Root invalid={!!errors.lastName} flex={{ base: 1, sm: 0.6 }}>
                 <Field.Label>{UI_TEXT.account.familyName}</Field.Label>
                 <Input
                   name="lastName"
