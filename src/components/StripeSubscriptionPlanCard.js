@@ -89,6 +89,13 @@ const SubscriptionPlanCard = ({
                   active !== true && disabled !== true ? onClick : undefined
                 }
                 data-planidx={planIdx}
+                _hover={{
+                  backgroundColor: active || disabled ? "#0d776e" : "#0a5d56",
+                  cursor: active || disabled ? "not-allowed" : "pointer",
+                }}
+                _active={{
+                  backgroundColor: active || disabled ? "#0d776e" : "#084a44",
+                }}
               >
                 Subscribe
               </Button>
