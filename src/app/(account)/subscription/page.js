@@ -9,7 +9,16 @@ import {
   useState,
   useMemo,
 } from "react";
-import { Box, Text, Flex, VStack, useDisclosure, Button, Dialog, Spinner } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Flex,
+  VStack,
+  useDisclosure,
+  Button,
+  Dialog,
+  Spinner,
+} from "@chakra-ui/react";
 import { AuthContext } from "@/app/providers/AuthProvider";
 import { Loading } from "@/components/Loading";
 import { useShallow } from "zustand/react/shallow";
@@ -102,14 +111,15 @@ export default function SubscriptionPage() {
   const handleSocketUpdate = useCallback(
     (socketStatus) => {
       console.log("STRIPE SOCKET STATUS ", socketStatus);
-      
+
       // Handle STRIPE events
       if (socketStatus.event === "STRIPE") {
         effectCalled.current = false;
         setStripeUpdate(true);
-        
+
         switch (socketStatus.status) {
           case "CANCELLED":
+          case "LAMBDA_PROCESSED":
             changeModalEvent(billingModalEventTypes.CANCEL);
             break;
           case "FAIL":
@@ -362,7 +372,10 @@ export default function SubscriptionPage() {
     );
 
     return (
-      <Dialog.Root open={isSubscriptionEventModalOpen} onOpenChange={onSubscriptionEventModalClose}>
+      <Dialog.Root
+        open={isSubscriptionEventModalOpen}
+        onOpenChange={onSubscriptionEventModalClose}
+      >
         <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content>
@@ -394,7 +407,9 @@ export default function SubscriptionPage() {
                             currentPlan
                           )} Plan. Your next billing date is ${
                             state.subscription?.currentPeriodEnd
-                              ? new Date(state.subscription.currentPeriodEnd * 1000).toLocaleDateString()
+                              ? new Date(
+                                  state.subscription.currentPeriodEnd * 1000
+                                ).toLocaleDateString()
                               : "-"
                           }.`}
                         />
@@ -444,7 +459,9 @@ export default function SubscriptionPage() {
                           title="Subscription Cancelled"
                           subtitle={`You'll have access until ${
                             state.subscription?.currentPeriodEnd
-                              ? new Date(state.subscription.currentPeriodEnd * 1000).toLocaleDateString()
+                              ? new Date(
+                                  state.subscription.currentPeriodEnd * 1000
+                                ).toLocaleDateString()
                               : "-"
                           }.`}
                         />
