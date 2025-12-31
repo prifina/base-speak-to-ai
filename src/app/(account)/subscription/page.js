@@ -16,17 +16,23 @@ export default function SubscriptionPage() {
   const effectCalled = useRef(false);
   const authFetch = useAuthFetch();
   const [isMobile] = useMediaQuery("(max-width: 992px)");
-  const { activeGroup, knowledgebaseId, cognitoId, language, verifiedEmail, env } =
-    useStore(
-      useShallow((state) => ({
-        activeGroup: state.activeGroup,
-        knowledgebaseId: state.knowledgebaseId,
-        cognitoId: state.cognitoId,
-        language: state.language,
-        verifiedEmail: state.verifiedEmail,
-        env: state.env,
-      }))
-    );
+  const {
+    activeGroup,
+    knowledgebaseId,
+    cognitoId,
+    language,
+    verifiedEmail,
+    env,
+  } = useStore(
+    useShallow((state) => ({
+      activeGroup: state.activeGroup,
+      knowledgebaseId: state.knowledgebaseId,
+      cognitoId: state.cognitoId,
+      language: state.language,
+      verifiedEmail: state.verifiedEmail,
+      env: state.env,
+    }))
+  );
   const billingModalEventTypes = {
     NONE: 0,
     SUCCESS: 1,
@@ -167,7 +173,7 @@ export default function SubscriptionPage() {
       fetchData();
       effectCalled.current = true;
     }
-  }, [authLoaded, activeGroup, knowledgebaseId, authFetch]);
+  }, [authLoaded, activeGroup, knowledgebaseId, env, authFetch]);
 
   useEffect(() => {
     return () => {
@@ -243,7 +249,7 @@ export default function SubscriptionPage() {
           }),
         });
         const portalData = await portalRes.json();
-        
+
         if (portalData && portalData.url) {
           customerPortalRef.current = window.open(
             `${portalData.url}${additionalRoute ? `/${additionalRoute}` : ""}`,
