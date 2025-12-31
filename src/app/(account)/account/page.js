@@ -13,6 +13,7 @@ import { toaster } from "@/components/ui/toaster";
 import { isEmail } from "@/utils";
 import VerifyEmailDialog from "@/components/Modals/VerifyEmailDialog";
 import ConnectAuthenticatorDialog from "@/components/Modals/ConnectAuthenticatorDialog";
+import { validateUsername, validateEmail } from "@/lib/validation";
 import { useAuthFetch } from "@/lib/useAuthFetch";
 
 export default function AccountPage() {
@@ -80,76 +81,30 @@ export default function AccountPage() {
     }
   }, [authLoaded]);
 
-  const validateEmail = useCallback(
-    async (email) => {
-      if (!email) return "";
-      if (email === state.initialData.email) return "";
-      
-      if (!isEmail(email)) {
-        return UI_TEXT.account.emailErrors.invalid;
-      }
-      
-      const res = await authFetch(`/api/check-email?email=${encodeURIComponent(email)}`);
-      const data = await res.json();
-      
-      if (!data.available) {
-        return UI_TEXT.account.emailErrors.exists;
-      }
-      
-      return "";
-    },
-    [state.initialData.email, authFetch]
-  );
-
   const handleEmailChange = useCallback(
     async (value) => {
       setState({ email: value });
       if (value) {
-        const error = await validateEmail(value);
+        const error = await validateEmail(value, state.initialData.email);
         setState({ emailError: error });
       } else {
         setState({ emailError: "" });
       }
     },
-    [validateEmail]
-  );
-
-  const validateUsername = useCallback(
-    async (username) => {
-      if (!username) return "";
-      if (username === state.initialData.preferredUsername) return "";
-      
-      if (username.length < 10 || username.length > 30) {
-        return UI_TEXT.account.usernameErrors.length;
-      }
-      if (/\s/.test(username)) {
-        return UI_TEXT.account.usernameErrors.spaces;
-      }
-      if (/@/.test(username)) {
-        return UI_TEXT.account.usernameErrors.email;
-      }
-      
-      const available = await usernameAvailable(username);
-      if (!available) {
-        return UI_TEXT.account.usernameErrors.exists;
-      }
-      
-      return "";
-    },
-    [state.initialData.preferredUsername, usernameAvailable]
+    [state.initialData.email]
   );
 
   const handleUsernameChange = useCallback(
     async (value) => {
       setState({ preferredUsername: value });
       if (value) {
-        const error = await validateUsername(value);
+        const error = await validateUsername(value, state.initialData.preferredUsername, usernameAvailable);
         setState({ usernameError: error });
       } else {
         setState({ usernameError: "" });
       }
     },
-    [validateUsername]
+    [state.initialData.preferredUsername, usernameAvailable]
   );
 
   const hasChanges =
