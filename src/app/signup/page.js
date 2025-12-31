@@ -13,6 +13,7 @@ import {
   Link,
   Text,
   Flex,
+  Image,
 } from "@chakra-ui/react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { UI_TEXT } from "@/lib/uiStrings";
@@ -155,6 +156,14 @@ export default function SignupPage() {
         borderRadius="lg"
       >
         <Heading mb={6}>Create your Prifina account</Heading>
+        <Flex justifyContent="center" mb={6}>
+          <Image
+            src="/assets/data-center.svg"
+            alt="Data Center"
+            width="200px"
+            height="auto"
+          />
+        </Flex>
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} align="stretch">
             <Field.Root invalid={!!errors.firstName}>
