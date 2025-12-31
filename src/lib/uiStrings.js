@@ -334,6 +334,28 @@ export const UI_TEXT = {
     },
   },
 
+  subscription: {
+    sectionTitle: "Subscription plans for AI Twin",
+    modal: {
+      success: {
+        title: "You've successfully subscribed",
+        subtitle: "You are now on the {planName} Plan. Your next billing date is {date}.",
+        button: "Continue",
+      },
+      failure: {
+        title: "Payment Failed",
+        subtitle: "We couldn't process your payment. Please update your payment method.",
+        button: "Update Payment Method",
+      },
+      cancel: {
+        title: "Subscription Cancelled",
+        subtitle: "You'll have access until {date}.",
+        button: "Explore Other Plans",
+      },
+    },
+    defaultPlan: "Plan",
+  },
+
   general: {
     inputPlaceholder: "Type here",
     searchPlaceholder: "Search",

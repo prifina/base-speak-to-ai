@@ -29,6 +29,7 @@ import { useWebSocket } from "@/hooks/useWebSocket";
 import { BiError } from "react-icons/bi";
 import { FiCheckCircle } from "react-icons/fi";
 import { MdInfoOutline } from "react-icons/md";
+import { UI_TEXT } from "@/lib/uiStrings";
 import SubscriptionPlansContainer from "@/components/SubscriptionPlansContainer";
 import BillingInformation from "@/components/BillingInformation";
 
@@ -354,7 +355,7 @@ export default function SubscriptionPage() {
   }; */
 
   const formatPlanTitle = useCallback((plan) => {
-    return plan?.name || "Plan";
+    return plan?.name || UI_TEXT.subscription.defaultPlan;
   }, []);
 
   const BillingStatusModal = () => {
@@ -402,16 +403,12 @@ export default function SubscriptionPage() {
                     ) : (
                       <>
                         <ModalText
-                          title="You've successfully subscribed"
-                          subtitle={`You are now on the ${formatPlanTitle(
-                            currentPlan
-                          )} Plan. Your next billing date is ${
-                            state.subscription?.currentPeriodEnd
-                              ? new Date(
-                                  state.subscription.currentPeriodEnd * 1000
-                                ).toLocaleDateString()
-                              : "-"
-                          }.`}
+                          title={UI_TEXT.subscription.modal.success.title}
+                          subtitle={UI_TEXT.subscription.modal.success.subtitle
+                            .replace("{planName}", formatPlanTitle(currentPlan))
+                            .replace("{date}", state.subscription?.currentPeriodEnd
+                              ? new Date(state.subscription.currentPeriodEnd * 1000).toLocaleDateString()
+                              : "-")}
                         />
                         <Button
                           color="white"
@@ -419,7 +416,7 @@ export default function SubscriptionPage() {
                           width="100%"
                           onClick={onSubscriptionEventModalClose}
                         >
-                          Continue
+                          {UI_TEXT.subscription.modal.success.button}
                         </Button>
                       </>
                     )}
@@ -433,8 +430,8 @@ export default function SubscriptionPage() {
                     ) : (
                       <>
                         <ModalText
-                          title="Payment Failed"
-                          subtitle="We couldn't process your payment. Please update your payment method."
+                          title={UI_TEXT.subscription.modal.failure.title}
+                          subtitle={UI_TEXT.subscription.modal.failure.subtitle}
                         />
                         <Button
                           color="white"
@@ -442,7 +439,7 @@ export default function SubscriptionPage() {
                           width="100%"
                           onClick={() => openCustomerPortal()}
                         >
-                          Update Payment Method
+                          {UI_TEXT.subscription.modal.failure.button}
                         </Button>
                       </>
                     )}
@@ -456,14 +453,11 @@ export default function SubscriptionPage() {
                     ) : (
                       <>
                         <ModalText
-                          title="Subscription Cancelled"
-                          subtitle={`You'll have access until ${
-                            state.subscription?.currentPeriodEnd
-                              ? new Date(
-                                  state.subscription.currentPeriodEnd * 1000
-                                ).toLocaleDateString()
-                              : "-"
-                          }.`}
+                          title={UI_TEXT.subscription.modal.cancel.title}
+                          subtitle={UI_TEXT.subscription.modal.cancel.subtitle
+                            .replace("{date}", state.subscription?.currentPeriodEnd
+                              ? new Date(state.subscription.currentPeriodEnd * 1000).toLocaleDateString()
+                              : "-")}
                         />
                         <Button
                           color="white"
@@ -471,7 +465,7 @@ export default function SubscriptionPage() {
                           width="100%"
                           onClick={onSubscriptionEventModalClose}
                         >
-                          Explore Other Plans
+                          {UI_TEXT.subscription.modal.cancel.button}
                         </Button>
                       </>
                     )}
@@ -493,7 +487,7 @@ export default function SubscriptionPage() {
     <>
       <Flex flexDir="column" gap="40px" p="28px">
         <Box pl={{ base: "42px", md: "0" }}>
-          <Text textStyle="pageTitle">Subscription plans for AI Twin</Text>
+          <Text textStyle="pageTitle">{UI_TEXT.subscription.sectionTitle}</Text>
         </Box>
         <SubscriptionPlansContainer
           state={state}
