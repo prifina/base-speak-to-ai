@@ -5,6 +5,7 @@ import {
   Spacer,
   Text,
   List,
+  Box,
 } from "@chakra-ui/react";
 
 const SubscriptionPlanCard = ({
@@ -21,50 +22,47 @@ const SubscriptionPlanCard = ({
   disabled,
 }) => {
   return (
-    <Flex
-      // maxHeight={"400px"}
-      width={isMobile ? "unset" : "300px"}
-      backgroundColor={"#f8fcfc"}
-      // backgroundColor={"#f8fcfc"}
-      // height={"500px"}
-      flexDirection={"column"}
-      padding={"20px"}
-      borderRadius={"20px"}
-      border={active ? "3px solid rgba(13, 119, 110, 1)" : "1px solid #EAEBEB"}
-      gap={"24px"}
+    <Box
+      w={isMobile ? "full" : "300px"}
+      bg="gray.50"
+      p={5}
+      borderRadius="xl"
+      border={active ? "3px solid" : "1px solid"}
+      borderColor={active ? "teal.600" : "gray.200"}
+      display="flex"
+      flexDirection="column"
+      gap={6}
     >
-      <Text color={"#111111"} fontWeight={600} fontSize={"24px"}>
+      <Text color="gray.900" fontWeight="semibold" fontSize="2xl">
         {title}
       </Text>
-      <Flex flexDirection={"column"} gap={"32px"}>
+      <Flex flexDirection="column" gap={8}>
         {type !== "info" ? (
           <>
-            <Flex alignContent={"center"} gap={"5px"}>
-              <Text color={"#111111"} fontWeight={600} fontSize={"32px"}>
+            <Flex alignItems="baseline" gap={1}>
+              <Text color="gray.900" fontWeight="semibold" fontSize="3xl">
                 {price[0]}
               </Text>
-              <Text color={"#111111"} fontWeight={600} fontSize={"32px"}>
+              <Text color="gray.900" fontWeight="semibold" fontSize="3xl">
                 {price.slice(1)}
               </Text>
               {interval && (
                 <Text
-                  color={"#767676"}
-                  fontWeight={600}
-                  alignSelf={"flex-end"}
-                  fontSize={"20px"}
-                  mb={"5px"}
+                  color="gray.500"
+                  fontWeight="medium"
+                  fontSize="xl"
+                  ml={1}
                 >
-                  {/* This is not good way for localized strings */}
-                  {"per"}
+                  per
                   {interval.intervalCount > 1
-                    ? interval.intervalCount + " "
+                    ? ` ${interval.intervalCount} `
                     : " "}
                   {interval.interval}
                 </Text>
               )}
             </Flex>
 
-            <List.Root spacing={"12px"} color={"#767676"}>
+            <List.Root spacing={3} color="gray.500">
               {list.map((item, key) => {
                 return <List.Item key={key}>{item}</List.Item>;
               })}
@@ -73,29 +71,22 @@ const SubscriptionPlanCard = ({
             {active === true ? (
               <Button
                 onClick={onClick}
-                mt={"auto"}
-                backgroundColor={"#dbf0ee"}
-                color={"#0d776e"}
+                mt="auto"
+                variant="outline"
+                colorPalette="teal"
               >
                 Manage your subscription
               </Button>
             ) : (
               <Button
-                mt={"auto"}
-                backgroundColor={"#0d776e"}
-                color={"white"}
+                mt="auto"
+                variant="solid"
+                colorPalette="teal"
                 disabled={active || disabled}
                 onClick={
                   active !== true && disabled !== true ? onClick : undefined
                 }
                 data-planidx={planIdx}
-                _hover={{
-                  backgroundColor: active || disabled ? "#0d776e" : "#0a5d56",
-                  cursor: active || disabled ? "not-allowed" : "pointer",
-                }}
-                _active={{
-                  backgroundColor: active || disabled ? "#0d776e" : "#084a44",
-                }}
               >
                 Subscribe
               </Button>
@@ -103,19 +94,18 @@ const SubscriptionPlanCard = ({
           </>
         ) : (
           <>
-            <Text color={"#767676"}>{details}</Text>
+            <Text color="gray.500">{details}</Text>
             <Spacer />
             <Button
-              color={"#0d776e"}
-              borderColor={"#0d776e"}
-              variant={"outline"}
+              variant="outline"
+              colorPalette="teal"
             >
               Contact us
             </Button>
           </>
         )}
       </Flex>
-    </Flex>
+    </Box>
   );
 };
 
