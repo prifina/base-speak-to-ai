@@ -18,7 +18,7 @@ export async function POST(request) {
     }
 
     const query = `
-      mutation GetPortalSession($input: CreatePortalSessionInput!) {
+      query GetPortalSession($input: CreatePortalSessionInput!) {
         getPortalSession(input: $input) {
           url
         }
