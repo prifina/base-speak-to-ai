@@ -121,8 +121,10 @@ export default function SignupPage() {
             </Field.Root>
 
             <Field.Root invalid={!!errors.username} required>
-              <Field.RequiredIndicator />
-              <Field.Label>{UI_TEXT.account.username}</Field.Label>
+              <Field.Label>
+                {UI_TEXT.account.username}
+                <Field.RequiredIndicator />
+              </Field.Label>
               <Input
                 name="username"
                 value={formData.username}
@@ -137,8 +139,10 @@ export default function SignupPage() {
             </Field.Root>
 
             <Field.Root invalid={!!errors.email} required>
-              <Field.RequiredIndicator />
-              <Field.Label>{UI_TEXT.account.email}</Field.Label>
+              <Field.Label>
+                {UI_TEXT.account.email}
+                <Field.RequiredIndicator />
+              </Field.Label>
               <Input
                 name="email"
                 type="email"
