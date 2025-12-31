@@ -32,11 +32,13 @@ const usePersistentStore = create((set, get) => {
     loginName: "",
     knowledgebaseId: "",
     language: checkLng(),
-    env: typeof window !== "undefined" 
-      ? (window.location.hostname === "localhost" && !process.env.NEXT_PUBLIC_ENV
+    env:
+      typeof window !== "undefined"
+        ? window.location.hostname === "localhost" &&
+          !process.env.NEXT_PUBLIC_ENV
           ? "dev"
-          : process.env.NEXT_PUBLIC_ENV || "dev")
-      : "dev",
+          : process.env.NEXT_PUBLIC_ENV || "dev"
+        : "dev",
     socketUpdate: {},
     connectionId: "",
     verifiedEmail: "",
@@ -277,6 +279,7 @@ const usePersistentStore = create((set, get) => {
         setSocketUpdate,
         setConnectionId,
         setQueueStatus,
+        setUserStatus,
         ...stateToSave
       } = state;
       sessionStorage.setItem("prifina-base", JSON.stringify(stateToSave));
@@ -308,6 +311,10 @@ if (typeof window !== "undefined") {
       getActiveGroup,
       setActiveGroup,
       setKnowledgebaseId,
+      setSocketUpdate,
+      setConnectionId,
+      setQueueStatus,
+      setUserStatus,
       ...stateToSave
     } = state;
     sessionStorage.setItem("prifina-base", JSON.stringify(stateToSave));

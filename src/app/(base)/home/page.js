@@ -77,7 +77,10 @@ export default function HomePage() {
 
   useEffect(() => {
     async function fetchData() {
-      console.log("[HOME] Fetching data with knowledgebaseId:", knowledgebaseId);
+      console.log(
+        "[HOME] Fetching data with knowledgebaseId:",
+        knowledgebaseId
+      );
       const res = await authFetch(
         `/api/user-knowledgebase?knowledgebaseId=${knowledgebaseId}`,
         {
@@ -96,12 +99,19 @@ export default function HomePage() {
       setUserStatus(data.user?.status);
       setState({ loading: false, user: data.user, editedUser: data.user });
     }
-    console.log("[HOME] Effect check - authLoaded:", authLoaded, "knowledgebaseId:", knowledgebaseId, "effectCalled:", effectCalled.current);
+    console.log(
+      "[HOME] Effect check - authLoaded:",
+      authLoaded,
+      "knowledgebaseId:",
+      knowledgebaseId,
+      "effectCalled:",
+      effectCalled.current
+    );
     if (!effectCalled.current && authLoaded && knowledgebaseId) {
       fetchData();
       effectCalled.current = true;
     }
-  }, [cognitoId, authFetch, knowledgebaseId, authLoaded]);
+  }, [cognitoId, authFetch, knowledgebaseId, authLoaded, setUserStatus]);
 
   const loading = !authLoaded || state.loading;
 
