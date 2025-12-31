@@ -46,43 +46,19 @@ const navItems = [
 ];
 
 export default function BaseLayout({ children }) {
-  const { loaded: authLoaded } = useContext(AuthContext);
   const router = useRouter();
-  const authFetch = useAuthFetch();
-  const { knowledgebaseId } = useStore(
+  const { userStatus } = useStore(
     useShallow((state) => ({
-      knowledgebaseId: state.knowledgebaseId,
+      userStatus: state.userStatus,
     }))
   );
-  const [userStatus, setUserStatus] = useState(null);
-  const [statusLoaded, setStatusLoaded] = useState(false);
-
-  useEffect(() => {
-    async function checkUserStatus() {
-      if (!authLoaded || !knowledgebaseId) return;
-      
-      try {
-        const response = await authFetch(
-          `/api/user-knowledgebase?knowledgebaseId=${knowledgebaseId}&opt=STATUS`
-        );
-        const data = await response.json();
-        setUserStatus(data.user?.status);
-      } catch (error) {
-        console.error("Failed to fetch user status:", error);
-      } finally {
-        setStatusLoaded(true);
-      }
-    }
-
-    checkUserStatus();
-  }, [authLoaded, knowledgebaseId, authFetch]);
 
   const isBlocked = userStatus === "Suspended" || userStatus === "Terminated";
   const docLink = userStatus === "Suspended" 
     ? "https://prifina.com/service-suspended"
     : "https://prifina.com/service-terminated";
 
-  if (statusLoaded && isBlocked) {
+  if (isBlocked) {
     return (
       <Dialog.Root open={true} closeOnOverlayClick={false} closeOnEsc={false} trapFocus preventScroll>
         <Dialog.Backdrop />

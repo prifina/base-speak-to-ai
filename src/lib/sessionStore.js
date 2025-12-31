@@ -40,6 +40,7 @@ const usePersistentStore = create((set, get) => {
     socketUpdate: {},
     connectionId: "",
     verifiedEmail: "",
+    userStatus: null,
     queueStatus: undefined,
     setLoginName: (name) => {
       set({ loginName: name });
@@ -247,6 +248,9 @@ const usePersistentStore = create((set, get) => {
     },
     setQueueStatus: (obj) => {
       set(() => ({ queueStatus: obj }));
+    },
+    setUserStatus: (status) => {
+      set(() => ({ userStatus: status }));
     },
     setConnectionId: (str) => {
       set(() => ({ connectionId: str }));

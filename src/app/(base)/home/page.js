@@ -51,11 +51,12 @@ export default function HomePage() {
   // console.log("IS MOBILE ", isMobile);
   const { user, loaded: authLoaded } = useContext(AuthContext);
 
-  const { cognitoId, knowledgebaseId, language } = useStore(
+  const { cognitoId, knowledgebaseId, language, setUserStatus } = useStore(
     useShallow((state) => ({
       cognitoId: state.cognitoId,
       knowledgebaseId: state.knowledgebaseId,
       language: state.language,
+      setUserStatus: state.setUserStatus,
     }))
   );
 
@@ -91,6 +92,8 @@ export default function HomePage() {
       }
       const data = await res.json();
       console.log("RES ", data);
+      // Update userStatus in sessionStore
+      setUserStatus(data.user?.status);
       setState({ loading: false, user: data.user, editedUser: data.user });
     }
     console.log("[HOME] Effect check - authLoaded:", authLoaded, "knowledgebaseId:", knowledgebaseId, "effectCalled:", effectCalled.current);
