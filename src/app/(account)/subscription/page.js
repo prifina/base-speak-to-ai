@@ -30,6 +30,7 @@ import { BiError } from "react-icons/bi";
 import { FiCheckCircle } from "react-icons/fi";
 import { MdInfoOutline } from "react-icons/md";
 import { UI_TEXT } from "@/lib/uiStrings";
+import { formatSubscriptionPlanTitle } from "@/utils";
 import SubscriptionPlansContainer from "@/components/SubscriptionPlansContainer";
 import BillingInformation from "@/components/BillingInformation";
 
@@ -352,8 +353,8 @@ export default function SubscriptionPage() {
   }; */
 
   const formatPlanTitle = useCallback((plan) => {
-    return plan?.name || UI_TEXT.subscription.defaultPlan;
-  }, []);
+    return formatSubscriptionPlanTitle(plan, state.productName) || UI_TEXT.subscription.defaultPlan;
+  }, [state.productName]);
 
   const BillingStatusModal = () => {
     const currentPlan = (state.planDetails || []).find(
