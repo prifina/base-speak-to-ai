@@ -102,22 +102,26 @@ export default function SubscriptionPage() {
   const handleSocketUpdate = useCallback(
     (socketStatus) => {
       console.log("STRIPE SOCKET STATUS ", socketStatus);
-      effectCalled.current = false;
-      setStripeUpdate(true);
-      // pure side-effect: no subscriptions, no timeouts, etc.
-      switch (socketStatus.status) {
-        case "CANCELLED":
-          changeModalEvent(billingModalEventTypes.CANCEL);
-          break;
-        case "FAIL":
-          changeModalEvent(billingModalEventTypes.FAILURE);
-          break;
-        case "PROCESS":
-        case "UPDATE":
-          changeModalEvent(billingModalEventTypes.SUCCESS);
-          break;
-        default:
-          break;
+      
+      // Handle STRIPE events
+      if (socketStatus.event === "STRIPE") {
+        effectCalled.current = false;
+        setStripeUpdate(true);
+        
+        switch (socketStatus.status) {
+          case "CANCELLED":
+            changeModalEvent(billingModalEventTypes.CANCEL);
+            break;
+          case "FAIL":
+            changeModalEvent(billingModalEventTypes.FAILURE);
+            break;
+          case "PROCESS":
+          case "UPDATE":
+            changeModalEvent(billingModalEventTypes.SUCCESS);
+            break;
+          default:
+            break;
+        }
       }
     },
     [changeModalEvent, billingModalEventTypes, setStripeUpdate]
