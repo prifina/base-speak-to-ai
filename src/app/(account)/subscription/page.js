@@ -7,6 +7,7 @@ import {
   useReducer,
   useCallback,
   useState,
+  useMemo,
 } from "react";
 import { Box, Text, Flex, VStack, useDisclosure } from "@chakra-ui/react";
 import { AuthContext } from "@/app/providers/AuthProvider";
@@ -43,12 +44,15 @@ export default function SubscriptionPage() {
       setSocketUpdate: state.setSocketUpdate,
     }))
   );
-  const billingModalEventTypes = {
-    NONE: 0,
-    SUCCESS: 1,
-    FAILURE: 2,
-    CANCEL: 3,
-  };
+  const billingModalEventTypes = useMemo(
+    () => ({
+      NONE: 0,
+      SUCCESS: 1,
+      FAILURE: 2,
+      CANCEL: 3,
+    }),
+    []
+  );
   const paymentWinRef = useRef();
   const customerPortalRef = useRef();
   const [connectionId, setConnectionId] = useState(null);
@@ -113,7 +117,7 @@ export default function SubscriptionPage() {
           break;
       }
     },
-    [changeModalEvent, billingModalEventTypes]
+    [changeModalEvent, billingModalEventTypes, setStripeUpdate]
   );
 
   useWebSocket({
