@@ -352,9 +352,15 @@ export default function SubscriptionPage() {
     }
   }; */
 
-  const formatPlanTitle = useCallback((plan) => {
-    return formatSubscriptionPlanTitle(plan, state.productName) || UI_TEXT.subscription.defaultPlan;
-  }, [state.productName]);
+  const formatPlanTitle = useCallback(
+    (plan) => {
+      return (
+        formatSubscriptionPlanTitle(plan, state.productName) ||
+        UI_TEXT.subscription.defaultPlan
+      );
+    },
+    [state.productName]
+  );
 
   const BillingStatusModal = () => {
     const currentPlan = (state.planDetails || []).find(
@@ -459,14 +465,7 @@ export default function SubscriptionPage() {
                       <>
                         <ModalText
                           title={UI_TEXT.subscription.modal.cancel.title}
-                          subtitle={UI_TEXT.subscription.modal.cancel.subtitle.replace(
-                            "{date}",
-                            state.subscription?.currentPeriodEnd
-                              ? new Date(
-                                  state.subscription.currentPeriodEnd * 1000
-                                ).toLocaleDateString()
-                              : "-"
-                          )}
+                          subtitle={UI_TEXT.subscription.modal.cancel.subtitle}
                         />
                         <Button
                           color="white"

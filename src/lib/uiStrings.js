@@ -255,11 +255,15 @@ export const UI_TEXT = {
       titleFailed: "Processing Failed",
       uploadFailed: "Upload Failed",
       processingStarted: "Uploaded Content Processing Started",
-      existingFilesNote: (count) => `Note: ${count} file${count > 1 ? "s" : ""} already existed in the knowledge base`,
+      existingFilesNote: (count) =>
+        `Note: ${count} file${
+          count > 1 ? "s" : ""
+        } already existed in the knowledge base`,
       duplicateFilesLabel: "Duplicate files:",
       chunkingComplete: "Chunking of Uploaded Documents is Complete",
       knowledgeBaseReady: "Knowledge Base Ready",
-      readyDescription: "Processing still continues in background, but knowledge base is ready to be used.",
+      readyDescription:
+        "Processing still continues in background, but knowledge base is ready to be used.",
       closeButton: "Close",
     },
   },
@@ -328,7 +332,8 @@ export const UI_TEXT = {
       manualSetupInstructionEnd: "on your mobile phone and type this code.",
       next: "Next",
       verifyCode: "Verify Code",
-      enterVerificationCode: "Enter the 6-digit code from your authenticator app",
+      enterVerificationCode:
+        "Enter the 6-digit code from your authenticator app",
       setupSuccess: "Authenticator connected successfully",
       setupFailed: "Failed to connect authenticator",
     },
@@ -343,17 +348,20 @@ export const UI_TEXT = {
     modal: {
       success: {
         title: "You've successfully subscribed",
-        subtitle: "You are now on the {planName} Plan. Your next billing date is {date}.",
+        subtitle:
+          "You are now on the {planName} Plan. Your next billing date is {date}.",
         button: "Continue",
       },
       failure: {
         title: "Payment Failed",
-        subtitle: "We couldn't process your payment. Please update your payment method.",
+        subtitle:
+          "We couldn't process your payment. Please update your payment method.",
         button: "Update Payment Method",
       },
       cancel: {
         title: "Subscription Cancelled",
-        subtitle: "Your AI-Twin works in limited mode and the Base app use is suspended until new subscription.",
+        subtitle:
+          "Your AI Twin works in limited mode and the Base app use is suspended until new subscription.",
         button: "Explore Other Plans",
       },
     },
