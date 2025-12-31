@@ -122,25 +122,19 @@ export default function SubscriptionPage() {
           case "LAMBDA_PROCESSED":
             console.log("[SUBSCRIPTION] Triggering CANCEL modal");
             changeModalEvent(billingModalEventTypes.CANCEL);
-            // Delay fetchData to allow modal to show first
-            setTimeout(() => {
-              effectCalled.current = false;
-            }, 100);
+            // Trigger immediate refetch
+            effectCalled.current = false;
             break;
           case "FAIL":
             console.log("[SUBSCRIPTION] Triggering FAILURE modal");
             changeModalEvent(billingModalEventTypes.FAILURE);
-            setTimeout(() => {
-              effectCalled.current = false;
-            }, 100);
+            effectCalled.current = false;
             break;
           case "PROCESS":
           case "UPDATE":
             console.log("[SUBSCRIPTION] Triggering SUCCESS modal");
             changeModalEvent(billingModalEventTypes.SUCCESS);
-            setTimeout(() => {
-              effectCalled.current = false;
-            }, 100);
+            effectCalled.current = false;
             break;
           default:
             console.log("[SUBSCRIPTION] Unknown status:", socketStatus.status);
@@ -252,7 +246,7 @@ export default function SubscriptionPage() {
       }
     }
 
-    if (!effectCalled.current && authLoaded) {
+    if (!effectCalled.current && authLoaded && activeGroup && knowledgebaseId && env) {
       fetchData();
       effectCalled.current = true;
     }
