@@ -9,6 +9,7 @@ import useStore from "@/lib/sessionStore";
 import { useAuthFetch } from "@/lib/useAuthFetch";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 import SubscriptionPlansContainer from "@/components/SubscriptionPlansContainer";
+import BillingInformation from "@/components/BillingInformation";
 
 export default function SubscriptionPage() {
   const { loaded: authLoaded } = useContext(AuthContext);
@@ -246,8 +247,7 @@ export default function SubscriptionPage() {
         isProcessing={state.isProcessing}
         openCustomerPortal={openCustomerPortal}
       />
-      {/* 
-       {((state.subscribed && state.subscribed !== "") ||
+      {((state.subscribed && state.subscribed !== "") ||
         state.kbStatus.status !== "Free") &&
         state.kbStatus.status !== "" && (
           <BillingInformation
@@ -255,7 +255,7 @@ export default function SubscriptionPage() {
             state={state}
             openCustomerPortal={openCustomerPortal}
           />
-        )} */}
+        )}
     </Flex>
   );
 }
