@@ -61,6 +61,20 @@ export default function SignupPage() {
     }
   }, [formData.email]);
 
+  const handleUsernameKeyDown = async (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      await handleUsernameBlur();
+    }
+  };
+
+  const handleEmailKeyDown = async (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      await handleEmailBlur();
+    }
+  };
+
   const onCaptchaChange = (token) => {
     console.log("Captcha token:", token);
 
@@ -171,6 +185,7 @@ export default function SignupPage() {
                 value={formData.username}
                 onChange={handleInputChange}
                 onBlur={handleUsernameBlur}
+                onKeyDown={handleUsernameKeyDown}
                 autoComplete="username"
                 required
               />
@@ -192,6 +207,7 @@ export default function SignupPage() {
                 value={formData.email}
                 onChange={handleInputChange}
                 onBlur={handleEmailBlur}
+                onKeyDown={handleEmailKeyDown}
                 autoComplete="email"
                 required
               />
