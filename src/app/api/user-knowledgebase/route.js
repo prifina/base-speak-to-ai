@@ -36,6 +36,7 @@ export async function GET(request) {
               hideFooter
               addBadge
               showContactMe
+              status
             }
           }
         }
