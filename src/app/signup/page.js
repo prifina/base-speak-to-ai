@@ -11,7 +11,7 @@ export default function SignupPage() {
         borderWidth="1px"
         borderRadius="lg"
       >
-        <Heading mb={6}>Login</Heading>
+        <Heading mb={6}>Signup</Heading>
       </Box>
     </AbsoluteCenter>
   );
