@@ -96,6 +96,7 @@ export default function HomePage() {
       const data = await res.json();
       console.log("RES ", data);
       // Update userStatus in sessionStore
+      console.log("[HOME] Setting userStatus to:", data.user?.status);
       setUserStatus(data.user?.status);
       setState({ loading: false, user: data.user, editedUser: data.user });
     }
