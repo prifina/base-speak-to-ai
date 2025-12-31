@@ -231,9 +231,17 @@ export default function SubscriptionPage() {
           return;
         }
 
-        const portalRes = await authFetch(
-          `/api/get-portal-session?configurationId=${state.portalConfigurationId}&customerId=${state.subscription.customerId}&env=${env}`
-        );
+        const portalRes = await authFetch(`/api/get-portal-session`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            customerId: state.subscription.customerId,
+            env,
+            configurationId: state.portalConfigurationId,
+          }),
+        });
         const portalData = await portalRes.json();
         
         if (portalData && portalData.url) {
