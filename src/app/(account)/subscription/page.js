@@ -224,11 +224,47 @@ export default function SubscriptionPage() {
     }
   };
 
+  const openCustomerPortal = useCallback(
+    async (additionalRoute = "") => {
+      try {
+        console.log("OPEN CUSTOMER PORTAL ", state.portalConfigurationId);
+        if (!state.portalConfigurationId || !state.subscription?.customerId) {
+          return;
+        }
+        if (customerPortalRef.current && !customerPortalRef.current.closed) {
+          customerPortalRef.current.focus();
+          return;
+        }
+
+        const portalUrl = await makeRequest({
+          api,
+          url: `new-stripe-portal-session`,
+          method: "POST",
+          payload: {
+            configurationId: state.portalConfigurationId,
+            customerId: state.subscription.customerId,
+          },
+        });
+        if (portalUrl && portalUrl.url) {
+          customerPortalRef.current = window.open(
+            `${portalUrl.url}${additionalRoute ? `/${additionalRoute}` : ""}`,
+            "stripeCustomerPortal",
+            "popup"
+          );
+        }
+      } catch (err) {
+        console.error("Stripe portal error", err);
+      }
+    },
+    [state.portalConfigurationId, state.subscription]
+  );
+
+  /* 
   const openCustomerPortal = () => {
     if (state.paymentLinks?.customerPortal) {
       window.open(state.paymentLinks.customerPortal, "_blank");
     }
-  };
+  }; */
 
   if (!authLoaded || state.loading) {
     return <Loading />;
