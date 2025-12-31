@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useRef, useReducer, useCallback } from "react";
+import { useContext, useEffect, useRef, useReducer, useCallback, useState } from "react";
 import { Box, Text, Flex, VStack } from "@chakra-ui/react";
 import { AuthContext } from "@/app/providers/AuthProvider";
 import { Loading } from "@/components/Loading";
@@ -8,6 +8,7 @@ import { useShallow } from "zustand/react/shallow";
 import useStore from "@/lib/sessionStore";
 import { useAuthFetch } from "@/lib/useAuthFetch";
 import { useMediaQuery } from "@/lib/useMediaQuery";
+import { useWebSocket } from "@/hooks/useWebSocket";
 import SubscriptionPlansContainer from "@/components/SubscriptionPlansContainer";
 import BillingInformation from "@/components/BillingInformation";
 
@@ -23,6 +24,7 @@ export default function SubscriptionPage() {
     language,
     verifiedEmail,
     env,
+    setSocketUpdate,
   } = useStore(
     useShallow((state) => ({
       activeGroup: state.activeGroup,
@@ -31,6 +33,7 @@ export default function SubscriptionPage() {
       language: state.language,
       verifiedEmail: state.verifiedEmail,
       env: state.env,
+      setSocketUpdate: state.setSocketUpdate,
     }))
   );
   const billingModalEventTypes = {
@@ -41,6 +44,7 @@ export default function SubscriptionPage() {
   };
   const paymentWinRef = useRef();
   const customerPortalRef = useRef();
+  const [connectionId, setConnectionId] = useState(null);
 
   const [state, setState] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
@@ -61,6 +65,25 @@ export default function SubscriptionPage() {
       isProcessing: false,
     }
   );
+
+  const handleSocketUpdate = useCallback(
+    (msg) => {
+      console.log("[SUBSCRIPTION WEBSOCKET] Message received:", msg);
+      
+      if (msg.event === "NOTIFY" && msg.status === "SUBSCRIPTION-UPDATE") {
+        console.log("[SUBSCRIPTION WEBSOCKET] Subscription updated, refreshing data...");
+        setState({ stripeUpdate: true });
+      }
+    },
+    []
+  );
+
+  useWebSocket({
+    site: knowledgebaseId,
+    enabled: !!knowledgebaseId,
+    setConnectionId,
+    onSocketUpdate: handleSocketUpdate,
+  });
 
   useEffect(() => {
     async function fetchData() {
