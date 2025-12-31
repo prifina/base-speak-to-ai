@@ -77,7 +77,7 @@ export default function SubscriptionPage() {
       kbStatus: {},
       stripeUpdate: false,
       isProcessing: false,
-      modalEvent: billingModalEventTypes.NONE,
+      modalEvent: 0, // Use literal 0 instead of billingModalEventTypes.NONE
     }
   );
 
