@@ -16,7 +16,7 @@ export default function SubscriptionPage() {
   const effectCalled = useRef(false);
   const authFetch = useAuthFetch();
   const [isMobile] = useMediaQuery("(max-width: 992px)");
-  const { activeGroup, knowledgebaseId, cognitoId, language, verifiedEmail } =
+  const { activeGroup, knowledgebaseId, cognitoId, language, verifiedEmail, env } =
     useStore(
       useShallow((state) => ({
         activeGroup: state.activeGroup,
@@ -24,6 +24,7 @@ export default function SubscriptionPage() {
         cognitoId: state.cognitoId,
         language: state.language,
         verifiedEmail: state.verifiedEmail,
+        env: state.env,
       }))
     );
   const billingModalEventTypes = {
@@ -58,12 +59,6 @@ export default function SubscriptionPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const host = window.location.hostname;
-        const env =
-          host === "localhost" && !process.env.NEXT_PUBLIC_ENV
-            ? "dev"
-            : process.env.NEXT_PUBLIC_ENV || "dev";
-
         const networkId = activeGroup || "x_prifina";
 
         console.log("[SUBSCRIPTION] Active Group:", activeGroup);
@@ -236,12 +231,6 @@ export default function SubscriptionPage() {
           return;
         }
 
-        const host = window.location.hostname;
-        const env =
-          host === "localhost" && !process.env.NEXT_PUBLIC_ENV
-            ? "dev"
-            : process.env.NEXT_PUBLIC_ENV || "dev";
-
         const portalRes = await authFetch(
           `/api/get-portal-session?configurationId=${state.portalConfigurationId}&customerId=${state.subscription.customerId}&env=${env}`
         );
@@ -258,7 +247,7 @@ export default function SubscriptionPage() {
         console.error("Stripe portal error", err);
       }
     },
-    [state.portalConfigurationId, state.subscription, authFetch]
+    [state.portalConfigurationId, state.subscription, authFetch, env]
   );
 
   /* 
