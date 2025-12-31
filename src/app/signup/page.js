@@ -120,13 +120,14 @@ export default function SignupPage() {
               )}
             </Field.Root>
 
-            <Field.Root invalid={!!errors.username}>
+            <Field.Root invalid={!!errors.username} required>
               <Field.Label>{UI_TEXT.account.username}</Field.Label>
               <Input
                 name="username"
                 value={formData.username}
                 onChange={handleInputChange}
                 autoComplete="username"
+                required
               />
               <Field.HelperText>{UI_TEXT.account.usernameHelper}</Field.HelperText>
               {errors.username && (
@@ -134,7 +135,7 @@ export default function SignupPage() {
               )}
             </Field.Root>
 
-            <Field.Root invalid={!!errors.email}>
+            <Field.Root invalid={!!errors.email} required>
               <Field.Label>{UI_TEXT.account.email}</Field.Label>
               <Input
                 name="email"
@@ -142,6 +143,7 @@ export default function SignupPage() {
                 value={formData.email}
                 onChange={handleInputChange}
                 autoComplete="email"
+                required
               />
               {errors.email && (
                 <Field.ErrorText>{errors.email}</Field.ErrorText>
