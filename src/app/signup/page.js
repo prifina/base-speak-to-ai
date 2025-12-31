@@ -169,31 +169,33 @@ export default function SignupPage() {
         </Flex>
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} align="stretch">
-            <Field.Root invalid={!!errors.firstName}>
-              <Field.Label>{UI_TEXT.account.givenName}</Field.Label>
-              <Input
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleInputChange}
-                autoComplete="given-name"
-              />
-              {errors.firstName && (
-                <Field.ErrorText>{errors.firstName}</Field.ErrorText>
-              )}
-            </Field.Root>
+            <Flex gap={4}>
+              <Field.Root invalid={!!errors.firstName} flex={1}>
+                <Field.Label>{UI_TEXT.account.givenName}</Field.Label>
+                <Input
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  autoComplete="given-name"
+                />
+                {errors.firstName && (
+                  <Field.ErrorText>{errors.firstName}</Field.ErrorText>
+                )}
+              </Field.Root>
 
-            <Field.Root invalid={!!errors.lastName}>
-              <Field.Label>{UI_TEXT.account.familyName}</Field.Label>
-              <Input
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleInputChange}
-                autoComplete="family-name"
-              />
-              {errors.lastName && (
-                <Field.ErrorText>{errors.lastName}</Field.ErrorText>
-              )}
-            </Field.Root>
+              <Field.Root invalid={!!errors.lastName} flex={1}>
+                <Field.Label>{UI_TEXT.account.familyName}</Field.Label>
+                <Input
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  autoComplete="family-name"
+                />
+                {errors.lastName && (
+                  <Field.ErrorText>{errors.lastName}</Field.ErrorText>
+                )}
+              </Field.Root>
+            </Flex>
 
             <Field.Root invalid={!!errors.username} required>
               <Field.Label>
