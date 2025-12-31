@@ -150,17 +150,19 @@ export default function SignupPage() {
       <Box
         w={"450px"}
         mx="auto"
-        mt={10}
+        mt={5}
         p={8}
         borderWidth="1px"
         borderRadius="lg"
       >
-        <Heading mb={6} textAlign="center">Create your Prifina account</Heading>
-        <Flex justifyContent="center" mb={6}>
+        <Heading mb={4} textAlign="center">
+          Create your Prifina account
+        </Heading>
+        <Flex justifyContent="center" mb={4}>
           <Image
             src="/assets/data-center.svg"
             alt="Data Center"
-            width="120px"
+            width="160px"
             height="auto"
           />
         </Flex>
@@ -261,7 +263,7 @@ export default function SignupPage() {
           </VStack>
         </form>
 
-        <Text textAlign="center" mt={6}>
+        <Text textAlign="center" mt={4} fontSize="sm">
           Already have an account?{" "}
           <Link color="blue.500" onClick={() => router.push("/login")}>
             Sign in here
