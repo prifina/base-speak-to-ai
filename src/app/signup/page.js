@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
   AbsoluteCenter,
@@ -17,10 +17,18 @@ import {
 import ReCAPTCHA from "react-google-recaptcha";
 import { UI_TEXT } from "@/lib/uiStrings";
 import { toaster } from "@/components/ui/toaster";
+import { validateUsername, validateEmail, validateFormData } from "@/lib/validation";
+import { useShallow } from "zustand/react/shallow";
+import useStore from "@/lib/sessionStore";
 
 export default function SignupPage() {
   const router = useRouter();
   const captchaRef = useRef();
+  const { usernameAvailable } = useStore(
+    useShallow((state) => ({
+      usernameAvailable: state.usernameAvailable,
+    }))
+  );
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -38,6 +46,20 @@ export default function SignupPage() {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
   };
+
+  const handleUsernameBlur = useCallback(async () => {
+    if (formData.username) {
+      const error = await validateUsername(formData.username, "", usernameAvailable);
+      setErrors(prev => ({ ...prev, username: error }));
+    }
+  }, [formData.username, usernameAvailable]);
+
+  const handleEmailBlur = useCallback(async () => {
+    if (formData.email) {
+      const error = await validateEmail(formData.email);
+      setErrors(prev => ({ ...prev, email: error }));
+    }
+  }, [formData.email]);
 
   const onCaptchaChange = (token) => {
     console.log("Captcha token:", token);
@@ -67,6 +89,14 @@ export default function SignupPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate form data
+    const formErrors = validateFormData(formData);
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
+    
     if (!captchaValidated) {
       toaster.create({
         title: "Verification Required",
@@ -75,6 +105,17 @@ export default function SignupPage() {
       });
       return;
     }
+    
+    // Check for validation errors
+    if (Object.values(errors).some(error => error)) {
+      toaster.create({
+        title: "Validation Error",
+        type: "error",
+        description: "Please fix the errors before submitting",
+      });
+      return;
+    }
+    
     setIsLoading(true);
     // TODO: Implement signup logic
     console.log("Signup data:", formData);
@@ -129,6 +170,7 @@ export default function SignupPage() {
                 name="username"
                 value={formData.username}
                 onChange={handleInputChange}
+                onBlur={handleUsernameBlur}
                 autoComplete="username"
                 required
               />
@@ -148,6 +190,7 @@ export default function SignupPage() {
                 type="email"
                 value={formData.email}
                 onChange={handleInputChange}
+                onBlur={handleEmailBlur}
                 autoComplete="email"
                 required
               />

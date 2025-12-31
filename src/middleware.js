@@ -25,7 +25,7 @@ const PROTECTED_API_PATHS = [
   "/api/cognito-user-knowledgebase",
   "/api/get-portal-session",
 ];
-const PUBLIC_API_PATHS = ["/api/auth", "/api/verify-captcha"];
+const PUBLIC_API_PATHS = ["/api/auth", "/api/verify-captcha", "/api/check-email"];
 
 export function middleware(req) {
   const { pathname } = req.nextUrl;
