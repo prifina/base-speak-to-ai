@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   AbsoluteCenter,
@@ -12,11 +12,15 @@ import {
   Field,
   Link,
   Text,
+  Flex,
 } from "@chakra-ui/react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { UI_TEXT } from "@/lib/uiStrings";
+import { toaster } from "@/components/ui/toaster";
 
 export default function SignupPage() {
   const router = useRouter();
+  const captchaRef = useRef();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -25,6 +29,7 @@ export default function SignupPage() {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [captchaValidated, setCaptchaValidated] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -34,8 +39,42 @@ export default function SignupPage() {
     }
   };
 
+  const onCaptchaChange = (token) => {
+    console.log("Captcha token:", token);
+
+    fetch("/api/verify-captcha", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    }).then(async (res) => {
+      console.log("STATUS ", res.status, res.statusText);
+      const check = await res.json();
+      if (res.status === 200) {
+        setCaptchaValidated(true);
+      } else {
+        toaster.create({
+          title: "CAPTCHA Check",
+          type: "error",
+          description: check.message,
+        });
+        captchaRef.current.reset();
+        setCaptchaValidated(false);
+      }
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!captchaValidated) {
+      toaster.create({
+        title: "Verification Required",
+        type: "error",
+        description: "Please complete the CAPTCHA verification",
+      });
+      return;
+    }
     setIsLoading(true);
     // TODO: Implement signup logic
     console.log("Signup data:", formData);
@@ -109,6 +148,14 @@ export default function SignupPage() {
               )}
             </Field.Root>
 
+            <Flex justifyContent="center" mt={4}>
+              <ReCAPTCHA
+                ref={captchaRef}
+                sitekey={process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY}
+                onChange={onCaptchaChange}
+              />
+            </Flex>
+
             <Button
               type="submit"
               colorScheme="blue"
@@ -116,6 +163,7 @@ export default function SignupPage() {
               mt={4}
               loading={isLoading}
               loadingText="Creating account..."
+              disabled={!captchaValidated}
             >
               Create Account
             </Button>
