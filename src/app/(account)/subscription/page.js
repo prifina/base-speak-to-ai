@@ -1,7 +1,14 @@
 "use client";
 
-import { useContext, useEffect, useRef, useReducer, useCallback, useState } from "react";
-import { Box, Text, Flex, VStack } from "@chakra-ui/react";
+import {
+  useContext,
+  useEffect,
+  useRef,
+  useReducer,
+  useCallback,
+  useState,
+} from "react";
+import { Box, Text, Flex, VStack, useDisclosure } from "@chakra-ui/react";
 import { AuthContext } from "@/app/providers/AuthProvider";
 import { Loading } from "@/components/Loading";
 import { useShallow } from "zustand/react/shallow";
@@ -66,7 +73,43 @@ export default function SubscriptionPage() {
     }
   );
 
+  const {
+    isOpen: isSubscriptionEventModalOpen,
+    onClose: onSubscriptionEventModalClose,
+    onOpen: onSubscriptionEventModalOpen,
+  } = useDisclosure();
+
+  const changeModalEvent = useCallback(
+    (eventType) => {
+      setModalEvent(eventType);
+      onSubscriptionEventModalOpen();
+    },
+    [onSubscriptionEventModalOpen]
+  );
+
   const handleSocketUpdate = useCallback(
+    (socketStatus) => {
+      console.log("STRIPE SOCKET STATUS ", socketStatus);
+      effectCalled.current = false;
+      setStripeUpdate(true);
+      // pure side-effect: no subscriptions, no timeouts, etc.
+      switch (socketStatus.status) {
+        case "CANCELLED":
+          changeModalEvent(billingModalEventTypes.CANCEL);
+          break;
+        case "FAIL":
+          changeModalEvent(billingModalEventTypes.FAILURE);
+          break;
+        case "PROCESS":
+        case "UPDATE":
+          changeModalEvent(billingModalEventTypes.SUCCESS);
+          break;
+        default:
+          break;
+      }
+    },
+    [changeModalEvent, billingModalEventTypes]
+    /*
     (msg) => {
       console.log("[SUBSCRIPTION WEBSOCKET] Message received:", msg);
       
@@ -76,6 +119,7 @@ export default function SubscriptionPage() {
       }
     },
     []
+    */
   );
 
   useWebSocket({
