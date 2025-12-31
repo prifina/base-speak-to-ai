@@ -319,6 +319,13 @@ export const UI_TEXT = {
     emailMustBeVerified: "Email must be verified before making other changes",
     saveSuccess: "Account information updated successfully",
     saveFailed: "Failed to update account information",
+    statusModal: {
+      title: "Subscription Required",
+      message: "Your AI-Status is {status} and before you can continue, you need to subscribe.",
+      learnMore: "Learn more about {status} status",
+      subscribeButton: "Subscribe Here",
+      homeButton: "Home",
+    },
     mfa: {
       title: "Multi-Factor Authentication (MFA)",
       connectAuthenticator: "Connect Your Authenticator",

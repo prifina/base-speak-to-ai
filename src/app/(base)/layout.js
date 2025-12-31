@@ -89,17 +89,15 @@ export default function BaseLayout({ children }) {
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.Header>
-              Subscription Required
+              {UI_TEXT.account.statusModal.title}
             </Dialog.Header>
             <Dialog.Body>
               <VStack spacing={4} align="stretch">
                 <Text>
-                  Your AI-Status is <strong>{userStatus}</strong> and
-                  before you can continue, you need to{" "}
-                  <strong>subscribe</strong>.
+                  {UI_TEXT.account.statusModal.message.replace("{status}", `**${userStatus}**`)}
                 </Text>
                 <ChakraLink href={docLink} color="blue.500" target="_blank">
-                  {`Learn more about ${userStatus.toLowerCase()} status`}
+                  {UI_TEXT.account.statusModal.learnMore.replace("{status}", userStatus.toLowerCase())}
                 </ChakraLink>
               </VStack>
             </Dialog.Body>
@@ -109,14 +107,14 @@ export default function BaseLayout({ children }) {
                 width="100%"
                 onClick={() => router.push("/subscription")}
               >
-                Subscribe Here
+                {UI_TEXT.account.statusModal.subscribeButton}
               </Button>
               <Button
                 variant="outline"
                 width="100%"
                 onClick={() => router.push("/")}
               >
-                Home
+                {UI_TEXT.account.statusModal.homeButton}
               </Button>
             </Dialog.Footer>
           </Dialog.Content>
