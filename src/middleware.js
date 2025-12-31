@@ -23,6 +23,7 @@ const PROTECTED_API_PATHS = [
   "/api/get-network-config",
   "/api/get-subscription",
   "/api/cognito-user-knowledgebase",
+  "/api/get-portal-session",
 ];
 const PUBLIC_API_PATHS = ["/api/auth"];
 
