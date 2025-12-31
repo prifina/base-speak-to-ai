@@ -336,6 +336,10 @@ export const UI_TEXT = {
 
   subscription: {
     sectionTitle: "Subscription plans for AI Twin",
+    per: "per",
+    manageButton: "Manage your subscription",
+    subscribeButton: "Subscribe",
+    contactButton: "Contact us",
     modal: {
       success: {
         title: "You've successfully subscribed",

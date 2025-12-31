@@ -7,6 +7,7 @@ import {
   List,
   Box,
 } from "@chakra-ui/react";
+import { UI_TEXT } from "../lib/uiStrings";
 
 const SubscriptionPlanCard = ({
   price = "$0",
@@ -53,7 +54,7 @@ const SubscriptionPlanCard = ({
                   fontSize="xl"
                   ml={1}
                 >
-                  per
+                  {UI_TEXT.subscription.per || "per"}
                   {interval.intervalCount > 1
                     ? ` ${interval.intervalCount} `
                     : " "}
@@ -75,7 +76,7 @@ const SubscriptionPlanCard = ({
                 variant="outline"
                 colorPalette="teal"
               >
-                Manage your subscription
+                {UI_TEXT.subscription.manageButton || "Manage your subscription"}
               </Button>
             ) : (
               <Button
@@ -88,7 +89,7 @@ const SubscriptionPlanCard = ({
                 }
                 data-planidx={planIdx}
               >
-                Subscribe
+                {UI_TEXT.subscription.subscribeButton || "Subscribe"}
               </Button>
             )}
           </>
@@ -100,7 +101,7 @@ const SubscriptionPlanCard = ({
               variant="outline"
               colorPalette="teal"
             >
-              Contact us
+              {UI_TEXT.subscription.contactButton || "Contact us"}
             </Button>
           </>
         )}
