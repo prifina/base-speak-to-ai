@@ -32,6 +32,11 @@ const usePersistentStore = create((set, get) => {
     loginName: "",
     knowledgebaseId: "",
     language: checkLng(),
+    env: typeof window !== "undefined" 
+      ? (window.location.hostname === "localhost" && !process.env.NEXT_PUBLIC_ENV
+          ? "dev"
+          : process.env.NEXT_PUBLIC_ENV || "dev")
+      : "dev",
     socketUpdate: {},
     connectionId: "",
     verifiedEmail: "",
