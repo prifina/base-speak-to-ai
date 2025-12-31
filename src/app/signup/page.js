@@ -174,9 +174,10 @@ export default function SignupPage() {
                 autoComplete="username"
                 required
               />
-              <Field.HelperText>{UI_TEXT.account.usernameHelper}</Field.HelperText>
-              {errors.username && (
+              {errors.username ? (
                 <Field.ErrorText>{errors.username}</Field.ErrorText>
+              ) : (
+                <Field.HelperText>{UI_TEXT.account.usernameHelper}</Field.HelperText>
               )}
             </Field.Root>
 
@@ -194,8 +195,10 @@ export default function SignupPage() {
                 autoComplete="email"
                 required
               />
-              {errors.email && (
+              {errors.email ? (
                 <Field.ErrorText>{errors.email}</Field.ErrorText>
+              ) : (
+                <Field.HelperText>{UI_TEXT.account.emailHelper}</Field.HelperText>
               )}
             </Field.Root>
 

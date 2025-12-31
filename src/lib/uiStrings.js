@@ -297,6 +297,7 @@ export const UI_TEXT = {
     username: "Login Username",
     usernameMissing: "Login username not created yet",
     usernameHelper: "10-30 characters, no spaces or special characters",
+    emailHelper: "We'll send a verification code to this email",
     usernameErrors: {
       length: "Username must be 10-30 characters",
       spaces: "Username cannot contain spaces",
