@@ -236,7 +236,7 @@ export default function SubscriptionPage() {
           return;
         }
 
-        const portalUrl = await makeRequest({
+        /*  const portalUrl = await makeRequest({
           api,
           url: `new-stripe-portal-session`,
           method: "POST",
@@ -244,7 +244,7 @@ export default function SubscriptionPage() {
             configurationId: state.portalConfigurationId,
             customerId: state.subscription.customerId,
           },
-        });
+        }); */
         if (portalUrl && portalUrl.url) {
           customerPortalRef.current = window.open(
             `${portalUrl.url}${additionalRoute ? `/${additionalRoute}` : ""}`,
