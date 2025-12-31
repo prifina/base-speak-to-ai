@@ -246,7 +246,7 @@ export default function SubscriptionPage() {
       }
     }
 
-    if (!effectCalled.current && authLoaded && activeGroup && knowledgebaseId && env) {
+    if (!effectCalled.current && authLoaded) {
       fetchData();
       effectCalled.current = true;
     }
