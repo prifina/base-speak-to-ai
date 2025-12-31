@@ -46,7 +46,7 @@ const navItems = [
 ];
 
 export default function BaseLayout({ children }) {
-  const { loaded: authLoaded, cognitoId } = useContext(AuthContext);
+  const { loaded: authLoaded } = useContext(AuthContext);
   const router = useRouter();
   const authFetch = useAuthFetch();
   const { knowledgebaseId } = useStore(
@@ -89,14 +89,14 @@ export default function BaseLayout({ children }) {
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.Header>
-              {cognitoId ? "Subscription Required" : "Signup Required"}
+              Subscription Required
             </Dialog.Header>
             <Dialog.Body>
               <VStack spacing={4} align="stretch">
                 <Text>
                   Your AI-Status is <strong>{userStatus}</strong> and
                   before you can continue, you need to{" "}
-                  <strong>{cognitoId ? "subscribe" : "sign up"}</strong>.
+                  <strong>subscribe</strong>.
                 </Text>
                 <ChakraLink href={docLink} color="blue.500" target="_blank">
                   {`Learn more about ${userStatus.toLowerCase()} status`}
@@ -107,9 +107,9 @@ export default function BaseLayout({ children }) {
               <Button
                 colorScheme="blue"
                 width="100%"
-                onClick={() => router.push(cognitoId ? "/subscription" : "/signup")}
+                onClick={() => router.push("/subscription")}
               >
-                {cognitoId ? "Subscribe Here" : "Signup Here"}
+                Subscribe Here
               </Button>
               <Button
                 variant="outline"
