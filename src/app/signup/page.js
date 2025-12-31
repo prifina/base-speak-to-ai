@@ -151,7 +151,8 @@ export default function SignupPage() {
         w={"450px"}
         mx="auto"
         mt={5}
-        p={8}
+        px={8}
+        py={3}
         borderWidth="1px"
         borderRadius="lg"
       >
