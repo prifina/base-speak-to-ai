@@ -70,6 +70,7 @@ export default function SubscriptionPage() {
       kbStatus: {},
       stripeUpdate: false,
       isProcessing: false,
+      modalEvent: billingModalEventTypes.NONE,
     }
   );
 
@@ -81,11 +82,15 @@ export default function SubscriptionPage() {
 
   const changeModalEvent = useCallback(
     (eventType) => {
-      setModalEvent(eventType);
+      setState({ modalEvent: eventType });
       onSubscriptionEventModalOpen();
     },
     [onSubscriptionEventModalOpen]
   );
+
+  const setStripeUpdate = useCallback((value) => {
+    setState({ stripeUpdate: value });
+  }, []);
 
   const handleSocketUpdate = useCallback(
     (socketStatus) => {
@@ -109,17 +114,6 @@ export default function SubscriptionPage() {
       }
     },
     [changeModalEvent, billingModalEventTypes]
-    /*
-    (msg) => {
-      console.log("[SUBSCRIPTION WEBSOCKET] Message received:", msg);
-      
-      if (msg.event === "NOTIFY" && msg.status === "SUBSCRIPTION-UPDATE") {
-        console.log("[SUBSCRIPTION WEBSOCKET] Subscription updated, refreshing data...");
-        setState({ stripeUpdate: true });
-      }
-    },
-    []
-    */
   );
 
   useWebSocket({
