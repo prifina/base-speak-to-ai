@@ -120,6 +120,7 @@ const usePersistentStore = create((set, get) => {
             cognitoId: "",
             knowledgebaseId: "",
             loginName: "",
+            verifiedEmail: "",
           });
           // set({ user: initUser });
           return Promise.resolve(false);
