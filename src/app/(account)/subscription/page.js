@@ -236,18 +236,20 @@ export default function SubscriptionPage() {
           return;
         }
 
-        /*  const portalUrl = await makeRequest({
-          api,
-          url: `new-stripe-portal-session`,
-          method: "POST",
-          payload: {
-            configurationId: state.portalConfigurationId,
-            customerId: state.subscription.customerId,
-          },
-        }); */
-        if (portalUrl && portalUrl.url) {
+        const host = window.location.hostname;
+        const env =
+          host === "localhost" && !process.env.NEXT_PUBLIC_ENV
+            ? "dev"
+            : process.env.NEXT_PUBLIC_ENV || "dev";
+
+        const portalRes = await authFetch(
+          `/api/get-portal-session?configurationId=${state.portalConfigurationId}&customerId=${state.subscription.customerId}&env=${env}`
+        );
+        const portalData = await portalRes.json();
+        
+        if (portalData && portalData.url) {
           customerPortalRef.current = window.open(
-            `${portalUrl.url}${additionalRoute ? `/${additionalRoute}` : ""}`,
+            `${portalData.url}${additionalRoute ? `/${additionalRoute}` : ""}`,
             "stripeCustomerPortal",
             "popup"
           );
@@ -256,7 +258,7 @@ export default function SubscriptionPage() {
         console.error("Stripe portal error", err);
       }
     },
-    [state.portalConfigurationId, state.subscription]
+    [state.portalConfigurationId, state.subscription, authFetch]
   );
 
   /* 
