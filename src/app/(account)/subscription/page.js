@@ -119,7 +119,6 @@ export default function SubscriptionPage() {
       // Handle STRIPE events
       if (socketStatus.event === "STRIPE") {
         console.log("[SUBSCRIPTION] Processing STRIPE event with status:", socketStatus.status);
-        effectCalled.current = false;
         setStripeUpdate(true);
 
         switch (socketStatus.status) {
@@ -127,15 +126,25 @@ export default function SubscriptionPage() {
           case "LAMBDA_PROCESSED":
             console.log("[SUBSCRIPTION] Triggering CANCEL modal");
             changeModalEvent(billingModalEventTypes.CANCEL);
+            // Delay fetchData to allow modal to show first
+            setTimeout(() => {
+              effectCalled.current = false;
+            }, 100);
             break;
           case "FAIL":
             console.log("[SUBSCRIPTION] Triggering FAILURE modal");
             changeModalEvent(billingModalEventTypes.FAILURE);
+            setTimeout(() => {
+              effectCalled.current = false;
+            }, 100);
             break;
           case "PROCESS":
           case "UPDATE":
             console.log("[SUBSCRIPTION] Triggering SUCCESS modal");
             changeModalEvent(billingModalEventTypes.SUCCESS);
+            setTimeout(() => {
+              effectCalled.current = false;
+            }, 100);
             break;
           default:
             console.log("[SUBSCRIPTION] Unknown status:", socketStatus.status);
