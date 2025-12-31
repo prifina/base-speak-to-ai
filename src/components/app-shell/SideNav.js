@@ -68,13 +68,16 @@ function SideNavContent({ items, collapsed, onToggleCollapsed, onNavigate }) {
             w="full"
             justify="center"
             cursor="pointer"
-            onClick={onToggleCollapsed}
+            onClick={() => go("/home")}
+            _hover={{ bg: "rgba(255, 255, 255, 0.1)" }}
+            borderRadius="md"
+            p={2}
           >
             <Image src="/assets/base_icon.svg" alt="Logo" boxSize="6" />
           </Flex>
         ) : (
           <>
-            <HStack gap="2">
+            <HStack gap="2" cursor="pointer" onClick={() => go("/home")} _hover={{ bg: "rgba(255, 255, 255, 0.1)" }} borderRadius="md" p={2}>
               <Image src="/assets/base_icon.svg" alt="Logo" boxSize="8" />
               <Text fontSize="20px" fontWeight={600} color="white">
                 {UI_TEXT.app.title}
