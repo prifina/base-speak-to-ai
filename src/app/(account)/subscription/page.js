@@ -78,7 +78,7 @@ export default function SubscriptionPage() {
       subscription: null,
       userInfo: null,
       subscribed: "",
-      planName: "",
+      productName: "",
       planDetails: [],
       paymentLinks: [],
       portalConfigurationId: "",
@@ -114,7 +114,10 @@ export default function SubscriptionPage() {
 
       // Handle STRIPE events
       if (socketStatus.event === "STRIPE") {
-        console.log("[SUBSCRIPTION] Processing STRIPE event with status:", socketStatus.status);
+        console.log(
+          "[SUBSCRIPTION] Processing STRIPE event with status:",
+          socketStatus.status
+        );
         setStripeUpdate(true);
 
         switch (socketStatus.status) {
@@ -400,9 +403,14 @@ export default function SubscriptionPage() {
                           title={UI_TEXT.subscription.modal.success.title}
                           subtitle={UI_TEXT.subscription.modal.success.subtitle
                             .replace("{planName}", formatPlanTitle(currentPlan))
-                            .replace("{date}", state.subscription?.currentPeriodEnd
-                              ? new Date(state.subscription.currentPeriodEnd * 1000).toLocaleDateString()
-                              : "-")}
+                            .replace(
+                              "{date}",
+                              state.subscription?.currentPeriodEnd
+                                ? new Date(
+                                    state.subscription.currentPeriodEnd * 1000
+                                  ).toLocaleDateString()
+                                : "-"
+                            )}
                         />
                         <Button
                           color="white"
@@ -448,10 +456,14 @@ export default function SubscriptionPage() {
                       <>
                         <ModalText
                           title={UI_TEXT.subscription.modal.cancel.title}
-                          subtitle={UI_TEXT.subscription.modal.cancel.subtitle
-                            .replace("{date}", state.subscription?.currentPeriodEnd
-                              ? new Date(state.subscription.currentPeriodEnd * 1000).toLocaleDateString()
-                              : "-")}
+                          subtitle={UI_TEXT.subscription.modal.cancel.subtitle.replace(
+                            "{date}",
+                            state.subscription?.currentPeriodEnd
+                              ? new Date(
+                                  state.subscription.currentPeriodEnd * 1000
+                                ).toLocaleDateString()
+                              : "-"
+                          )}
                         />
                         <Button
                           color="white"
