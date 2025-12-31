@@ -9,7 +9,7 @@ import {
   useState,
   useMemo,
 } from "react";
-import { Box, Text, Flex, VStack, useDisclosure } from "@chakra-ui/react";
+import { Box, Text, Flex, VStack, useDisclosure, Button, Dialog, Spinner } from "@chakra-ui/react";
 import { AuthContext } from "@/app/providers/AuthProvider";
 import { Loading } from "@/components/Loading";
 import { useShallow } from "zustand/react/shallow";
@@ -17,6 +17,9 @@ import useStore from "@/lib/sessionStore";
 import { useAuthFetch } from "@/lib/useAuthFetch";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 import { useWebSocket } from "@/hooks/useWebSocket";
+import { BiError } from "react-icons/bi";
+import { FiCheckCircle } from "react-icons/fi";
+import { MdInfoOutline } from "react-icons/md";
 import SubscriptionPlansContainer from "@/components/SubscriptionPlansContainer";
 import BillingInformation from "@/components/BillingInformation";
 
@@ -336,32 +339,160 @@ export default function SubscriptionPage() {
     }
   }; */
 
+  const formatPlanTitle = useCallback((plan) => {
+    return plan?.name || "Plan";
+  }, []);
+
+  const BillingStatusModal = () => {
+    const currentPlan = (state.planDetails || []).find(
+      (obj) => obj.prices?.[0]?.priceId === state.subscribed
+    );
+
+    const ModalText = ({ title, subtitle }) => (
+      <Flex flexDirection="column" gap="24px">
+        <Text fontSize="24px" fontWeight={600} textAlign="center">
+          {title}
+        </Text>
+        <Text textAlign="center">{subtitle}</Text>
+      </Flex>
+    );
+
+    return (
+      <Dialog.Root open={isSubscriptionEventModalOpen} onOpenChange={onSubscriptionEventModalClose}>
+        <Dialog.Backdrop />
+        <Dialog.Positioner>
+          <Dialog.Content>
+            <Flex
+              backgroundColor="#f6f9f9"
+              justifyContent="center"
+              height="100%"
+              alignItems="center"
+            >
+              <Flex
+                maxWidth="508px"
+                padding="40px 24px"
+                backgroundColor="rgba(248, 252, 252, 1)"
+                flexDirection="column"
+                alignItems="center"
+                gap="40px"
+                borderRadius="12px"
+              >
+                {state.modalEvent === billingModalEventTypes.SUCCESS && (
+                  <>
+                    <FiCheckCircle color="rgba(0, 132, 122, 1)" size="80px" />
+                    {state.stripeUpdate ? (
+                      <Spinner size="xl" />
+                    ) : (
+                      <>
+                        <ModalText
+                          title="You've successfully subscribed"
+                          subtitle={`You are now on the ${formatPlanTitle(
+                            currentPlan
+                          )} Plan. Your next billing date is ${
+                            state.subscription?.currentPeriodEnd
+                              ? new Date(state.subscription.currentPeriodEnd * 1000).toLocaleDateString()
+                              : "-"
+                          }.`}
+                        />
+                        <Button
+                          color="white"
+                          backgroundColor="rgba(13, 119, 110, 1)"
+                          width="100%"
+                          onClick={onSubscriptionEventModalClose}
+                        >
+                          Continue
+                        </Button>
+                      </>
+                    )}
+                  </>
+                )}
+                {state.modalEvent === billingModalEventTypes.FAILURE && (
+                  <>
+                    <BiError color="rgba(231, 29, 29, 1)" size="80px" />
+                    {state.stripeUpdate ? (
+                      <Spinner size="xl" />
+                    ) : (
+                      <>
+                        <ModalText
+                          title="Payment Failed"
+                          subtitle="We couldn't process your payment. Please update your payment method."
+                        />
+                        <Button
+                          color="white"
+                          backgroundColor="rgba(13, 119, 110, 1)"
+                          width="100%"
+                          onClick={() => openCustomerPortal()}
+                        >
+                          Update Payment Method
+                        </Button>
+                      </>
+                    )}
+                  </>
+                )}
+                {state.modalEvent === billingModalEventTypes.CANCEL && (
+                  <>
+                    <MdInfoOutline color="rgba(102, 107, 106, 1)" size="80px" />
+                    {state.stripeUpdate ? (
+                      <Spinner size="xl" />
+                    ) : (
+                      <>
+                        <ModalText
+                          title="Subscription Cancelled"
+                          subtitle={`You'll have access until ${
+                            state.subscription?.currentPeriodEnd
+                              ? new Date(state.subscription.currentPeriodEnd * 1000).toLocaleDateString()
+                              : "-"
+                          }.`}
+                        />
+                        <Button
+                          color="white"
+                          backgroundColor="rgba(13, 119, 110, 1)"
+                          width="100%"
+                          onClick={onSubscriptionEventModalClose}
+                        >
+                          Explore Other Plans
+                        </Button>
+                      </>
+                    )}
+                  </>
+                )}
+              </Flex>
+            </Flex>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Dialog.Root>
+    );
+  };
+
   if (!authLoaded || state.loading) {
     return <Loading />;
   }
 
   return (
-    <Flex flexDir="column" gap="40px" p="28px">
-      <Box pl={{ base: "42px", md: "0" }}>
-        <Text textStyle="pageTitle">Subscription plans for AI Twin</Text>
-      </Box>
-      <SubscriptionPlansContainer
-        state={state}
-        isMobile={isMobile}
-        stripeUpdate={state.stripeUpdate}
-        onSubscribe={onSubscribe}
-        isProcessing={state.isProcessing}
-        openCustomerPortal={openCustomerPortal}
-      />
-      {((state.subscribed && state.subscribed !== "") ||
-        state.kbStatus.status !== "Free") &&
-        state.kbStatus.status !== "" && (
-          <BillingInformation
-            isMobile={isMobile}
-            state={state}
-            openCustomerPortal={openCustomerPortal}
-          />
-        )}
-    </Flex>
+    <>
+      <Flex flexDir="column" gap="40px" p="28px">
+        <Box pl={{ base: "42px", md: "0" }}>
+          <Text textStyle="pageTitle">Subscription plans for AI Twin</Text>
+        </Box>
+        <SubscriptionPlansContainer
+          state={state}
+          isMobile={isMobile}
+          stripeUpdate={state.stripeUpdate}
+          onSubscribe={onSubscribe}
+          isProcessing={state.isProcessing}
+          openCustomerPortal={openCustomerPortal}
+        />
+        {((state.subscribed && state.subscribed !== "") ||
+          state.kbStatus.status !== "Free") &&
+          state.kbStatus.status !== "" && (
+            <BillingInformation
+              isMobile={isMobile}
+              state={state}
+              openCustomerPortal={openCustomerPortal}
+            />
+          )}
+      </Flex>
+      <BillingStatusModal />
+    </>
   );
 }
