@@ -511,7 +511,7 @@ export default function SubscriptionPage() {
           isMobile={isMobile}
           stripeUpdate={state.stripeUpdate}
           onSubscribe={onSubscribe}
-          isProcessing={state.isProcessing}
+          isProcessing={false}
           openCustomerPortal={openCustomerPortal}
         />
         {((state.subscribed && state.subscribed !== "") ||
