@@ -91,21 +91,17 @@ export default function SubscriptionPage() {
     }
   );
 
-  const {
-    isOpen: isSubscriptionEventModalOpen,
-    onClose: onSubscriptionEventModalClose,
-    onOpen: onSubscriptionEventModalOpen,
-  } = useDisclosure();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const changeModalEvent = useCallback(
     (eventType) => {
       console.log("[SUBSCRIPTION] changeModalEvent called with:", eventType);
       console.log("[SUBSCRIPTION] Current modal state:", state.modalEvent);
-      console.log("[SUBSCRIPTION] Current modal open state:", isSubscriptionEventModalOpen);
+      console.log("[SUBSCRIPTION] Current modal open state:", isModalOpen);
       setState({ modalEvent: eventType });
-      onSubscriptionEventModalOpen();
+      setIsModalOpen(true);
     },
-    [onSubscriptionEventModalOpen, state.modalEvent, isSubscriptionEventModalOpen]
+    [state.modalEvent, isModalOpen]
   );
 
   const setStripeUpdate = useCallback((value) => {
@@ -378,8 +374,8 @@ export default function SubscriptionPage() {
 
     return (
       <Dialog.Root
-        open={isSubscriptionEventModalOpen}
-        onOpenChange={onSubscriptionEventModalClose}
+        open={isModalOpen}
+        onOpenChange={(details) => setIsModalOpen(details.open)}
       >
         <Dialog.Backdrop />
         <Dialog.Positioner>
@@ -418,7 +414,7 @@ export default function SubscriptionPage() {
                           color="white"
                           backgroundColor="rgba(13, 119, 110, 1)"
                           width="100%"
-                          onClick={onSubscriptionEventModalClose}
+                          onClick={() => setIsModalOpen(false)}
                         >
                           {UI_TEXT.subscription.modal.success.button}
                         </Button>
@@ -467,7 +463,7 @@ export default function SubscriptionPage() {
                           color="white"
                           backgroundColor="rgba(13, 119, 110, 1)"
                           width="100%"
-                          onClick={onSubscriptionEventModalClose}
+                          onClick={() => setIsModalOpen(false)}
                         >
                           {UI_TEXT.subscription.modal.cancel.button}
                         </Button>
