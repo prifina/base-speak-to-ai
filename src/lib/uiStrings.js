@@ -353,7 +353,7 @@ export const UI_TEXT = {
       },
       cancel: {
         title: "Subscription Cancelled",
-        subtitle: "You'll have access until {date}.",
+        subtitle: "Your AI-Twin works in limited mode and the Base app use is suspended until new subscription.",
         button: "Explore Other Plans",
       },
     },
