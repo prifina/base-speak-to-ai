@@ -99,10 +99,13 @@ export default function SubscriptionPage() {
 
   const changeModalEvent = useCallback(
     (eventType) => {
+      console.log("[SUBSCRIPTION] changeModalEvent called with:", eventType);
+      console.log("[SUBSCRIPTION] Current modal state:", state.modalEvent);
+      console.log("[SUBSCRIPTION] Current modal open state:", isSubscriptionEventModalOpen);
       setState({ modalEvent: eventType });
       onSubscriptionEventModalOpen();
     },
-    [onSubscriptionEventModalOpen]
+    [onSubscriptionEventModalOpen, state.modalEvent, isSubscriptionEventModalOpen]
   );
 
   const setStripeUpdate = useCallback((value) => {
@@ -115,22 +118,27 @@ export default function SubscriptionPage() {
 
       // Handle STRIPE events
       if (socketStatus.event === "STRIPE") {
+        console.log("[SUBSCRIPTION] Processing STRIPE event with status:", socketStatus.status);
         effectCalled.current = false;
         setStripeUpdate(true);
 
         switch (socketStatus.status) {
           case "CANCELLED":
           case "LAMBDA_PROCESSED":
+            console.log("[SUBSCRIPTION] Triggering CANCEL modal");
             changeModalEvent(billingModalEventTypes.CANCEL);
             break;
           case "FAIL":
+            console.log("[SUBSCRIPTION] Triggering FAILURE modal");
             changeModalEvent(billingModalEventTypes.FAILURE);
             break;
           case "PROCESS":
           case "UPDATE":
+            console.log("[SUBSCRIPTION] Triggering SUCCESS modal");
             changeModalEvent(billingModalEventTypes.SUCCESS);
             break;
           default:
+            console.log("[SUBSCRIPTION] Unknown status:", socketStatus.status);
             break;
         }
       }
