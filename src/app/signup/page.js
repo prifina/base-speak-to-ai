@@ -17,7 +17,11 @@ import {
 import ReCAPTCHA from "react-google-recaptcha";
 import { UI_TEXT } from "@/lib/uiStrings";
 import { toaster } from "@/components/ui/toaster";
-import { validateUsername, validateEmail, validateFormData } from "@/lib/validation";
+import {
+  validateUsername,
+  validateEmail,
+  validateFormData,
+} from "@/lib/validation";
 import { useShallow } from "zustand/react/shallow";
 import useStore from "@/lib/sessionStore";
 
@@ -41,35 +45,39 @@ export default function SignupPage() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const handleUsernameBlur = useCallback(async () => {
     if (formData.username) {
-      const error = await validateUsername(formData.username, "", usernameAvailable);
-      setErrors(prev => ({ ...prev, username: error }));
+      const error = await validateUsername(
+        formData.username,
+        "",
+        usernameAvailable
+      );
+      setErrors((prev) => ({ ...prev, username: error }));
     }
   }, [formData.username, usernameAvailable]);
 
   const handleEmailBlur = useCallback(async () => {
     if (formData.email) {
       const error = await validateEmail(formData.email);
-      setErrors(prev => ({ ...prev, email: error }));
+      setErrors((prev) => ({ ...prev, email: error }));
     }
   }, [formData.email]);
 
   const handleUsernameKeyDown = async (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       await handleUsernameBlur();
     }
   };
 
   const handleEmailKeyDown = async (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       await handleEmailBlur();
     }
@@ -103,14 +111,14 @@ export default function SignupPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate form data
     const formErrors = validateFormData(formData);
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       return;
     }
-    
+
     if (!captchaValidated) {
       toaster.create({
         title: "Verification Required",
@@ -119,9 +127,9 @@ export default function SignupPage() {
       });
       return;
     }
-    
+
     // Check for validation errors
-    if (Object.values(errors).some(error => error)) {
+    if (Object.values(errors).some((error) => error)) {
       toaster.create({
         title: "Validation Error",
         type: "error",
@@ -129,7 +137,7 @@ export default function SignupPage() {
       });
       return;
     }
-    
+
     setIsLoading(true);
     // TODO: Implement signup logic
     console.log("Signup data:", formData);
@@ -192,7 +200,9 @@ export default function SignupPage() {
               {errors.username ? (
                 <Field.ErrorText>{errors.username}</Field.ErrorText>
               ) : (
-                <Field.HelperText>{UI_TEXT.account.usernameHelper}</Field.HelperText>
+                <Field.HelperText>
+                  {UI_TEXT.account.usernameHelper}
+                </Field.HelperText>
               )}
             </Field.Root>
 
@@ -214,7 +224,9 @@ export default function SignupPage() {
               {errors.email ? (
                 <Field.ErrorText>{errors.email}</Field.ErrorText>
               ) : (
-                <Field.HelperText>{UI_TEXT.account.emailHelper}</Field.HelperText>
+                <Field.HelperText>
+                  {UI_TEXT.account.emailHelper}
+                </Field.HelperText>
               )}
             </Field.Root>
 
@@ -232,14 +244,14 @@ export default function SignupPage() {
               width="100%"
               mt={4}
               loading={isLoading}
-              loadingText="Creating account..."
+              loadingText="Sending verification email..."
               disabled={!captchaValidated}
             >
-              Create Account
+              Verify Email
             </Button>
           </VStack>
         </form>
-        
+
         <Text textAlign="center" mt={6}>
           Already have an account?{" "}
           <Link color="blue.500" onClick={() => router.push("/login")}>
