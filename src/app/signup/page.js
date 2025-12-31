@@ -155,12 +155,12 @@ export default function SignupPage() {
         borderWidth="1px"
         borderRadius="lg"
       >
-        <Heading mb={6}>Create your Prifina account</Heading>
+        <Heading mb={6} textAlign="center">Create your Prifina account</Heading>
         <Flex justifyContent="center" mb={6}>
           <Image
             src="/assets/data-center.svg"
             alt="Data Center"
-            width="200px"
+            width="120px"
             height="auto"
           />
         </Flex>
