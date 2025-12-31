@@ -374,6 +374,8 @@ export default function SubscriptionPage() {
       <Dialog.Root
         open={isModalOpen}
         onOpenChange={(details) => setIsModalOpen(details.open)}
+        trapFocus
+        preventScroll
       >
         <Dialog.Backdrop />
         <Dialog.Positioner>
