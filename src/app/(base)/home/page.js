@@ -225,21 +225,26 @@ export default function HomePage() {
 
   const validateAiName = (aiName) => {
     const regex = /^[a-z0-9\-\_\.~]+$/;
-    const hyphenIndex = aiName.indexOf('-');
-    return aiName.length >= 4 && 
-           regex.test(aiName) && 
-           aiName.includes('-') && 
-           hyphenIndex > 0 && 
-           hyphenIndex < aiName.length - 1;
+    const hyphenIndex = aiName.indexOf("-");
+    return (
+      aiName.length >= 4 &&
+      regex.test(aiName) &&
+      aiName.includes("-") &&
+      hyphenIndex > 0 &&
+      hyphenIndex < aiName.length - 1
+    );
   };
 
   const handleValidateAiName = async () => {
     setState({ validatingAiName: true });
     try {
-      const res = await authFetch(`/api/validate-ai-name?aiName=${state.profileData.aiName}`, {
-        method: "GET",
-      });
-      
+      const res = await authFetch(
+        `/api/validate-ai-name?aiName=${state.profileData.aiName}`,
+        {
+          method: "GET",
+        }
+      );
+
       if (res.status === 404) {
         // AI name is available (not found)
         setState({ validatingAiName: false, aiNameValidated: true });
@@ -270,13 +275,13 @@ export default function HomePage() {
     try {
       // TODO: Call API to create knowledgebase with profile data
       console.log("Creating profile:", state.profileData);
-      
+
       // Placeholder - replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       setShowProfileDialog(false);
       setState({ saving: false });
-      
+
       toaster.create({
         title: "Profile created",
         type: "success",
@@ -298,7 +303,7 @@ export default function HomePage() {
           <Dialog.Positioner>
             <Dialog.Content>
               <Dialog.Header>
-                <Dialog.Title>Complete Your Profile</Dialog.Title>
+                <Dialog.Title>Complete Your Twin Profile</Dialog.Title>
               </Dialog.Header>
               <Dialog.Body>
                 <VStack spacing={4} align="stretch">
@@ -306,47 +311,61 @@ export default function HomePage() {
                     <Field.Label>{UI_TEXT.profile.nameLabel}</Field.Label>
                     <Input
                       value={state.profileData.title}
-                      onChange={(e) => setState({
-                        profileData: {
-                          ...state.profileData,
-                          title: e.target.value
-                        }
-                      })}
+                      onChange={(e) =>
+                        setState({
+                          profileData: {
+                            ...state.profileData,
+                            title: e.target.value,
+                          },
+                        })
+                      }
                       placeholder={UI_TEXT.profile.namePlaceholder}
                     />
                   </Field.Root>
-                  
+
                   <Field.Root>
-                    <Field.Label>{UI_TEXT.profile.visibleDescription}</Field.Label>
+                    <Field.Label>
+                      {UI_TEXT.profile.visibleDescription}
+                    </Field.Label>
                     <Textarea
                       value={state.profileData.caption}
-                      onChange={(e) => setState({
-                        profileData: {
-                          ...state.profileData,
-                          caption: e.target.value
-                        }
-                      })}
+                      onChange={(e) =>
+                        setState({
+                          profileData: {
+                            ...state.profileData,
+                            caption: e.target.value,
+                          },
+                        })
+                      }
                       placeholder={UI_TEXT.profile.descriptionPlaceholder}
                       rows={3}
                     />
                   </Field.Root>
-                  
+
                   <Field.Root>
                     <Field.Label>Use Case Description</Field.Label>
                     <Textarea
                       value={state.profileData.useCase}
-                      onChange={(e) => setState({
-                        profileData: {
-                          ...state.profileData,
-                          useCase: e.target.value
-                        }
-                      })}
+                      onChange={(e) =>
+                        setState({
+                          profileData: {
+                            ...state.profileData,
+                            useCase: e.target.value,
+                          },
+                        })
+                      }
                       placeholder="Briefly describe your use case for this AI Twin."
                       rows={3}
                     />
                   </Field.Root>
-                  
-                  <Field.Root required invalid={!validateAiName(state.profileData.aiName) && state.profileData.aiName.length > 0}>
+
+                  <Field.Root
+                    required
+                    invalid={
+                      !validateAiName(state.profileData.aiName) &&
+                      state.profileData.aiName.length > 0
+                    }
+                  >
                     <Field.Label>
                       AI-Name
                       <Field.RequiredIndicator />
@@ -354,13 +373,15 @@ export default function HomePage() {
                     <HStack spacing={2}>
                       <Input
                         value={state.profileData.aiName}
-                        onChange={(e) => setState({
-                          profileData: {
-                            ...state.profileData,
-                            aiName: e.target.value.toLowerCase()
-                          },
-                          aiNameValidated: false
-                        })}
+                        onChange={(e) =>
+                          setState({
+                            profileData: {
+                              ...state.profileData,
+                              aiName: e.target.value.toLowerCase(),
+                            },
+                            aiNameValidated: false,
+                          })
+                        }
                         placeholder="your-ai-name"
                         flex={1}
                       />
@@ -374,10 +395,10 @@ export default function HomePage() {
                       </Button>
                     </HStack>
                     <Field.HelperText>
-                      {!validateAiName(state.profileData.aiName) && state.profileData.aiName.length > 0 
-                        ? "Invalid AI name format" 
-                        : "Minimum 4 characters, must include hyphen (-). Valid: a-z, 0-9, -, _, ., ~"
-                      }
+                      {!validateAiName(state.profileData.aiName) &&
+                      state.profileData.aiName.length > 0
+                        ? "Invalid AI name format"
+                        : "Minimum 4 characters, must include hyphen (-). Valid: a-z, 0-9, -, _, ., ~"}
                     </Field.HelperText>
                   </Field.Root>
                 </VStack>
@@ -386,16 +407,21 @@ export default function HomePage() {
                 <Button
                   onClick={handleCreateProfile}
                   loading={state.saving}
-                  disabled={!state.profileData.title || !state.profileData.caption || !state.profileData.useCase || !validateAiName(state.profileData.aiName)}
+                  disabled={
+                    !state.profileData.title ||
+                    !state.profileData.caption ||
+                    !state.profileData.useCase ||
+                    !validateAiName(state.profileData.aiName)
+                  }
                 >
-                  Create Profile
+                  Create Twin Profile
                 </Button>
               </Dialog.Footer>
             </Dialog.Content>
           </Dialog.Positioner>
         </Dialog.Root>
       )}
-      
+
       {state.user?.userId && (
         <HStack justify="space-between" mb="20px">
           <Box>
