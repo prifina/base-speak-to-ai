@@ -77,6 +77,7 @@ export default function HomePage() {
       profileData: {
         title: "",
         caption: "",
+        useCase: "",
         aiName: "",
       },
     }
@@ -261,7 +262,7 @@ export default function HomePage() {
               <Dialog.Body>
                 <VStack spacing={4} align="stretch">
                   <Field.Root>
-                    <Field.Label>Title</Field.Label>
+                    <Field.Label>{UI_TEXT.profile.nameLabel}</Field.Label>
                     <Input
                       value={state.profileData.title}
                       onChange={(e) => setState({
@@ -270,18 +271,33 @@ export default function HomePage() {
                           title: e.target.value
                         }
                       })}
-                      placeholder="Enter your title"
+                      placeholder={UI_TEXT.profile.namePlaceholder}
                     />
                   </Field.Root>
                   
                   <Field.Root>
-                    <Field.Label>Caption</Field.Label>
+                    <Field.Label>{UI_TEXT.profile.visibleDescription}</Field.Label>
                     <Textarea
                       value={state.profileData.caption}
                       onChange={(e) => setState({
                         profileData: {
                           ...state.profileData,
                           caption: e.target.value
+                        }
+                      })}
+                      placeholder={UI_TEXT.profile.descriptionPlaceholder}
+                      rows={3}
+                    />
+                  </Field.Root>
+                  
+                  <Field.Root>
+                    <Field.Label>Use Case Description</Field.Label>
+                    <Textarea
+                      value={state.profileData.useCase}
+                      onChange={(e) => setState({
+                        profileData: {
+                          ...state.profileData,
+                          useCase: e.target.value
                         }
                       })}
                       placeholder="Briefly describe your use case for this AI Twin."
@@ -314,7 +330,7 @@ export default function HomePage() {
                 <Button
                   onClick={handleCreateProfile}
                   loading={state.saving}
-                  disabled={!state.profileData.title || !state.profileData.caption || !validateAiName(state.profileData.aiName)}
+                  disabled={!state.profileData.title || !state.profileData.caption || !state.profileData.useCase || !validateAiName(state.profileData.aiName)}
                 >
                   Create Profile
                 </Button>
