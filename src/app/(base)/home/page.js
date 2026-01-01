@@ -362,11 +362,11 @@ export default function HomePage() {
                       </Button>
                     </HStack>
                     <Field.HelperText>
-                      Minimum 4 characters, must include hyphen (-). Valid: a-z, 0-9, -, _, ., ~
+                      {!validateAiName(state.profileData.aiName) && state.profileData.aiName.length > 0 
+                        ? "Invalid AI name format" 
+                        : "Minimum 4 characters, must include hyphen (-). Valid: a-z, 0-9, -, _, ., ~"
+                      }
                     </Field.HelperText>
-                    {!validateAiName(state.profileData.aiName) && state.profileData.aiName.length > 0 && (
-                      <Field.ErrorText>Invalid AI name format</Field.ErrorText>
-                    )}
                   </Field.Root>
                 </VStack>
               </Dialog.Body>
