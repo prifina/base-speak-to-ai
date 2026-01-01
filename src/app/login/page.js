@@ -65,6 +65,7 @@ export default function LoginPage() {
     isLoggedIn,
     setLoginName,
     setKnowledgebaseId,
+    setUserStatus,
   } = useStore(
     useShallow((state) => ({
       signIn: state.signIn,
@@ -73,6 +74,7 @@ export default function LoginPage() {
       isLoggedIn: state.isLoggedIn,
       setLoginName: state.setLoginName,
       setKnowledgebaseId: state.setKnowledgebaseId,
+      setUserStatus: state.setUserStatus,
     }))
   );
 
@@ -159,18 +161,11 @@ export default function LoginPage() {
     ]
   );
 
-  const handleEmailVerification = useCallback(async (username) => {
-    // TODO: Implement email verification flow
-    console.log("Email verification needed for user:", username);
-    setError("Email verification required. Please check your email.");
-    return false;
-  }, []);
-
   const checkUser = useCallback(
     async (user) => {
       try {
         const isEmailInput = isEmail(user);
-        let apiUrl, data;
+        let data;
         
         if (isEmailInput) {
           console.log("Checking email:", user);
@@ -203,11 +198,11 @@ export default function LoginPage() {
         if (data.username) {
           console.log("Found Cognito user:", data);
           
-          // Check if email is verified
-          if (!data.attributes?.emailVerified) {
-            console.log("Email not verified for user:", user);
-            return await handleEmailVerification(user);
-          }
+          // Save user status to session for later processing
+          setUserStatus({
+            emailVerified: data.attributes?.emailVerified || false,
+            authenticatorStatus: data.attributes?.authenticatorStatus,
+          });
           
           setState({ username: data.username });
           return true;
@@ -221,7 +216,7 @@ export default function LoginPage() {
         return false;
       }
     },
-    [handleEmailVerification]
+    [setUserStatus]
   );
 
   const handleValidateAndNext = useCallback(async () => {
