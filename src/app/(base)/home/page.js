@@ -236,7 +236,7 @@ export default function HomePage() {
   const handleValidateAiName = async () => {
     setState({ validatingAiName: true });
     try {
-      const res = await authFetch(`/api/user-knowledgebase?userId=${state.profileData.aiName}&opt=VALIDATE`, {
+      const res = await authFetch(`/api/validate-ai-name?aiName=${state.profileData.aiName}`, {
         method: "GET",
       });
       
