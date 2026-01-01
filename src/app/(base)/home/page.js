@@ -225,7 +225,12 @@ export default function HomePage() {
 
   const validateAiName = (aiName) => {
     const regex = /^[a-z0-9\-\_\.~]+$/;
-    return aiName.length >= 4 && regex.test(aiName) && aiName.includes('-');
+    const hyphenIndex = aiName.indexOf('-');
+    return aiName.length >= 4 && 
+           regex.test(aiName) && 
+           aiName.includes('-') && 
+           hyphenIndex > 0 && 
+           hyphenIndex < aiName.length - 1;
   };
 
   const handleValidateAiName = async () => {
