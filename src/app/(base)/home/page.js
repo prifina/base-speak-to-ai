@@ -48,6 +48,8 @@ import { useAvatarUpload } from "@/lib/useFileUpload";
 
 const visibleDescriptionMaxLength = 100;
 
+// Profile creation dialog component
+
 export default function HomePage() {
   const authFetch = useAuthFetch();
   const [isMobile] = useMediaQuery("(max-width: 992px)");
@@ -80,6 +82,8 @@ export default function HomePage() {
         useCase: "",
         aiName: "",
       },
+      validatingAiName: false,
+      aiNameValidated: false,
     }
   );
 
@@ -224,6 +228,31 @@ export default function HomePage() {
     return aiName.length >= 4 && regex.test(aiName) && aiName.includes('-');
   };
 
+  const handleValidateAiName = async () => {
+    setState({ validatingAiName: true });
+    try {
+      // TODO: Call API to check AI name availability
+      console.log("Validating AI name:", state.profileData.aiName);
+      
+      // Placeholder - replace with actual API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setState({ validatingAiName: false, aiNameValidated: true });
+      
+      toaster.create({
+        title: "AI name is available",
+        type: "success",
+      });
+    } catch (error) {
+      console.error("AI name validation error:", error);
+      setState({ validatingAiName: false, aiNameValidated: false });
+      toaster.create({
+        title: "AI name is not available",
+        type: "error",
+      });
+    }
+  };
+
   const handleCreateProfile = async () => {
     setState({ saving: true });
     try {
@@ -316,10 +345,20 @@ export default function HomePage() {
                         profileData: {
                           ...state.profileData,
                           aiName: e.target.value.toLowerCase()
-                        }
+                        },
+                        aiNameValidated: false
                       })}
                       placeholder="your-ai-name"
                     />
+                    <Button
+                      mt={2}
+                      size="sm"
+                      onClick={handleValidateAiName}
+                      loading={state.validatingAiName}
+                      disabled={!validateAiName(state.profileData.aiName)}
+                    >
+                      Validate
+                    </Button>
                     <Field.HelperText>
                       Minimum 4 characters, must include hyphen (-). Valid: a-z, 0-9, -, _, ., ~
                     </Field.HelperText>
