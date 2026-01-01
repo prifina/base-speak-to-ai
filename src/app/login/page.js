@@ -42,10 +42,12 @@ login scenarios
   - authenticator status = 99  (authenticator is not verified)
   - authenticator status = 1 username is random, automatically created
   - authenticator status = 2  username is valid, normal signup
-  - email not verified => has to verify email first
+  //- email not verified => has to verify email first
 
 - email as login username => check login keys
   - when the cognito username is created and email validated, add new login key with cognito username. 
+  
+
 - ai-name as login username => check login keys
   - when new knowledgebase is created, add new login key with cognito username.
   - if login key exists, but no username then create new cognito user (auth status 1)
@@ -166,48 +168,56 @@ export default function LoginPage() {
       try {
         const isEmailInput = isEmail(user);
         let data;
-        
+
         if (isEmailInput) {
           console.log("Checking email:", user);
-          const res = await fetch(`/api/check-email?email=${encodeURIComponent(user)}&returnUser=true`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
+          const res = await fetch(
+            `/api/check-email?email=${encodeURIComponent(
+              user
+            )}&returnUser=true`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
           data = await res.json();
         } else {
           console.log("Checking username:", user);
-          const res = await fetch(`/api/get-cognito-user?username=${encodeURIComponent(user)}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
+          const res = await fetch(
+            `/api/get-cognito-user?username=${encodeURIComponent(user)}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
           data = await res.json();
         }
-        
+
         console.log("COGNITO USER DATA:", data);
-        
+
         if (data.error) {
           console.log("User not found in Cognito:", data.error);
           setError("User not found");
           return false;
         }
-        
+
         if (data.username) {
           console.log("Found Cognito user:", data);
-          
+
           // Save user status to session for later processing
           setUserStatus({
             emailVerified: data.attributes?.emailVerified || false,
             authenticatorStatus: data.attributes?.authenticatorStatus,
           });
-          
+
           setState({ username: data.username });
           return true;
         }
-        
+
         setError("User not found");
         return false;
       } catch (error) {
@@ -221,7 +231,7 @@ export default function LoginPage() {
 
   const handleValidateAndNext = useCallback(async () => {
     if (!state.loginName.trim()) return;
-    
+
     setIsBusy(true);
     const isValid = await checkUser(state.loginName);
     if (isValid) {
