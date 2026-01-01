@@ -381,4 +381,32 @@ export const UI_TEXT = {
     searchPlaceholder: "Search",
     cancel: "Cancel",
   },
+
+  signup: {
+    title: "Create your Prifina account",
+    createButton: "Create Account",
+    loadingText: "Creating account...",
+    alreadyHaveAccount: "Already have an account?",
+    signInHere: "Sign in here",
+    verification: {
+      title: "Verify Your Email",
+      description: "We've sent a verification code to {email}",
+      didntReceive: "Didn't receive the code? Check your spam folder or",
+      goBack: "go back",
+    },
+    messages: {
+      accountCreated: "Account Created",
+      checkEmail: "Please check your email for the verification code",
+      signupFailed: "Signup Failed",
+      createAccountFailed: "Failed to create account",
+      emailVerified: "Email Verified",
+      accountVerified: "Your account has been verified successfully",
+      verificationFailed: "Verification Failed",
+      invalidCode: "Invalid verification code",
+      captchaRequired: "Verification Required",
+      completeCaptcha: "Please complete the CAPTCHA verification",
+      validationError: "Validation Error",
+      fixErrors: "Please fix the errors before submitting",
+    },
+  },
 };
