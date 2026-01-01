@@ -25,9 +25,10 @@ import {
 } from "@/lib/validation";
 import { useShallow } from "zustand/react/shallow";
 import useStore from "@/lib/sessionStore";
-import { signUp, confirmSignUp } from "aws-amplify/auth";
+import { signUp } from "aws-amplify/auth";
 import CustomPINInput from "@/components/CustomPINInput";
 import { v4 as uuidv4 } from "uuid";
+import { verifyEmailAttribute, requestEmailVerificationCode } from "@/lib/userAttributes";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -179,6 +180,10 @@ export default function SignupPage() {
       console.log("SIGNUP: Next step:", result.nextStep);
       
       setCognitoUsername(result.userId);
+      
+      // Request email verification code
+      await requestEmailVerificationCode();
+      
       setShowConfirmation(true);
       
       toaster.create({
@@ -203,21 +208,12 @@ export default function SignupPage() {
 
   const handleConfirmSignup = async (code) => {
     try {
-      console.log("CONFIRM: Starting confirmation process");
-      console.log("CONFIRM: Cognito username:", cognitoUsername);
-      console.log("CONFIRM: Verification code:", code);
+      console.log("VERIFY: Starting email verification process");
+      console.log("VERIFY: Verification code:", code);
       
-      const confirmParams = {
-        username: cognitoUsername,
-        confirmationCode: code,
-      };
+      const result = await verifyEmailAttribute(code);
       
-      console.log("CONFIRM: Confirmation parameters:", confirmParams);
-      
-      const result = await confirmSignUp(confirmParams);
-      
-      console.log("CONFIRM: Confirmation result:", result);
-      console.log("CONFIRM: Next step:", result.nextStep);
+      console.log("VERIFY: Verification result:", result);
       
       toaster.create({
         title: UI_TEXT.signup.messages.emailVerified,
@@ -228,16 +224,31 @@ export default function SignupPage() {
       router.push("/login");
       return true;
     } catch (error) {
-      console.error("CONFIRM ERROR: Full error object:", error);
-      console.error("CONFIRM ERROR: Error name:", error.name);
-      console.error("CONFIRM ERROR: Error message:", error.message);
-      console.error("CONFIRM ERROR: Error code:", error.code);
+      console.error("VERIFY ERROR: Full error object:", error);
+      console.error("VERIFY ERROR: Error name:", error.name);
+      console.error("VERIFY ERROR: Error message:", error.message);
+      console.error("VERIFY ERROR: Error code:", error.code);
       toaster.create({
         title: UI_TEXT.signup.messages.verificationFailed,
         type: "error",
         description: error.message || UI_TEXT.signup.messages.invalidCode,
       });
       return false;
+    }
+  };
+
+  const handleResendCode = async () => {
+    try {
+      await requestEmailVerificationCode();
+      toaster.create({
+        title: UI_TEXT.account.verificationCodeSent,
+        type: "success",
+      });
+    } catch (error) {
+      toaster.create({
+        title: "Failed to send verification code",
+        type: "error",
+      });
     }
   };
 
@@ -387,11 +398,16 @@ export default function SignupPage() {
                 setIsBusy={setIsLoading}
                 reset={() => {}}
               />
-              <Text textAlign="center" fontSize="sm" color="gray.600">
-                {UI_TEXT.signup.verification.didntReceive}{" "}
-                <Link color="blue.500" onClick={() => setShowConfirmation(false)}>
+              <Flex gap={4} wrap="wrap" justify="center">
+                <Button variant="outline" onClick={handleResendCode}>
+                  {UI_TEXT.account.resendCode}
+                </Button>
+                <Button variant="outline" onClick={() => setShowConfirmation(false)}>
                   {UI_TEXT.signup.verification.goBack}
-                </Link>
+                </Button>
+              </Flex>
+              <Text textAlign="center" fontSize="sm" color="gray.600">
+                {UI_TEXT.signup.verification.didntReceive}
               </Text>
             </VStack>
           </>
