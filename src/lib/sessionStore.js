@@ -90,7 +90,7 @@ const usePersistentStore = create((set, get) => {
 
       return Promise.resolve(false);
     },
-    confirmSignIn: async (code) => {
+    confirmSignIn: async (code, loginType = null) => {
       console.log(code);
       try {
         // to send the answer of the custom challenge
@@ -100,6 +100,7 @@ const usePersistentStore = create((set, get) => {
             clientMetadata: {
               flow: "base-otp",
               loginName: get().loginName,
+              loginType,
 
               // any non-sensitive routing hint
             },

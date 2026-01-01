@@ -105,6 +105,7 @@ export default function LoginPage() {
       const signInResponse = await signIn(state.username);
       console.log("SIGN IN RESPONSE ", signInResponse);
       if (signInResponse) {
+        // include loginType...
         const confirmSignInResponse = await confirmSignIn(code);
         if (confirmSignInResponse) {
           console.log("LOGIN SUCCESS");
