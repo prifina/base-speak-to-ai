@@ -47,6 +47,7 @@ login scenarios
   - when the cognito username is created and email validated, add new login key with cognito username. 
 - ai-name as login username => check login keys
   - when new knowledgebase is created, add new login key with cognito username.
+  - if login key exists, but no username then create new cognito user (auth status 1)
 
 */
 
