@@ -158,19 +158,6 @@ export default function LoginPage() {
     ]
   );
 
-  const handleValidateAndNext = useCallback(async () => {
-    if (!state.loginName.trim()) return;
-    
-    setIsBusy(true);
-    const isValid = await checkUser(state.loginName);
-    if (isValid) {
-      setIsBusy(false);
-      setPage(1);
-    } else {
-      setIsBusy(false);
-    }
-  }, [checkUser, state.loginName]);
-
   const handleEmailVerification = useCallback(async (username) => {
     // TODO: Implement email verification flow
     console.log("Email verification needed for user:", username);
@@ -220,6 +207,19 @@ export default function LoginPage() {
     },
     [handleEmailVerification]
   );
+
+  const handleValidateAndNext = useCallback(async () => {
+    if (!state.loginName.trim()) return;
+    
+    setIsBusy(true);
+    const isValid = await checkUser(state.loginName);
+    if (isValid) {
+      setIsBusy(false);
+      setPage(1);
+    } else {
+      setIsBusy(false);
+    }
+  }, [checkUser, state.loginName]);
 
   useEffect(() => {
     configureAmplify();
