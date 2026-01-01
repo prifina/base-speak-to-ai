@@ -303,10 +303,52 @@ export default function HomePage() {
           <Dialog.Positioner>
             <Dialog.Content>
               <Dialog.Header>
-                <Dialog.Title>Complete Your Twin Profile</Dialog.Title>
+                <Dialog.Title>{UI_TEXT.profile.dialog.title}</Dialog.Title>
               </Dialog.Header>
               <Dialog.Body>
                 <VStack spacing={4} align="stretch">
+                  <Field.Root
+                    required
+                    invalid={
+                      !validateAiName(state.profileData.aiName) &&
+                      state.profileData.aiName.length > 0
+                    }
+                  >
+                    <Field.Label>
+                      AI-Name
+                      <Field.RequiredIndicator />
+                    </Field.Label>
+                    <HStack spacing={2}>
+                      <Input
+                        value={state.profileData.aiName}
+                        onChange={(e) =>
+                          setState({
+                            profileData: {
+                              ...state.profileData,
+                              aiName: e.target.value.toLowerCase(),
+                            },
+                            aiNameValidated: false,
+                          })
+                        }
+                        placeholder="your-ai-name"
+                        flex={1}
+                      />
+                      <Button
+                        size="sm"
+                        onClick={handleValidateAiName}
+                        loading={state.validatingAiName}
+                        disabled={!validateAiName(state.profileData.aiName)}
+                      >
+                        Validate
+                      </Button>
+                    </HStack>
+                    <Field.HelperText>
+                      {!validateAiName(state.profileData.aiName) &&
+                      state.profileData.aiName.length > 0
+                        ? "Invalid AI name format"
+                        : "Minimum 4 characters, must include hyphen (-). Valid: a-z, 0-9, -, _, ., ~"}
+                    </Field.HelperText>
+                  </Field.Root>
                   <Field.Root>
                     <Field.Label>{UI_TEXT.profile.nameLabel}</Field.Label>
                     <Input
@@ -343,7 +385,7 @@ export default function HomePage() {
                   </Field.Root>
 
                   <Field.Root>
-                    <Field.Label>Use Case Description</Field.Label>
+                    <Field.Label>{UI_TEXT.profile.dialog.useCaseLabel}</Field.Label>
                     <Textarea
                       value={state.profileData.useCase}
                       onChange={(e) =>
@@ -354,7 +396,7 @@ export default function HomePage() {
                           },
                         })
                       }
-                      placeholder="Briefly describe your use case for this AI Twin."
+                      placeholder={UI_TEXT.profile.dialog.useCasePlaceholder}
                       rows={3}
                     />
                   </Field.Root>
@@ -408,13 +450,11 @@ export default function HomePage() {
                   onClick={handleCreateProfile}
                   loading={state.saving}
                   disabled={
-                    !state.profileData.title ||
-                    !state.profileData.caption ||
-                    !state.profileData.useCase ||
-                    !validateAiName(state.profileData.aiName)
+                    !validateAiName(state.profileData.aiName) ||
+                    !state.aiNameValidated
                   }
                 >
-                  Create Twin Profile
+                  {UI_TEXT.profile.dialog.createButton}
                 </Button>
               </Dialog.Footer>
             </Dialog.Content>

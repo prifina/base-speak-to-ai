@@ -277,6 +277,17 @@ export const UI_TEXT = {
     descriptionPlaceholder:
       "e.g., Amplifying expertise in digital marketing & strategy",
     invisibleDescription: "Link Sharing Preview",
+    dialog: {
+      title: "Complete Your Twin Profile",
+      aiNameLabel: "AI-Name",
+      aiNamePlaceholder: "your-ai-name",
+      aiNameHelper: "Minimum 4 characters, must include hyphen (-). Valid: a-z, 0-9, -, _, ., ~",
+      aiNameInvalid: "Invalid AI name format",
+      useCaseLabel: "Use Case Description",
+      useCasePlaceholder: "Briefly describe your use case for this AI Twin.",
+      validateButton: "Validate",
+      createButton: "Create Twin Profile",
+    },
     avatar: {
       notAnImage: "Not an image.",
       allowedSize: "Allowed size is <5M.",
