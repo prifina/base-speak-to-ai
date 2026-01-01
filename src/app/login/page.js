@@ -168,7 +168,7 @@ export default function LoginPage() {
   const checkUser = useCallback(
     async (user) => {
       try {
-        const res = await fetch(`/api/get-cognito-user?username=${user}`, {
+        const res = await fetch(`/api/get-cognito-user?username=${encodeURIComponent(user)}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -184,16 +184,16 @@ export default function LoginPage() {
           return false;
         }
         
-        if (data.user) {
-          console.log("Found Cognito user:", data.user);
+        if (data.username) {
+          console.log("Found Cognito user:", data);
           
           // Check if email is verified
-          if (!data.user.email_verified) {
+          if (!data.attributes?.emailVerified) {
             console.log("Email not verified for user:", user);
             return await handleEmailVerification(user);
           }
           
-          setState({ username: user });
+          setState({ username: data.username });
           return true;
         }
         
