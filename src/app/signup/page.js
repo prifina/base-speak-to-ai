@@ -25,7 +25,7 @@ import {
 } from "@/lib/validation";
 import { useShallow } from "zustand/react/shallow";
 import useStore from "@/lib/sessionStore";
-import { signUp } from "aws-amplify/auth";
+import { signUp, signIn } from "aws-amplify/auth";
 import CustomPINInput from "@/components/CustomPINInput";
 import { v4 as uuidv4 } from "uuid";
 import { verifyEmailAttribute, requestEmailVerificationCode } from "@/lib/userAttributes";
@@ -49,6 +49,7 @@ export default function SignupPage() {
   const [captchaValidated, setCaptchaValidated] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [cognitoUsername, setCognitoUsername] = useState("");
+  const [tempPassword, setTempPassword] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -180,8 +181,17 @@ export default function SignupPage() {
       console.log("SIGNUP: Next step:", result.nextStep);
       
       setCognitoUsername(result.userId);
+      setTempPassword(randomPassword);
+      
+      // Sign in with the random password to enable email verification
+      console.log("SIGNUP: Signing in with temporary password");
+      await signIn({
+        username: cognitoUserId,
+        password: randomPassword,
+      });
       
       // Request email verification code
+      console.log("SIGNUP: Requesting email verification code");
       await requestEmailVerificationCode();
       
       setShowConfirmation(true);
