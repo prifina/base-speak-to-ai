@@ -171,6 +171,13 @@ export default function LoginPage() {
     }
   }, [checkUser, state.loginName]);
 
+  const handleEmailVerification = useCallback(async (username) => {
+    // TODO: Implement email verification flow
+    console.log("Email verification needed for user:", username);
+    setError("Email verification required. Please check your email.");
+    return false;
+  }, []);
+
   const checkUser = useCallback(
     async (user) => {
       try {
@@ -192,6 +199,13 @@ export default function LoginPage() {
         
         if (data.user) {
           console.log("Found Cognito user:", data.user);
+          
+          // Check if email is verified
+          if (!data.user.email_verified) {
+            console.log("Email not verified for user:", user);
+            return await handleEmailVerification(user);
+          }
+          
           setState({ username: user });
           return true;
         }
@@ -204,7 +218,7 @@ export default function LoginPage() {
         return false;
       }
     },
-    []
+    [handleEmailVerification]
   );
 
   useEffect(() => {
