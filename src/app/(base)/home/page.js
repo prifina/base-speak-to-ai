@@ -306,7 +306,7 @@ export default function HomePage() {
                   </Field.Root>
                   
                   <Field.Root invalid={!validateAiName(state.profileData.aiName) && state.profileData.aiName.length > 0}>
-                    <Field.Label>AI-Name</Field.Label>
+                    <Field.Label>AI-Name <Field.RequiredIndicator /></Field.Label>
                     <Input
                       value={state.profileData.aiName}
                       onChange={(e) => setState({
