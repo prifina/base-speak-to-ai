@@ -43,6 +43,7 @@ import PersonalizationAccordionItem from "@/components/PersonalizationAccordionI
 import FooterSection from "@/components/FooterSection";
 import SaveButton from "@/components/SaveButton";
 import SharingModal from "@/components/Modals/Sharing";
+import ProfileCreationModal from "@/components/Modals/ProfileCreation";
 
 import { useAvatarUpload } from "@/lib/useFileUpload";
 
