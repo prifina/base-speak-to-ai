@@ -34,6 +34,22 @@ import CustomPINInput from "@/components/CustomPINInput";
 import { useShallow } from "zustand/react/shallow";
 import useStore from "@/lib/sessionStore";
 
+/*
+
+login scenarios
+- cognito username exists
+  - authenticator status = 99  (authenticator is not verified)
+  - authenticator status = 1 username is random, automatically created
+  - authenticator status = 2  username is valid, normal signup
+  - email not verified => has to verify email first
+
+- email as login username => check login keys
+  - when the cognito username is created and email validated, add new login key with cognito username. 
+- ai-name as login username => check login keys
+  - when new knowledgebase is created, add new login key with cognito username.
+
+*/
+
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -91,25 +107,29 @@ export default function LoginPage() {
         const confirmSignInResponse = await confirmSignIn(code);
         if (confirmSignInResponse) {
           console.log("LOGIN SUCCESS");
-          
+
           const { tokens } = await fetchAuthSession();
           const idToken = tokens.idToken.payload;
           const cognitoId = idToken["cognito:username"];
           let knowledgebaseId = idToken["custom:knowledgebaseId"] || "";
-          
+
           if (!knowledgebaseId) {
             console.log("No knowledgebaseId in token, fetching from API");
-            const res = await fetch(`/api/cognito-user-knowledgebase?cognitoId=${cognitoId}`);
+            const res = await fetch(
+              `/api/cognito-user-knowledgebase?cognitoId=${cognitoId}`
+            );
             const data = await res.json();
             if (Array.isArray(data) && data.length > 0) {
               knowledgebaseId = data[0].knowledgebaseId;
               console.log("Fetched knowledgebaseId:", knowledgebaseId);
-              
-              await updateUserProfile({ "custom:knowledgebaseId": knowledgebaseId });
+
+              await updateUserProfile({
+                "custom:knowledgebaseId": knowledgebaseId,
+              });
               console.log("Updated Cognito custom:knowledgebaseId");
             }
           }
-          
+
           if (knowledgebaseId) {
             setKnowledgebaseId(knowledgebaseId);
           }
