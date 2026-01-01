@@ -33,6 +33,7 @@ import CustomPINInput from "@/components/CustomPINInput";
 
 import { useShallow } from "zustand/react/shallow";
 import useStore from "@/lib/sessionStore";
+import { isEmail } from "@/utils";
 
 /*
 
@@ -168,10 +169,10 @@ export default function LoginPage() {
   const checkUser = useCallback(
     async (user) => {
       try {
-        const isEmail = user.includes('@');
+        const isEmailInput = isEmail(user);
         let apiUrl, data;
         
-        if (isEmail) {
+        if (isEmailInput) {
           console.log("Checking email:", user);
           const res = await fetch(`/api/check-email?email=${encodeURIComponent(user)}&returnUser=true`, {
             method: "GET",
