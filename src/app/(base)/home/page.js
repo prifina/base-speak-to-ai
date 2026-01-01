@@ -298,170 +298,25 @@ export default function HomePage() {
   };
   return (
     <Flex direction="column" p="28px">
-      {showProfileDialog && (
-        <Dialog.Root open={showProfileDialog} trapFocus preventScroll>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content>
-              <Dialog.Header>
-                <Dialog.Title>{UI_TEXT.profile.dialog.title}</Dialog.Title>
-              </Dialog.Header>
-              <Dialog.Body>
-                <VStack spacing={4} align="stretch">
-                  <Field.Root
-                    required
-                    invalid={
-                      !validateAiName(state.profileData.aiName) &&
-                      state.profileData.aiName.length > 0
-                    }
-                  >
-                    <Field.Label>
-                      AI-Name
-                      <Field.RequiredIndicator />
-                    </Field.Label>
-                    <HStack spacing={2}>
-                      <Input
-                        value={state.profileData.aiName}
-                        onChange={(e) =>
-                          setState({
-                            profileData: {
-                              ...state.profileData,
-                              aiName: e.target.value.toLowerCase(),
-                            },
-                            aiNameValidated: false,
-                          })
-                        }
-                        placeholder="your-ai-name"
-                        flex={1}
-                      />
-                      <Button
-                        size="sm"
-                        onClick={handleValidateAiName}
-                        loading={state.validatingAiName}
-                        disabled={!validateAiName(state.profileData.aiName)}
-                      >
-                        Validate
-                      </Button>
-                    </HStack>
-                    <Field.HelperText>
-                      {!validateAiName(state.profileData.aiName) &&
-                      state.profileData.aiName.length > 0
-                        ? "Invalid AI name format"
-                        : "Minimum 4 characters, must include hyphen (-). Valid: a-z, 0-9, -, _, ., ~"}
-                    </Field.HelperText>
-                  </Field.Root>
-                  <Field.Root>
-                    <Field.Label>{UI_TEXT.profile.nameLabel}</Field.Label>
-                    <Input
-                      value={state.profileData.title}
-                      onChange={(e) =>
-                        setState({
-                          profileData: {
-                            ...state.profileData,
-                            title: e.target.value,
-                          },
-                        })
-                      }
-                      placeholder={UI_TEXT.profile.namePlaceholder}
-                    />
-                  </Field.Root>
-
-                  <Field.Root>
-                    <Field.Label>
-                      {UI_TEXT.profile.visibleDescription}
-                    </Field.Label>
-                    <Textarea
-                      value={state.profileData.caption}
-                      onChange={(e) =>
-                        setState({
-                          profileData: {
-                            ...state.profileData,
-                            caption: e.target.value,
-                          },
-                        })
-                      }
-                      placeholder={UI_TEXT.profile.descriptionPlaceholder}
-                      rows={3}
-                    />
-                  </Field.Root>
-
-                  <Field.Root>
-                    <Field.Label>{UI_TEXT.profile.dialog.useCaseLabel}</Field.Label>
-                    <Textarea
-                      value={state.profileData.useCase}
-                      onChange={(e) =>
-                        setState({
-                          profileData: {
-                            ...state.profileData,
-                            useCase: e.target.value,
-                          },
-                        })
-                      }
-                      placeholder={UI_TEXT.profile.dialog.useCasePlaceholder}
-                      rows={3}
-                    />
-                  </Field.Root>
-
-                  <Field.Root
-                    required
-                    invalid={
-                      !validateAiName(state.profileData.aiName) &&
-                      state.profileData.aiName.length > 0
-                    }
-                  >
-                    <Field.Label>
-                      AI-Name
-                      <Field.RequiredIndicator />
-                    </Field.Label>
-                    <HStack spacing={2}>
-                      <Input
-                        value={state.profileData.aiName}
-                        onChange={(e) =>
-                          setState({
-                            profileData: {
-                              ...state.profileData,
-                              aiName: e.target.value.toLowerCase(),
-                            },
-                            aiNameValidated: false,
-                          })
-                        }
-                        placeholder="your-ai-name"
-                        flex={1}
-                      />
-                      <Button
-                        size="sm"
-                        onClick={handleValidateAiName}
-                        loading={state.validatingAiName}
-                        disabled={!validateAiName(state.profileData.aiName)}
-                      >
-                        Validate
-                      </Button>
-                    </HStack>
-                    <Field.HelperText>
-                      {!validateAiName(state.profileData.aiName) &&
-                      state.profileData.aiName.length > 0
-                        ? "Invalid AI name format"
-                        : "Minimum 4 characters, must include hyphen (-). Valid: a-z, 0-9, -, _, ., ~"}
-                    </Field.HelperText>
-                  </Field.Root>
-                </VStack>
-              </Dialog.Body>
-              <Dialog.Footer>
-                <Button
-                  onClick={handleCreateProfile}
-                  loading={state.saving}
-                  disabled={
-                    !validateAiName(state.profileData.aiName) ||
-                    !state.aiNameValidated
-                  }
-                >
-                  {UI_TEXT.profile.dialog.createButton}
-                </Button>
-              </Dialog.Footer>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Dialog.Root>
-      )}
+      <ProfileCreationModal
+        isOpen={showProfileDialog}
+        profileData={state.profileData}
+        onProfileDataChange={(updates) =>
+          setState({
+            profileData: {
+              ...state.profileData,
+              ...updates,
+            },
+            aiNameValidated: updates.aiName ? false : state.aiNameValidated,
+          })
+        }
+        validatingAiName={state.validatingAiName}
+        aiNameValidated={state.aiNameValidated}
+        onValidateAiName={handleValidateAiName}
+        onCreateProfile={handleCreateProfile}
+        saving={state.saving}
+        validateAiName={validateAiName}
+      />
 
       {state.user?.userId && (
         <HStack justify="space-between" mb="20px">
