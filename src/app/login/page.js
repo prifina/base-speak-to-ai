@@ -168,13 +168,28 @@ export default function LoginPage() {
   const checkUser = useCallback(
     async (user) => {
       try {
-        const res = await fetch(`/api/get-cognito-user?username=${encodeURIComponent(user)}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const data = await res.json();
+        const isEmail = user.includes('@');
+        let apiUrl, data;
+        
+        if (isEmail) {
+          console.log("Checking email:", user);
+          const res = await fetch(`/api/check-email?email=${encodeURIComponent(user)}&returnUser=true`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          data = await res.json();
+        } else {
+          console.log("Checking username:", user);
+          const res = await fetch(`/api/get-cognito-user?username=${encodeURIComponent(user)}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          data = await res.json();
+        }
         
         console.log("COGNITO USER DATA:", data);
         
