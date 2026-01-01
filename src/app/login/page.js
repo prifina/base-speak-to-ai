@@ -61,7 +61,6 @@ export default function LoginPage() {
     signIn,
     confirmSignIn,
     getJWTIdToken,
-    usernameAvailable,
     isLoggedIn,
     setLoginName,
     setKnowledgebaseId,
@@ -70,7 +69,6 @@ export default function LoginPage() {
       signIn: state.signIn,
       confirmSignIn: state.confirmSignIn,
       getJWTIdToken: state.getJWTIdToken,
-      usernameAvailable: state.usernameAvailable,
       isLoggedIn: state.isLoggedIn,
       setLoginName: state.setLoginName,
       setKnowledgebaseId: state.setKnowledgebaseId,
@@ -162,34 +160,38 @@ export default function LoginPage() {
 
   const checkUser = useCallback(
     async (user) => {
-      const available = await usernameAvailable(user);
-      if (!available) {
-        setState({ username: user });
-        return true;
-      }
-
-      const res = await fetch(`/api/auth/check-login?user=${user}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await res.json();
-
-      if (!data.login?.knowledgebaseId) {
+      try {
+        const res = await fetch(`/api/get-cognito-user?username=${user}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await res.json();
+        
+        console.log("COGNITO USER DATA:", data);
+        
+        if (data.error) {
+          console.log("User not found in Cognito:", data.error);
+          setError("User not found");
+          return false;
+        }
+        
+        if (data.user) {
+          console.log("Found Cognito user:", data.user);
+          setState({ username: user });
+          return true;
+        }
+        
         setError("User not found");
         return false;
+      } catch (error) {
+        console.error("Error checking user:", error);
+        setError("Error checking user");
+        return false;
       }
-
-      console.log("LOGIN DATA ", data.login);
-      setState({
-        knowledgebaseId: data.login.knowledgebaseId,
-        username: data.login.username,
-        //otpValidated: true,
-      });
-      return true;
     },
-    [usernameAvailable]
+    []
   );
 
   useEffect(() => {
