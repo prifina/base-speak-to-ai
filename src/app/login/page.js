@@ -201,21 +201,70 @@ export default function LoginPage() {
 
         if (data.error) {
           console.log("User not found in Cognito:", data.error);
+          // No cognito user found, try check-login without username/loginType
+          const loginRes = await fetch(`/api/auth/check-login?user=${encodeURIComponent(user)}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          
+          if (loginRes.status === 404) {
+            setError("User not found");
+            return false;
+          }
+          
+          const loginData = await loginRes.json();
+          if (loginData.login?.username) {
+            setState({ username: loginData.login.username });
+            return true;
+          }
+          
           setError("User not found");
           return false;
         }
 
         if (data.username) {
           console.log("Found Cognito user:", data);
-
+          
+          const authenticatorStatus = data.attributes?.authenticatorStatus;
+          
           // Save user status to session for later processing
           setUserStatus({
             emailVerified: data.attributes?.emailVerified || false,
-            authenticatorStatus: data.attributes?.authenticatorStatus,
+            authenticatorStatus: authenticatorStatus,
           });
-
-          setState({ username: data.username });
-          return true;
+          
+          // Check authenticator status
+          if (authenticatorStatus === "0") {
+            // Skip check-login, go directly to PIN verification
+            setState({ username: data.username });
+            return true;
+          }
+          
+          if (["1", "2", "99"].includes(authenticatorStatus)) {
+            // Call check-login with cognito username and loginType 2
+            const loginRes = await fetch(`/api/auth/check-login?user=${encodeURIComponent(user)}&username=${encodeURIComponent(data.username)}&loginType=2`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+            
+            if (loginRes.status === 404) {
+              setError("User not found");
+              return false;
+            }
+            
+            const loginData = await loginRes.json();
+            if (loginData.login?.username) {
+              setState({ username: loginData.login.username });
+              return true;
+            }
+          }
+          
+          setError("Invalid user status");
+          return false;
         }
 
         setError("User not found");
