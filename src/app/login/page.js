@@ -265,6 +265,18 @@ export default function LoginPage() {
                   <Input
                     value={state.loginName}
                     onChange={(e) => setState({ loginName: e.target.value })}
+                    onKeyDown={async (e) => {
+                      if (e.key === "Enter" && state.loginName.trim()) {
+                        setIsBusy(true);
+                        const isValid = await checkUser(state.loginName);
+                        if (isValid) {
+                          setIsBusy(false);
+                          setPage(1);
+                        } else {
+                          setIsBusy(false);
+                        }
+                      }
+                    }}
                     autoComplete="username"
                   />
                   {error ? (
