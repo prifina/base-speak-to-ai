@@ -158,6 +158,19 @@ export default function LoginPage() {
     ]
   );
 
+  const handleValidateAndNext = useCallback(async () => {
+    if (!state.loginName.trim()) return;
+    
+    setIsBusy(true);
+    const isValid = await checkUser(state.loginName);
+    if (isValid) {
+      setIsBusy(false);
+      setPage(1);
+    } else {
+      setIsBusy(false);
+    }
+  }, [checkUser, state.loginName]);
+
   const checkUser = useCallback(
     async (user) => {
       try {
@@ -231,12 +244,7 @@ export default function LoginPage() {
           step={page}
           onStepChange={async (e) => {
             if (e.step === 1) {
-              setIsBusy(true);
-              const isValid = await checkUser(state.loginName);
-              if (isValid) {
-                setIsBusy(false);
-                setPage(e.step);
-              }
+              await handleValidateAndNext();
             } else {
               setError("");
               setIsBusy(false);
@@ -265,16 +273,9 @@ export default function LoginPage() {
                   <Input
                     value={state.loginName}
                     onChange={(e) => setState({ loginName: e.target.value })}
-                    onKeyDown={async (e) => {
-                      if (e.key === "Enter" && state.loginName.trim()) {
-                        setIsBusy(true);
-                        const isValid = await checkUser(state.loginName);
-                        if (isValid) {
-                          setIsBusy(false);
-                          setPage(1);
-                        } else {
-                          setIsBusy(false);
-                        }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleValidateAndNext();
                       }
                     }}
                     autoComplete="username"
