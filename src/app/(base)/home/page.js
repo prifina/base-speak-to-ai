@@ -236,23 +236,30 @@ export default function HomePage() {
   const handleValidateAiName = async () => {
     setState({ validatingAiName: true });
     try {
-      // TODO: Call API to check AI name availability
-      console.log("Validating AI name:", state.profileData.aiName);
-      
-      // Placeholder - replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setState({ validatingAiName: false, aiNameValidated: true });
-      
-      toaster.create({
-        title: "AI name is available",
-        type: "success",
+      const res = await authFetch(`/api/user-knowledgebase?userId=${state.profileData.aiName}&validateOnly=true`, {
+        method: "GET",
       });
+      
+      if (res.status === 404) {
+        // AI name is available (not found)
+        setState({ validatingAiName: false, aiNameValidated: true });
+        toaster.create({
+          title: "AI name is available",
+          type: "success",
+        });
+      } else {
+        // AI name already exists
+        setState({ validatingAiName: false, aiNameValidated: false });
+        toaster.create({
+          title: "AI name is not available",
+          type: "error",
+        });
+      }
     } catch (error) {
       console.error("AI name validation error:", error);
       setState({ validatingAiName: false, aiNameValidated: false });
       toaster.create({
-        title: "AI name is not available",
+        title: "Error checking AI name availability",
         type: "error",
       });
     }
