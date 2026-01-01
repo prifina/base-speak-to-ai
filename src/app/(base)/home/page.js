@@ -339,26 +339,28 @@ export default function HomePage() {
                       AI-Name
                       <Field.RequiredIndicator />
                     </Field.Label>
-                    <Input
-                      value={state.profileData.aiName}
-                      onChange={(e) => setState({
-                        profileData: {
-                          ...state.profileData,
-                          aiName: e.target.value.toLowerCase()
-                        },
-                        aiNameValidated: false
-                      })}
-                      placeholder="your-ai-name"
-                    />
-                    <Button
-                      mt={2}
-                      size="sm"
-                      onClick={handleValidateAiName}
-                      loading={state.validatingAiName}
-                      disabled={!validateAiName(state.profileData.aiName)}
-                    >
-                      Validate
-                    </Button>
+                    <HStack spacing={2}>
+                      <Input
+                        value={state.profileData.aiName}
+                        onChange={(e) => setState({
+                          profileData: {
+                            ...state.profileData,
+                            aiName: e.target.value.toLowerCase()
+                          },
+                          aiNameValidated: false
+                        })}
+                        placeholder="your-ai-name"
+                        flex={1}
+                      />
+                      <Button
+                        size="sm"
+                        onClick={handleValidateAiName}
+                        loading={state.validatingAiName}
+                        disabled={!validateAiName(state.profileData.aiName)}
+                      >
+                        Validate
+                      </Button>
+                    </HStack>
                     <Field.HelperText>
                       Minimum 4 characters, must include hyphen (-). Valid: a-z, 0-9, -, _, ., ~
                     </Field.HelperText>
