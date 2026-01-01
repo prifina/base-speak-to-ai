@@ -25,7 +25,7 @@ import {
 } from "@/lib/validation";
 import { useShallow } from "zustand/react/shallow";
 import useStore from "@/lib/sessionStore";
-import { signUp, signIn } from "aws-amplify/auth";
+import { signUp, signIn, signOut } from "aws-amplify/auth";
 import CustomPINInput from "@/components/CustomPINInput";
 import { v4 as uuidv4 } from "uuid";
 import { verifyEmailAttribute, requestEmailVerificationCode } from "@/lib/userAttributes";
@@ -50,6 +50,7 @@ export default function SignupPage() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [cognitoUsername, setCognitoUsername] = useState("");
   const [tempPassword, setTempPassword] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -217,6 +218,7 @@ export default function SignupPage() {
   };
 
   const handleConfirmSignup = async (code) => {
+    setIsVerifying(true);
     try {
       console.log("VERIFY: Starting email verification process");
       console.log("VERIFY: Verification code:", code);
@@ -231,6 +233,10 @@ export default function SignupPage() {
         description: UI_TEXT.signup.messages.accountVerified,
       });
       
+      // Sign out before redirecting to login
+      console.log("VERIFY: Signing out before redirect");
+      await signOut();
+      
       router.push("/login");
       return true;
     } catch (error) {
@@ -244,6 +250,8 @@ export default function SignupPage() {
         description: error.message || UI_TEXT.signup.messages.invalidCode,
       });
       return false;
+    } finally {
+      setIsVerifying(false);
     }
   };
 
@@ -408,14 +416,20 @@ export default function SignupPage() {
                 setIsBusy={setIsLoading}
                 reset={() => {}}
               />
-              <Flex gap={4} wrap="wrap" justify="center">
-                <Button variant="outline" onClick={handleResendCode}>
-                  {UI_TEXT.account.resendCode}
-                </Button>
-                <Button variant="outline" onClick={() => setShowConfirmation(false)}>
-                  {UI_TEXT.signup.verification.goBack}
-                </Button>
-              </Flex>
+              {isVerifying ? (
+                <Text textAlign="center" fontSize="sm" color="blue.600">
+                  Verifying code...
+                </Text>
+              ) : (
+                <Flex gap={4} wrap="wrap" justify="center">
+                  <Button variant="outline" onClick={handleResendCode}>
+                    {UI_TEXT.account.resendCode}
+                  </Button>
+                  <Button variant="outline" onClick={() => setShowConfirmation(false)}>
+                    {UI_TEXT.signup.verification.goBack}
+                  </Button>
+                </Flex>
+              )}
               <Text textAlign="center" fontSize="sm" color="gray.600">
                 {UI_TEXT.signup.verification.didntReceive}
               </Text>
