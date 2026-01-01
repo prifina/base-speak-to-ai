@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { CognitoIdentityProviderClient, ListUsersCommand } from "@aws-sdk/client-cognito-identity-provider";
+import { transformCognitoUser } from "@/lib/cognitoUserTransform";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,6 +17,7 @@ export async function GET(request) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const email = searchParams.get("email");
+    const returnUser = searchParams.get("returnUser") === "true";
 
     if (!email) {
       return NextResponse.json(
@@ -32,6 +34,12 @@ export async function GET(request) {
 
     const response = await client.send(command);
     const exists = response.Users && response.Users.length > 0;
+
+    if (returnUser && exists) {
+      const cognitoUser = response.Users[0];
+      const transformedUser = transformCognitoUser(cognitoUser);
+      return NextResponse.json(transformedUser);
+    }
 
     return NextResponse.json({ available: !exists });
   } catch (error) {

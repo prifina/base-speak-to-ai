@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestIAM } from "@/lib/graphqlRequestIAM";
+import { transformCognitoUser } from "@/lib/cognitoUserTransform";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -48,29 +49,7 @@ export async function GET(request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
     
-    // Parse attributes into a more usable format
-    const attributes = {};
-    cognitoUser.Attributes?.forEach(attr => {
-      attributes[attr.Name] = attr.Value;
-    });
-    
-    const userInfo = {
-      username: cognitoUser.Username,
-      enabled: cognitoUser.Enabled,
-      userStatus: cognitoUser.UserStatus,
-      userCreateDate: cognitoUser.UserCreateDate,
-      userLastModifiedDate: cognitoUser.UserLastModifiedDate,
-      attributes: {
-        email: attributes.email,
-        emailVerified: attributes.email_verified === 'true',
-        givenName: attributes.given_name,
-        familyName: attributes.family_name,
-        name: attributes.name,
-        preferredUsername: attributes.preferred_username,
-        authenticatorStatus: attributes['custom:authenticator_status'],
-        knowledgebaseId: attributes['custom:knowledgebaseId'],
-      }
-    };
+    const userInfo = transformCognitoUser(cognitoUser);
     
     console.log("[GET-COGNITO-USER] Returning user info:", JSON.stringify(userInfo, null, 2));
     
