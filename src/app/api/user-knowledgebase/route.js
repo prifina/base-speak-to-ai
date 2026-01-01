@@ -10,8 +10,10 @@ export async function GET(request) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const knowledgebaseId = searchParams.get("knowledgebaseId");
+    const userId = searchParams.get("userId");
     const opt = searchParams.get("opt");
     console.log("KNOWLEDGEBASE ID ", knowledgebaseId);
+    console.log("USER ID ", userId);
     console.log("OPT", opt);
     let query;
 
@@ -86,6 +88,16 @@ export async function GET(request) {
           }
         }
       `;
+    } else if (opt === "VALIDATE") {
+      query = `
+        query GetUserKnowledgebase($knowledgebaseId: ID!) {
+          getUserKnowledgebase(knowledgebaseId: $knowledgebaseId) {
+            user {
+              userId
+            }
+          }
+        }
+      `;
     }
 
     let data;
@@ -103,6 +115,11 @@ export async function GET(request) {
       } while (nextToken);
 
       data = { listDocfiles: { items: allItems } };
+    } else if (opt === "VALIDATE") {
+      data = await graphqlRequestUserPool({
+        query,
+        variables: { knowledgebaseId: userId },
+      });
     } else {
       data = await graphqlRequestUserPool({
         query,
@@ -114,6 +131,14 @@ export async function GET(request) {
 
     if (opt === "DOCS") {
       return NextResponse.json({ knowledgeBaseDocs: allItems });
+    }
+
+    if (opt === "VALIDATE") {
+      // Return 404 if user not found (AI name available), 200 if found (AI name taken)
+      if (!data.getUserKnowledgebase?.user) {
+        return NextResponse.json({ available: true }, { status: 404 });
+      }
+      return NextResponse.json({ available: false });
     }
 
     if (opt === "EMAIL" || opt === "STATUS") {
