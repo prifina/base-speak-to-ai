@@ -422,4 +422,18 @@ export const UI_TEXT = {
       fixErrors: "Please fix the errors before submitting",
     },
   },
+
+  login: {
+    title: "Login",
+    usernameLabel: "Username",
+    usernamePlaceholder: "e.g., john_doe",
+    usernameHelper: "Enter your username, email, or AI-name",
+    checkingText: "Checking...",
+    nextButton: "Next",
+    pinLabel: "Enter PIN",
+    pinHelper: "Enter your authenticator PIN code",
+    backButton: "Back",
+    needHelp: "Need help?",
+    noAccount: "Don't have an account?",
+  },
 };

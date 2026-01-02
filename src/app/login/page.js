@@ -24,6 +24,7 @@ import {
   Field,
   Flex,
   Image,
+  Link,
 } from "@chakra-ui/react";
 
 import { AuthContext } from "@/app/providers/AuthProvider";
@@ -33,6 +34,8 @@ import CustomPINInput from "@/components/CustomPINInput";
 import { useShallow } from "zustand/react/shallow";
 import useStore from "@/lib/sessionStore";
 import { isEmail } from "@/utils";
+import { EVALS } from "@/lib/appConfig";
+import { UI_TEXT } from "@/lib/uiStrings";
 
 /*
 
@@ -276,7 +279,7 @@ export default function LoginPage() {
         borderWidth="1px"
         borderRadius="lg"
       >
-        <Heading mb={6}>Login</Heading>
+        <Heading mb={6}>{UI_TEXT.login.title}</Heading>
         <Flex justifyContent="center" mb={6}>
           <Image
             src="/assets/data-center.svg"
@@ -289,7 +292,7 @@ export default function LoginPage() {
         {!state.showPinInput ? (
           <VStack spacing={4} align="stretch">
             <Field.Root invalid={!!error}>
-              <Field.Label>Username</Field.Label>
+              <Field.Label>{UI_TEXT.login.usernameLabel}</Field.Label>
               <Input
                 value={state.loginName}
                 onChange={(e) => setState({ loginName: e.target.value })}
@@ -299,27 +302,27 @@ export default function LoginPage() {
                   }
                 }}
                 autoComplete="username"
-                placeholder="e.g., john_doe"
+                placeholder={UI_TEXT.login.usernamePlaceholder}
               />
               {error ? (
                 <Field.ErrorText>{error}</Field.ErrorText>
               ) : (
-                <Field.HelperText>Enter your username, email, or AI-name</Field.HelperText>
+                <Field.HelperText>{UI_TEXT.login.usernameHelper}</Field.HelperText>
               )}
             </Field.Root>
             <Button 
               onClick={handleNext}
               loading={isBusy} 
-              loadingText="Checking..."
+              loadingText={UI_TEXT.login.checkingText}
               disabled={!state.loginName.trim()}
             >
-              Next
+              {UI_TEXT.login.nextButton}
             </Button>
           </VStack>
         ) : (
           <VStack spacing={4} align="stretch">
             <Field.Root invalid={!!error}>
-              <Field.Label>Enter PIN</Field.Label>
+              <Field.Label>{UI_TEXT.login.pinLabel}</Field.Label>
               <CustomPINInput
                 verify={verify}
                 isBusy={isBusy}
@@ -330,15 +333,24 @@ export default function LoginPage() {
                 <Field.ErrorText>{error}</Field.ErrorText>
               ) : (
                 <Field.HelperText>
-                  Enter your authenticator PIN code
+                  {UI_TEXT.login.pinHelper}
                 </Field.HelperText>
               )}
             </Field.Root>
             <Button onClick={handleBack} variant="outline">
-              Back
+              {UI_TEXT.login.backButton}
             </Button>
           </VStack>
         )}
+        
+        <Flex justify="space-between" mt={6} fontSize="sm">
+          <Link color="blue.500" onClick={() => window.open(EVALS.generalGuideDoc, "_blank")}>
+            {UI_TEXT.login.needHelp}
+          </Link>
+          <Link color="blue.500" onClick={() => router.push("/signup")}>
+            {UI_TEXT.login.noAccount}
+          </Link>
+        </Flex>
       </Box>
     </AbsoluteCenter>
   );
