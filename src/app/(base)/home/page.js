@@ -289,7 +289,7 @@ export default function HomePage() {
         description: state.profileData.useCase || "",
       };
 
-      const res = await authFetch("/api/update-user", {
+      const res = await authFetch("/api/add-new-twin", {
         method: "POST",
         body: JSON.stringify(profilePayload),
       });
