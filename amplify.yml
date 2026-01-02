@@ -1,0 +1,27 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+    build:
+      commands:
+        - env
+        - env | grep -e MY_ACCESS_KEY >> .env.production
+        - env | grep -e MY_SECRET_KEY >> .env.production
+        - env | grep -e LIMITED_ACCESS_KEY >> .env.production
+        - env | grep -e LIMITED_SECRET_KEY >> .env.production
+        - env | grep -e CAPTCHA_SECRET_KEY >> .env.production
+        - env | grep -e STRIPE_SECRET_KEY >> .env.production
+        - env | grep -e CORE_API_URL >> .env.production
+        - env | grep -e CORE_API_KEY >> .env.production
+        - env | grep -e STRIPE_SECRET_PROD_KEY >> .env.production
+        - npm run build
+
+  artifacts:
+    baseDirectory: .next
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - node_modules/**/*
