@@ -34,6 +34,9 @@ export async function POST(request) {
       variables.dailyReport = true;
     }
 
+    // Build mutation dynamically based on available fields
+    const hasEmail = verifiedEmail && verifiedEmail.trim() !== "";
+    
     const mutation = `
       mutation UpdateUser(
         $userId: ID!
@@ -43,10 +46,10 @@ export async function POST(request) {
         $title: String
         $caption: String
         $useCase: String
-        $email: String
+        ${hasEmail ? "$email: String" : ""}
         $status: String
         $trialEnds: String
-        $dailyReport: Boolean
+        ${hasEmail ? "$dailyReport: Boolean" : ""}
       ) {
         updateUser(
           userId: $userId
@@ -56,10 +59,10 @@ export async function POST(request) {
           title: $title
           caption: $caption
           useCase: $useCase
-          ${verifiedEmail && verifiedEmail.trim() !== "" ? "email: $email" : ""}
+          ${hasEmail ? "email: $email" : ""}
           status: $status
           trialEnds: $trialEnds
-          ${verifiedEmail && verifiedEmail.trim() !== "" ? "dailyReport: $dailyReport" : ""}
+          ${hasEmail ? "dailyReport: $dailyReport" : ""}
         ) {
           userId
         }
