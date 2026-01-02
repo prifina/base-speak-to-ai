@@ -41,6 +41,14 @@ export function getHttpStatus(err) {
 }
 
 export async function graphqlRequestUserPool({ query, variables = {}, token }) {
+  // Guard against build-time execution
+  const isBuildTime = process.env.NODE_ENV === 'production' && !process.env.NEXT_RUNTIME;
+  
+  if (isBuildTime) {
+    console.warn("GraphQL request skipped during build time");
+    return null;
+  }
+
   // Prefer an explicit token, otherwise read your custom cookie
   //const jwt = token || cookies().get("cognitoIdToken")?.value;
   const lastAuthUser = cookies().get(
