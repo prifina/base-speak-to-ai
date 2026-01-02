@@ -45,6 +45,7 @@ import SaveButton from "@/components/SaveButton";
 import SharingModal from "@/components/Modals/Sharing";
 import ProfileCreationModal from "@/components/Modals/ProfileCreation";
 
+import { updateKnowledgebaseId } from "@/lib/userAttributes";
 import { useAvatarUpload } from "@/lib/useFileUpload";
 
 const visibleDescriptionMaxLength = 100;
@@ -299,7 +300,6 @@ export default function HomePage() {
       }
 
       // Update Cognito user attribute
-      const { updateKnowledgebaseId } = await import('@/lib/userAttributes');
       await updateKnowledgebaseId(knowledgebaseId);
 
       setShowProfileDialog(false);
