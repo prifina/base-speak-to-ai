@@ -111,6 +111,42 @@ export async function POST(request) {
       },
     });
 
+    // Timer API calls
+    const callTimerApi = async (payload) => {
+      return fetch(process.env.TIMER_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.TIMER_API_KEY,
+        },
+        body: JSON.stringify(payload),
+      });
+    };
+
+    const getDateOffset = (days) => {
+      const date = new Date(variables.trialEnds);
+      date.setDate(date.getDate() + days - 30);
+      return date.toISOString().split("T")[0];
+    };
+
+    const basePayload = {
+      knowledgebaseId,
+      itemType: "PRIFINA",
+      cognitoId: ownerId,
+    };
+
+    await callTimerApi({
+      ...basePayload,
+      prifinaStatus: "TRIAL NOTIFICATION",
+      date: getDateOffset(23),
+    });
+
+    await callTimerApi({
+      ...basePayload,
+      prifinaStatus: "TRIAL ENDED",
+      date: getDateOffset(30),
+    });
+
     return NextResponse.json({ statusText: "OK" });
   } catch (err) {
     return handleApiError(err, "add new twin failed");
