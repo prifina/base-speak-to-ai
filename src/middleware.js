@@ -20,10 +20,12 @@ const PROTECTED_API_PATHS = [
   "/api/get-live-feed",
   "/api/list-message-objects",
   "/api/update-user",
+  "/api/add-new-twin",
   "/api/get-network-config",
   "/api/get-subscription",
   "/api/cognito-user-knowledgebase",
   "/api/get-portal-session",
+  "/api/validate-ai-name",
 ];
 const PUBLIC_API_PATHS = ["/api/auth", "/api/verify-captcha", "/api/check-email", "/api/get-cognito-user"];
 
