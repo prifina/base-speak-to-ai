@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestIAM } from "@/lib/graphqlRequestIAM";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request) {
   try {
     const host = request.headers.get("host");

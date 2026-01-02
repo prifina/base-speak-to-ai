@@ -7,6 +7,7 @@ import {
   useCallback,
   useReducer,
   useRef,
+  Suspense,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { fetchAuthSession } from "aws-amplify/auth";
@@ -56,7 +57,7 @@ login scenarios
 
 */
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/home";
@@ -384,5 +385,13 @@ export default function LoginPage() {
         </Flex>
       </Box>
     </AbsoluteCenter>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }
