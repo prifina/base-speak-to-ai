@@ -8,13 +8,27 @@ export const dynamic = "force-dynamic";
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { userId, ...rest } = body;
+    const { userId, knowledgebaseId, networkId, ownerId, verifiedEmail, ...rest } = body;
 
     if (!userId) {
       return NextResponse.json({ error: "userId is missing" }, { status: 400 });
     }
 
-    const variables = { userId, ...rest };
+    // Set defaults
+    const trialEnds = new Date();
+    trialEnds.setDate(trialEnds.getDate() + 30);
+    
+    const variables = {
+      userId,
+      ownerId,
+      knowledgebaseId,
+      networkId,
+      verifiedEmail,
+      status: "Trial",
+      trialEnds: trialEnds.toISOString().split("T")[0],
+      dailyReport: true,
+      ...rest
+    };
 
     const mutation = `
       mutation UpdateUser(
@@ -25,6 +39,10 @@ export async function POST(request) {
         $title: String
         $caption: String
         $useCase: String
+        $verifiedEmail: String
+        $status: String
+        $trialEnds: String
+        $dailyReport: Boolean
       ) {
         updateUser(
           userId: $userId
@@ -34,6 +52,10 @@ export async function POST(request) {
           title: $title
           caption: $caption
           useCase: $useCase
+          verifiedEmail: $verifiedEmail
+          status: $status
+          trialEnds: $trialEnds
+          dailyReport: $dailyReport
         ) {
           userId
         }
@@ -41,6 +63,25 @@ export async function POST(request) {
     `;
 
     await graphqlRequestUserPool({ query: mutation, variables });
+
+    // Insert KPI tracking
+    const insertKPIMutation = `
+      mutation InsertTwinKPI($input: InsertTwinKPIInput!) {
+        insertTwinKPI(input: $input)
+      }
+    `;
+
+    await graphqlRequestUserPool({
+      query: insertKPIMutation,
+      variables: {
+        input: {
+          userId,
+          knowledgebaseId,
+          networkId,
+          ownerType: 0
+        }
+      }
+    });
 
     // Create CognitoUserKnowledgebase relationship
     const upsertMutation = `
@@ -61,8 +102,8 @@ export async function POST(request) {
     await graphqlRequestUserPool({
       query: upsertMutation,
       variables: {
-        cognitoId: variables.ownerId,
-        knowledgebaseId: variables.knowledgebaseId,
+        cognitoId: ownerId,
+        knowledgebaseId,
       },
     });
 
