@@ -6,7 +6,6 @@ const PROTECTED_PATHS = [
   "/account",
   "/settings",
   "/subscription",
-  "/about",
   "/home",
   "/knowledge",
   "/insights",
@@ -27,7 +26,12 @@ const PROTECTED_API_PATHS = [
   "/api/get-portal-session",
   "/api/validate-ai-name",
 ];
-const PUBLIC_API_PATHS = ["/api/auth", "/api/verify-captcha", "/api/check-email", "/api/get-cognito-user"];
+const PUBLIC_API_PATHS = [
+  "/api/auth",
+  "/api/verify-captcha",
+  "/api/check-email",
+  "/api/get-cognito-user",
+];
 
 export function middleware(req) {
   const { pathname } = req.nextUrl;
@@ -39,7 +43,14 @@ export function middleware(req) {
   );
   const isPublicApi = PUBLIC_API_PATHS.some((p) => pathname.startsWith(p));
 
-  console.log("[MIDDLEWARE] isProtectedPage:", isProtectedPage, "isProtectedApi:", isProtectedApi, "isPublicApi:", isPublicApi);
+  console.log(
+    "[MIDDLEWARE] isProtectedPage:",
+    isProtectedPage,
+    "isProtectedApi:",
+    isProtectedApi,
+    "isPublicApi:",
+    isPublicApi
+  );
 
   if (isPublicApi) {
     console.log("[MIDDLEWARE] Public API, allowing");
