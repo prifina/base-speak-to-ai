@@ -9,13 +9,11 @@ frontend:
         - env
         - env | grep -e MY_ACCESS_KEY >> .env.production
         - env | grep -e MY_SECRET_KEY >> .env.production
-        - env | grep -e LIMITED_ACCESS_KEY >> .env.production
-        - env | grep -e LIMITED_SECRET_KEY >> .env.production
         - env | grep -e CAPTCHA_SECRET_KEY >> .env.production
-        - env | grep -e STRIPE_SECRET_KEY >> .env.production
         - env | grep -e CORE_API_URL >> .env.production
         - env | grep -e CORE_API_KEY >> .env.production
-        - env | grep -e STRIPE_SECRET_PROD_KEY >> .env.production
+        - env | grep -e TIMER_API_URL >> .env.production
+        - env | grep -e TIMER_API_KEY >> .env.production
         - npm run build
 
   artifacts:
