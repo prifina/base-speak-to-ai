@@ -278,6 +278,10 @@ export default function HomePage() {
   const handleCreateProfile = async () => {
     setState({ saving: true });
     try {
+      if (!cognitoId) {
+        throw new Error("User not authenticated - missing cognitoId");
+      }
+
       const { v4: uuidv4 } = await import('uuid');
       const knowledgebaseId = uuidv4();
       const networkId = activeGroup || "x_prifina";
