@@ -59,7 +59,7 @@ export function UserMenuFloating() {
                 {APPS.map((app) => (
                   <Menu.Item
                     key={app.key}
-                    value={app.href}
+                    value={app.key}
                     borderRadius="md"
                     p="2"
                     onClick={() => router.push(app.href)}
@@ -75,7 +75,7 @@ export function UserMenuFloating() {
               <Menu.Separator my="3" />
 
               <Menu.Item
-                value="/help"
+                value="help"
                 onClick={() => window.open(EVALS.generalGuideDoc, "_blank")}
               >
                 <HStack gap="3">
@@ -84,7 +84,7 @@ export function UserMenuFloating() {
                 </HStack>
               </Menu.Item>
               <Menu.Item
-                value="/logout"
+                value="logout"
                 onClick={handleLogout}
               >
                 <HStack gap="3">
