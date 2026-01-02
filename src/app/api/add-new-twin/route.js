@@ -23,7 +23,7 @@ export async function POST(request) {
       ownerId,
       knowledgebaseId,
       networkId,
-      verifiedEmail,
+      email: verifiedEmail,
       status: "Trial",
       trialEnds: trialEnds.toISOString().split("T")[0],
       dailyReport: true,
@@ -39,7 +39,7 @@ export async function POST(request) {
         $title: String
         $caption: String
         $useCase: String
-        $verifiedEmail: String
+        $email: String
         $status: String
         $trialEnds: String
         $dailyReport: Boolean
@@ -52,7 +52,7 @@ export async function POST(request) {
           title: $title
           caption: $caption
           useCase: $useCase
-          verifiedEmail: $verifiedEmail
+          email: $email
           status: $status
           trialEnds: $trialEnds
           dailyReport: $dailyReport
