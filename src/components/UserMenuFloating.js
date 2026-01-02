@@ -2,19 +2,37 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { HStack, Icon, Menu, Portal, SimpleGrid, Text } from "@chakra-ui/react";
+import { HStack, Icon, Menu, Portal, SimpleGrid, Text, Image } from "@chakra-ui/react";
 import { FloatingMenuWrap } from "@/components/app-shell/Styled";
 import { UserMenuAvatar } from "@/components/UserMenuAvatar";
-import { LuLayoutDashboard, LuCreditCard, LuSettings } from "react-icons/lu";
+import { IoMdHelpCircleOutline } from "react-icons/io";
+import { MdLogout } from "react-icons/md";
+import { signOut } from "aws-amplify/auth";
+import { EVALS } from "@/lib/appConfig";
+import useStore from "@/lib/sessionStore";
+
+import { UI_TEXT } from "@/lib/uiStrings";
 
 const APPS = [
-  { key: "admin", label: "Admin", href: "/dashboard", icon: LuLayoutDashboard },
-  { key: "billing", label: "Billing", href: "/overview", icon: LuCreditCard },
-  { key: "settings", label: "Settings", href: "/settings", icon: LuSettings },
+  { key: "base", label: UI_TEXT.app.title, href: "/home", icon: "/assets/prifina_icons/base_app.svg" },
+  { key: "account", label: "Prifina Account", href: "/account", icon: "/assets/prifina_icons/prifina_account.svg" },
 ];
 
 export function UserMenuFloating() {
   const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      // Clear sessionStorage
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem("prifina-base");
+      }
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   return (
     <FloatingMenuWrap>
@@ -34,7 +52,7 @@ export function UserMenuFloating() {
           <Menu.Positioner>
             <Menu.Content p="3" minW="280px" mt="2">
               <Text fontSize="sm" fontWeight="semibold" mb="2">
-                All Apps
+                {UI_TEXT.app.menu}
               </Text>
 
               <SimpleGrid columns={2} gap="2">
@@ -47,7 +65,7 @@ export function UserMenuFloating() {
                     onClick={() => router.push(app.href)}
                   >
                     <HStack gap="3">
-                      <Icon as={app.icon} />
+                      <Image src={app.icon} alt={app.label} boxSize="4" />
                       <Text fontSize="sm">{app.label}</Text>
                     </HStack>
                   </Menu.Item>
@@ -57,16 +75,22 @@ export function UserMenuFloating() {
               <Menu.Separator my="3" />
 
               <Menu.Item
-                value="/account"
-                onClick={() => router.push("/account")}
+                value="/help"
+                onClick={() => window.open(EVALS.generalGuideDoc, "_blank")}
               >
-                Account
+                <HStack gap="3">
+                  <Icon as={IoMdHelpCircleOutline} />
+                  <Text fontSize="sm">{UI_TEXT.app.help}</Text>
+                </HStack>
               </Menu.Item>
               <Menu.Item
                 value="/logout"
-                onClick={() => alert("Demo: implement sign-out")}
+                onClick={handleLogout}
               >
-                Logout
+                <HStack gap="3">
+                  <Icon as={MdLogout} />
+                  <Text fontSize="sm">Logout</Text>
+                </HStack>
               </Menu.Item>
             </Menu.Content>
           </Menu.Positioner>
