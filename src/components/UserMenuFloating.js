@@ -1,31 +1,31 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { useRouter } from "next/navigation"
-import {
-  HStack,
-  Icon,
-  Menu,
-  Portal,
-  SimpleGrid,
-  Text,
-} from "@chakra-ui/react"
-import { FloatingMenuWrap } from "@/components/app-shell/Styled"
-import { UserMenuAvatar } from "@/components/UserMenuAvatar"
-import { LuLayoutDashboard, LuCreditCard, LuSettings } from "react-icons/lu"
+import * as React from "react";
+import { useRouter } from "next/navigation";
+import { HStack, Icon, Menu, Portal, SimpleGrid, Text } from "@chakra-ui/react";
+import { FloatingMenuWrap } from "@/components/app-shell/Styled";
+import { UserMenuAvatar } from "@/components/UserMenuAvatar";
+import { LuLayoutDashboard, LuCreditCard, LuSettings } from "react-icons/lu";
 
 const APPS = [
   { key: "admin", label: "Admin", href: "/dashboard", icon: LuLayoutDashboard },
   { key: "billing", label: "Billing", href: "/overview", icon: LuCreditCard },
   { key: "settings", label: "Settings", href: "/settings", icon: LuSettings },
-]
+];
 
 export function UserMenuFloating() {
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <FloatingMenuWrap>
-      <Menu.Root positioning={{ strategy: "fixed", placement: "bottom-end", hideWhenDetached: true, gutter: 16 }}>
+      <Menu.Root
+        positioning={{
+          strategy: "fixed",
+          placement: "bottom-end",
+          hideWhenDetached: true,
+          gutter: 16,
+        }}
+      >
         <Menu.Trigger asChild>
           <UserMenuAvatar />
         </Menu.Trigger>
@@ -34,7 +34,7 @@ export function UserMenuFloating() {
           <Menu.Positioner>
             <Menu.Content p="3" minW="280px" mt="2">
               <Text fontSize="sm" fontWeight="semibold" mb="2">
-                Switch area
+                All Apps
               </Text>
 
               <SimpleGrid columns={2} gap="2">
@@ -56,10 +56,16 @@ export function UserMenuFloating() {
 
               <Menu.Separator my="3" />
 
-              <Menu.Item value="/account" onClick={() => router.push("/account")}>
+              <Menu.Item
+                value="/account"
+                onClick={() => router.push("/account")}
+              >
                 Account
               </Menu.Item>
-              <Menu.Item value="/logout" onClick={() => alert("Demo: implement sign-out")}>
+              <Menu.Item
+                value="/logout"
+                onClick={() => alert("Demo: implement sign-out")}
+              >
                 Logout
               </Menu.Item>
             </Menu.Content>
@@ -67,5 +73,5 @@ export function UserMenuFloating() {
         </Portal>
       </Menu.Root>
     </FloatingMenuWrap>
-  )
+  );
 }
