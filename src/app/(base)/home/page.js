@@ -298,6 +298,14 @@ export default function HomePage() {
         throw new Error("Failed to create profile");
       }
 
+      // Update Cognito user attribute
+      const { updateUserAttributes } = await import('aws-amplify/auth');
+      await updateUserAttributes({
+        userAttributes: {
+          'custom:knowledgebaseId': knowledgebaseId,
+        },
+      });
+
       setShowProfileDialog(false);
       setState({ saving: false });
       
