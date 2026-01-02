@@ -23,12 +23,16 @@ export async function POST(request) {
       ownerId,
       knowledgebaseId,
       networkId,
-      email: verifiedEmail,
       status: "Trial",
       trialEnds: trialEnds.toISOString().split("T")[0],
-      dailyReport: true,
       ...rest
     };
+
+    // Add email and dailyReport only if verifiedEmail exists
+    if (verifiedEmail && verifiedEmail.trim() !== "") {
+      variables.email = verifiedEmail;
+      variables.dailyReport = true;
+    }
 
     const mutation = `
       mutation UpdateUser(
@@ -52,10 +56,10 @@ export async function POST(request) {
           title: $title
           caption: $caption
           useCase: $useCase
-          email: $email
+          ${verifiedEmail && verifiedEmail.trim() !== "" ? "email: $email" : ""}
           status: $status
           trialEnds: $trialEnds
-          dailyReport: $dailyReport
+          ${verifiedEmail && verifiedEmail.trim() !== "" ? "dailyReport: $dailyReport" : ""}
         ) {
           userId
         }
