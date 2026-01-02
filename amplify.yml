@@ -21,6 +21,10 @@ frontend:
         - env | grep -e GRAPHQL_API >> .env.production
         - env | grep -e SPEAK_TO_CDN >> .env.production
         - env | grep -e UPLOAD_BUCKET >> .env.production
+        - env | grep -e NEXT_PUBLIC_SPEAK_TO_USER >> .env.production
+        - env | grep -e NEXT_PUBLIC_APP_ID >> .env.production
+        - env | grep -e NEXT_PUBLIC_CAPTCHA_SITE_KEY >> .env.production
+        - env | grep -e WEB_SOCKET_URL >> .env.production
         - npm run build
 
   artifacts:
