@@ -12,12 +12,10 @@ import { EVALS } from "@/lib/appConfig";
 import useStore from "@/lib/sessionStore";
 
 import { UI_TEXT } from "@/lib/uiStrings";
-import BaseAppIcon from "@/assets/prifina_icons/base_app.svg";
-import PrifinaAccountIcon from "@/assets/prifina_icons/prifina_account.svg";
 
 const APPS = [
-  { key: "base", label: UI_TEXT.app.title, href: "/home", icon: BaseAppIcon },
-  { key: "account", label: "Prifina Account", href: "/account", icon: PrifinaAccountIcon },
+  { key: "base", label: UI_TEXT.app.title, href: "/home", icon: "/assets/prifina_icons/base_app.svg" },
+  { key: "account", label: "Prifina Account", href: "/account", icon: "/assets/prifina_icons/prifina_account.svg" },
 ];
 
 export function UserMenuFloating() {
@@ -67,7 +65,7 @@ export function UserMenuFloating() {
                     onClick={() => router.push(app.href)}
                   >
                     <HStack gap="3">
-                      <Image src={app.icon} alt={app.label} boxSize="4" />
+                      <Image src={app.icon} alt={app.label} boxSize="8" />
                       <Text fontSize="sm">{app.label}</Text>
                     </HStack>
                   </Menu.Item>
@@ -81,7 +79,7 @@ export function UserMenuFloating() {
                 onClick={() => window.open(EVALS.generalGuideDoc, "_blank")}
               >
                 <HStack gap="3">
-                  <Icon as={IoMdHelpCircleOutline} />
+                  <Icon as={IoMdHelpCircleOutline} boxSize="5" />
                   <Text fontSize="sm">{UI_TEXT.app.help}</Text>
                 </HStack>
               </Menu.Item>
@@ -90,7 +88,7 @@ export function UserMenuFloating() {
                 onClick={handleLogout}
               >
                 <HStack gap="3">
-                  <Icon as={MdLogout} />
+                  <Icon as={MdLogout} boxSize="5" />
                   <Text fontSize="sm">{UI_TEXT.app.logout}</Text>
                 </HStack>
               </Menu.Item>
