@@ -363,7 +363,12 @@ export default function LoginPage() {
                 </Field.HelperText>
               )}
             </Field.Root>
-            <Button onClick={handleBack} variant="outline">
+            <Button 
+              onClick={handleBack} 
+              variant="outline"
+              loading={isBusy}
+              loadingText="Verifying..."
+            >
               {UI_TEXT.login.backButton}
             </Button>
           </VStack>
