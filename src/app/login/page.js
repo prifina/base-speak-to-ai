@@ -83,6 +83,7 @@ export default function LoginPage() {
       username: "",
       loginName: "",
       showPinInput: false,
+      loginType: null,
     }
   );
 
@@ -94,7 +95,7 @@ export default function LoginPage() {
       setLoginName(state.loginName);
       const signInResponse = await signIn(state.username);
       if (signInResponse) {
-        const confirmSignInResponse = await confirmSignIn(code);
+        const confirmSignInResponse = await confirmSignIn(code, state.loginType);
         if (confirmSignInResponse) {
           const { tokens } = await fetchAuthSession();
           const idToken = tokens.idToken.payload;
@@ -132,6 +133,7 @@ export default function LoginPage() {
       signIn,
       confirmSignIn,
       state.username,
+      state.loginType,
       redirect,
       router,
       state.loginName,
@@ -220,7 +222,7 @@ export default function LoginPage() {
           
           if (authenticatorStatus === "0") {
             console.log("[LOGIN] authenticatorStatus is 0, proceeding directly");
-            setState({ username: data.username });
+            setState({ username: data.username, loginType: null });
             return true;
           }
           
@@ -245,7 +247,7 @@ export default function LoginPage() {
             console.log("[LOGIN] check-login with loginType 2 response:", loginData);
             if (loginData.login?.username) {
               console.log("[LOGIN] Found username in check-login with loginType 2:", loginData.login.username);
-              setState({ username: loginData.login.username });
+              setState({ username: loginData.login.username, loginType: 2 });
               return true;
             }
           }
