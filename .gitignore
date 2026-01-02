@@ -51,3 +51,5 @@ envConfig.sh
 
 /next-cognito-nav-src-example/
 /chakra-nextjs-sidemenu-example/
+.amazonq
+*.code-workspace
