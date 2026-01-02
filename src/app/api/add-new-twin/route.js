@@ -66,6 +66,26 @@ export async function POST(request) {
       },
     });
 
+    // Update Cognito user custom:knowledgebaseId attribute
+    const { CognitoIdentityProviderClient, AdminUpdateUserAttributesCommand } = await import("@aws-sdk/client-cognito-identity-provider");
+    
+    const cognitoClient = new CognitoIdentityProviderClient({
+      region: process.env.MY_REGION,
+    });
+
+    const updateAttributesCommand = new AdminUpdateUserAttributesCommand({
+      UserPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID,
+      Username: variables.ownerId,
+      UserAttributes: [
+        {
+          Name: "custom:knowledgebaseId",
+          Value: variables.knowledgebaseId,
+        },
+      ],
+    });
+
+    await cognitoClient.send(updateAttributesCommand);
+
     return NextResponse.json({ statusText: "OK" });
   } catch (err) {
     return handleApiError(err, "add new twin failed");
