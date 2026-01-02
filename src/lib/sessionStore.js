@@ -100,7 +100,7 @@ const usePersistentStore = create((set, get) => {
             clientMetadata: {
               flow: "base-otp",
               loginName: get().loginName,
-              loginType,
+              loginType: loginType ? String(loginType) : null,
 
               // any non-sensitive routing hint
             },
