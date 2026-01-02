@@ -27,6 +27,9 @@ export async function POST(request) {
     const mutation = `
       mutation UpdateUser(
         $userId: ID!
+        $ownerId: ID
+        $knowledgebaseId: ID
+        $networkId: String
         $email: String
         $title: String
         $caption: String
@@ -60,6 +63,9 @@ export async function POST(request) {
       ) {
         updateUser(
           userId: $userId
+          ownerId: $ownerId
+          knowledgebaseId: $knowledgebaseId
+          networkId: $networkId
           email: $email
           title: $title
           caption: $caption

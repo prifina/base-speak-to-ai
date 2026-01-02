@@ -57,12 +57,13 @@ export default function HomePage() {
   // console.log("IS MOBILE ", isMobile);
   const { user, loaded: authLoaded } = useContext(AuthContext);
 
-  const { cognitoId, knowledgebaseId, language, setUserStatus } = useStore(
+  const { cognitoId, knowledgebaseId, language, setUserStatus, activeGroup } = useStore(
     useShallow((state) => ({
       cognitoId: state.cognitoId,
       knowledgebaseId: state.knowledgebaseId,
       language: state.language,
       setUserStatus: state.setUserStatus,
+      activeGroup: state.getActiveGroup(),
     }))
   );
 
@@ -274,14 +275,34 @@ export default function HomePage() {
   const handleCreateProfile = async () => {
     setState({ saving: true });
     try {
-      // TODO: Call API to create knowledgebase with profile data
-      console.log("Creating profile:", state.profileData);
+      const { v4: uuidv4 } = await import('uuid');
+      const knowledgebaseId = uuidv4();
+      const networkId = activeGroup || "x_prifina";
+      
+      const profilePayload = {
+        userId: state.profileData.aiName,
+        ownerId: cognitoId,
+        knowledgebaseId,
+        networkId,
+        title: state.profileData.title || "",
+        caption: state.profileData.caption || "",
+        description: state.profileData.useCase || "",
+      };
 
-      // Placeholder - replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const res = await authFetch("/api/update-user", {
+        method: "POST",
+        body: JSON.stringify(profilePayload),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to create profile");
+      }
 
       setShowProfileDialog(false);
       setState({ saving: false });
+      
+      // Refresh the page to load the new profile
+      window.location.reload();
 
       toaster.create({
         title: "Profile created",
