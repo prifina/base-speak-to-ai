@@ -299,12 +299,8 @@ export default function HomePage() {
       }
 
       // Update Cognito user attribute
-      const { updateUserAttributes } = await import('aws-amplify/auth');
-      await updateUserAttributes({
-        userAttributes: {
-          'custom:knowledgebaseId': knowledgebaseId,
-        },
-      });
+      const { updateKnowledgebaseId } = await import('@/lib/userAttributes');
+      await updateKnowledgebaseId(knowledgebaseId);
 
       setShowProfileDialog(false);
       setState({ saving: false });

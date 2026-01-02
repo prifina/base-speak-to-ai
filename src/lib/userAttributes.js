@@ -73,3 +73,17 @@ export async function requestEmailVerificationCode() {
     throw error;
   }
 }
+
+export async function updateKnowledgebaseId(knowledgebaseId) {
+  try {
+    await updateUserAttributes({
+      userAttributes: {
+        'custom:knowledgebaseId': knowledgebaseId,
+      },
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating knowledgebaseId:", error);
+    throw error;
+  }
+}
