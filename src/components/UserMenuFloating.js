@@ -89,7 +89,7 @@ export function UserMenuFloating() {
               >
                 <HStack gap="3">
                   <Icon as={MdLogout} />
-                  <Text fontSize="sm">Logout</Text>
+                  <Text fontSize="sm">{UI_TEXT.app.logout}</Text>
                 </HStack>
               </Menu.Item>
             </Menu.Content>

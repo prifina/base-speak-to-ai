@@ -3,6 +3,7 @@ export const UI_TEXT = {
     title: "Base",
     menu: "Menu",
     help: "Help",
+    logout: "Logout",
   },
 
   qrCode: {
