@@ -27,7 +27,7 @@ export async function GET(request) {
     }
 
     const command = new ListUsersCommand({
-      UserPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID,
+      UserPoolId: process.env.COGNITO_USER_POOL_ID || process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID,
       Filter: `email = "${email}"`,
       Limit: 1,
     });

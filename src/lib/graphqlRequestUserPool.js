@@ -41,24 +41,15 @@ export function getHttpStatus(err) {
 }
 
 export async function graphqlRequestUserPool({ query, variables = {}, token }) {
-  // Guard against build-time execution
-  const isBuildTime = process.env.NODE_ENV === 'production' && !process.env.NEXT_RUNTIME;
+  const clientId = process.env.COGNITO_CLIENT_ID || process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID;
   
-  if (isBuildTime) {
-    console.warn("GraphQL request skipped during build time");
-    return null;
-  }
-
-  // Prefer an explicit token, otherwise read your custom cookie
-  //const jwt = token || cookies().get("cognitoIdToken")?.value;
   const lastAuthUser = cookies().get(
-    `CognitoIdentityServiceProvider.${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}.LastAuthUser`
+    `CognitoIdentityServiceProvider.${clientId}.LastAuthUser`
   )?.value;
   console.log("LAST AUTH USER ", lastAuthUser);
   const jwt = cookies().get(
-    `CognitoIdentityServiceProvider.${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}.${lastAuthUser}.idToken`
+    `CognitoIdentityServiceProvider.${clientId}.${lastAuthUser}.idToken`
   )?.value;
-  //const token = cookies["cognitoIdToken"];
   console.log("JWT ", jwt);
 
   if (!jwt) {

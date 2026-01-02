@@ -63,11 +63,12 @@ export function middleware(req) {
   }
 
   const cookies = parse(req.headers.get("cookie") || "");
+  const clientId = process.env.COGNITO_CLIENT_ID || process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID;
   const lastAuthUser =
     cookies[
-      `CognitoIdentityServiceProvider.${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}.LastAuthUser`
+      `CognitoIdentityServiceProvider.${clientId}.LastAuthUser`
     ];
-  const idToken = `CognitoIdentityServiceProvider.${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}.${lastAuthUser}.idToken`;
+  const idToken = `CognitoIdentityServiceProvider.${clientId}.${lastAuthUser}.idToken`;
   const token = cookies[idToken];
 
   console.log("[MIDDLEWARE] Has token:", !!token);

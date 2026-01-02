@@ -14,6 +14,10 @@ frontend:
         - env | grep -e CORE_API_KEY >> .env.production
         - env | grep -e TIMER_API_URL >> .env.production
         - env | grep -e TIMER_API_KEY >> .env.production
+        - env | grep -e COGNITO_USER_POOL_ID >> .env.production
+        - env | grep -e COGNITO_CLIENT_ID >> .env.production
+        - env | grep -e COGNITO_IDENTITY_POOL_ID >> .env.production
+        - env | grep -e GRAPHQL_API >> .env.production
         - npm run build
 
   artifacts:
