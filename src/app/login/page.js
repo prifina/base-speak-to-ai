@@ -289,7 +289,7 @@ export default function LoginPage() {
                   }
                 }}
                 autoComplete="username"
-                placeholder="Enter your username or email"
+                placeholder="e.g., john_doe"
               />
               {error ? (
                 <Field.ErrorText>{error}</Field.ErrorText>
