@@ -64,16 +64,27 @@ function SideNavContent({ items, collapsed, onToggleCollapsed, onNavigate }) {
     <Flex direction="column" h="100dvh">
       <SideNavHeader collapsed={collapsed}>
         {collapsed ? (
-          <Flex
-            w="full"
-            justify="center"
-            cursor="pointer"
-            onClick={() => go("/home")}
-            _hover={{ bg: "rgba(255, 255, 255, 0.1)" }}
-            borderRadius="md"
-            p={2}
-          >
-            <Image src="/assets/base_icon.svg" alt="Logo" boxSize="6" />
+          <Flex direction="column" w="full" align="center" gap={2}>
+            <Flex
+              w="full"
+              justify="center"
+              cursor="pointer"
+              onClick={() => go("/home")}
+              _hover={{ bg: "rgba(255, 255, 255, 0.1)" }}
+              borderRadius="md"
+              p={2}
+            >
+              <Image src="/assets/base_icon.svg" alt="Logo" boxSize="6" />
+            </Flex>
+            <IconButton
+              aria-label="Expand sidebar"
+              variant="ghost"
+              size="sm"
+              onClick={onToggleCollapsed}
+              color="white"
+            >
+              <Icon as={LuChevronRight} />
+            </IconButton>
           </Flex>
         ) : (
           <>
