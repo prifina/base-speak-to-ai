@@ -289,6 +289,7 @@ export default function HomePage() {
         title: state.profileData.title || "",
         caption: state.profileData.caption || "",
         useCase: state.profileData.useCase || "",
+        verifiedEmail: user?.email || "",
       };
 
       const res = await authFetch("/api/add-new-twin", {
