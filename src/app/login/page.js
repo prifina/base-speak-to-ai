@@ -142,11 +142,14 @@ export default function LoginPage() {
 
   const checkUser = useCallback(
     async (user) => {
+      console.log("[LOGIN] checkUser called with:", user);
       try {
         const isEmailInput = isEmail(user);
+        console.log("[LOGIN] isEmailInput:", isEmailInput);
         let data;
 
         if (isEmailInput) {
+          console.log("[LOGIN] Checking email:", user);
           const res = await fetch(
             `/api/check-email?email=${encodeURIComponent(
               user
@@ -159,7 +162,9 @@ export default function LoginPage() {
             }
           );
           data = await res.json();
+          console.log("[LOGIN] check-email response:", data);
         } else {
+          console.log("[LOGIN] Checking username:", user);
           const res = await fetch(
             `/api/get-cognito-user?username=${encodeURIComponent(user)}`,
             {
@@ -170,9 +175,11 @@ export default function LoginPage() {
             }
           );
           data = await res.json();
+          console.log("[LOGIN] get-cognito-user response:", data);
         }
 
         if (data.error) {
+          console.log("[LOGIN] No cognito user found, trying check-login");
           const loginRes = await fetch(`/api/auth/check-login?user=${encodeURIComponent(user)}`, {
             method: "GET",
             headers: {
@@ -180,23 +187,31 @@ export default function LoginPage() {
             },
           });
           
+          console.log("[LOGIN] check-login status:", loginRes.status);
+          
           if (loginRes.status === 404) {
+            console.log("[LOGIN] check-login returned 404");
             setError("User not found");
             return false;
           }
           
           const loginData = await loginRes.json();
+          console.log("[LOGIN] check-login response:", loginData);
           if (loginData.login?.username) {
+            console.log("[LOGIN] Found username in check-login:", loginData.login.username);
             setState({ username: loginData.login.username });
             return true;
           }
           
+          console.log("[LOGIN] No username in check-login response");
           setError("User not found");
           return false;
         }
 
         if (data.username) {
+          console.log("[LOGIN] Found Cognito user:", data.username);
           const authenticatorStatus = data.attributes?.authenticatorStatus;
+          console.log("[LOGIN] authenticatorStatus:", authenticatorStatus);
           
           setUserStatus({
             emailVerified: data.attributes?.emailVerified || false,
@@ -204,11 +219,13 @@ export default function LoginPage() {
           });
           
           if (authenticatorStatus === "0") {
+            console.log("[LOGIN] authenticatorStatus is 0, proceeding directly");
             setState({ username: data.username });
             return true;
           }
           
           if (["1", "2", "99"].includes(authenticatorStatus)) {
+            console.log("[LOGIN] authenticatorStatus requires check-login, calling with loginType 2");
             const loginRes = await fetch(`/api/auth/check-login?user=${encodeURIComponent(user)}&username=${encodeURIComponent(data.username)}&loginType=2`, {
               method: "GET",
               headers: {
@@ -216,26 +233,33 @@ export default function LoginPage() {
               },
             });
             
+            console.log("[LOGIN] check-login with loginType 2 status:", loginRes.status);
+            
             if (loginRes.status === 404) {
+              console.log("[LOGIN] check-login with loginType 2 returned 404");
               setError("User not found");
               return false;
             }
             
             const loginData = await loginRes.json();
+            console.log("[LOGIN] check-login with loginType 2 response:", loginData);
             if (loginData.login?.username) {
+              console.log("[LOGIN] Found username in check-login with loginType 2:", loginData.login.username);
               setState({ username: loginData.login.username });
               return true;
             }
           }
           
+          console.log("[LOGIN] Invalid authenticator status or no username found");
           setError("Invalid user status");
           return false;
         }
 
+        console.log("[LOGIN] No username in response");
         setError("User not found");
         return false;
       } catch (error) {
-        console.error("Error checking user:", error);
+        console.error("[LOGIN] Error in checkUser:", error);
         setError("Error checking user");
         return false;
       }
