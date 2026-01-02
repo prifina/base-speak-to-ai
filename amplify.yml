@@ -9,6 +9,7 @@ frontend:
         - env
         - env | grep -e MY_ACCESS_KEY >> .env.production
         - env | grep -e MY_SECRET_KEY >> .env.production
+        - env | grep -e MY_REGION >> .env.production
         - env | grep -e CAPTCHA_SECRET_KEY >> .env.production
         - env | grep -e CORE_API_URL >> .env.production
         - env | grep -e CORE_API_KEY >> .env.production
@@ -18,6 +19,8 @@ frontend:
         - env | grep -e COGNITO_CLIENT_ID >> .env.production
         - env | grep -e COGNITO_IDENTITY_POOL_ID >> .env.production
         - env | grep -e GRAPHQL_API >> .env.production
+        - env | grep -e SPEAK_TO_CDN >> .env.production
+        - env | grep -e UPLOAD_BUCKET >> .env.production
         - npm run build
 
   artifacts:
