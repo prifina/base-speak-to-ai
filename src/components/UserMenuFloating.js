@@ -52,7 +52,7 @@ export function UserMenuFloating() {
           <Menu.Positioner>
             <Menu.Content p="3" minW="280px" mt="2">
               <Text fontSize="sm" fontWeight="semibold" mb="2">
-                {UI_TEXT.app.menu}
+                {UI_TEXT.app.allApps}
               </Text>
 
               <SimpleGrid columns={2} gap="2">

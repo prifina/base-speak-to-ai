@@ -4,6 +4,7 @@ export const UI_TEXT = {
     menu: "Menu",
     help: "Help",
     logout: "Logout",
+    allApps: "All Apps",
   },
 
   qrCode: {
