@@ -2,6 +2,14 @@ import { Amplify } from "aws-amplify";
 import { generateClient } from "aws-amplify/api";
 
 function ensureConfigured() {
+  // Guard against build-time execution
+  const isBuildTime = process.env.NODE_ENV === 'production' && !process.env.NEXT_RUNTIME;
+  
+  if (isBuildTime) {
+    console.warn("Amplify configuration skipped during build time");
+    return;
+  }
+
   Amplify.configure(
     {
       API: {
@@ -29,6 +37,14 @@ function ensureConfigured() {
 }
 
 export const graphqlRequestIAM = async ({ query, variables = {} }) => {
+  // Guard against build-time execution
+  const isBuildTime = process.env.NODE_ENV === 'production' && !process.env.NEXT_RUNTIME;
+  
+  if (isBuildTime) {
+    console.warn("GraphQL IAM request skipped during build time");
+    return null;
+  }
+
   ensureConfigured();
   const client = generateClient({ authMode: "iam" });
 
