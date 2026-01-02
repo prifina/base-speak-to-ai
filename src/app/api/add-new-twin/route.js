@@ -42,6 +42,30 @@ export async function POST(request) {
 
     await graphqlRequestUserPool({ query: mutation, variables });
 
+    // Create CognitoUserKnowledgebase relationship
+    const upsertMutation = `
+      mutation UpsertCognitoUserKnowledgebase(
+        $cognitoId: ID!
+        $knowledgebaseId: ID!
+      ) {
+        upsertCognitoUserKnowledgebase(
+          cognitoId: $cognitoId
+          knowledgebaseId: $knowledgebaseId
+        ) {
+          cognitoId
+          knowledgebaseId
+        }
+      }
+    `;
+
+    await graphqlRequestUserPool({
+      query: upsertMutation,
+      variables: {
+        cognitoId: variables.ownerId,
+        knowledgebaseId: variables.knowledgebaseId,
+      },
+    });
+
     return NextResponse.json({ statusText: "OK" });
   } catch (err) {
     return handleApiError(err, "add new twin failed");
