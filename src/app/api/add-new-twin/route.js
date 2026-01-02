@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { userId, avatar, ...rest } = body;
+    const { userId, ...rest } = body;
 
     if (!userId) {
       return NextResponse.json({ error: "userId is missing" }, { status: 400 });
@@ -24,7 +24,7 @@ export async function POST(request) {
         $networkId: String
         $title: String
         $caption: String
-        $description: String
+        $useCase: String
       ) {
         updateUser(
           userId: $userId
@@ -33,7 +33,7 @@ export async function POST(request) {
           networkId: $networkId
           title: $title
           caption: $caption
-          description: $description
+          useCase: $useCase
         ) {
           userId
         }

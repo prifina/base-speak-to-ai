@@ -286,7 +286,7 @@ export default function HomePage() {
         networkId,
         title: state.profileData.title || "",
         caption: state.profileData.caption || "",
-        description: state.profileData.useCase || "",
+        useCase: state.profileData.useCase || "",
       };
 
       const res = await authFetch("/api/add-new-twin", {
