@@ -58,7 +58,7 @@ export default function HomePage() {
   // console.log("IS MOBILE ", isMobile);
   const { user, loaded: authLoaded } = useContext(AuthContext);
 
-  const { cognitoId, knowledgebaseId, language, setUserStatus, activeGroup, setKnowledgebaseId } = useStore(
+  const { cognitoId, knowledgebaseId, language, setUserStatus, activeGroup, setKnowledgebaseId, verifiedEmail } = useStore(
     useShallow((state) => ({
       cognitoId: state.cognitoId,
       knowledgebaseId: state.knowledgebaseId,
@@ -66,6 +66,7 @@ export default function HomePage() {
       setUserStatus: state.setUserStatus,
       activeGroup: state.getActiveGroup(),
       setKnowledgebaseId: state.setKnowledgebaseId,
+      verifiedEmail: state.verifiedEmail,
     }))
   );
 
@@ -289,7 +290,7 @@ export default function HomePage() {
         title: state.profileData.title || "",
         caption: state.profileData.caption || "",
         useCase: state.profileData.useCase || "",
-        verifiedEmail: user?.email || "",
+        verifiedEmail: verifiedEmail || "",
       };
 
       const res = await authFetch("/api/add-new-twin", {
