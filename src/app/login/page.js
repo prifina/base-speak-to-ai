@@ -359,7 +359,7 @@ export default function LoginPage() {
                 <Field.ErrorText>{error}</Field.ErrorText>
               ) : (
                 <Field.HelperText>
-                  {UI_TEXT.login.pinHelper}
+                  {state.loginType === 2 ? UI_TEXT.login.otpHelper : UI_TEXT.login.pinHelper}
                 </Field.HelperText>
               )}
             </Field.Root>

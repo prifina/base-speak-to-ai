@@ -432,6 +432,7 @@ export const UI_TEXT = {
     nextButton: "Next",
     pinLabel: "Enter PIN",
     pinHelper: "Enter your authenticator PIN code",
+    otpHelper: "Enter your email OTP code",
     backButton: "Back",
     needHelp: "Need help?",
     noAccount: "Don't have an account?",
