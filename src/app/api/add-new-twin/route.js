@@ -22,72 +22,18 @@ export async function POST(request) {
         $ownerId: ID
         $knowledgebaseId: ID
         $networkId: String
-        $email: String
         $title: String
         $caption: String
         $description: String
-        $status: String
-        $mimeType: String
-        $interactionStyle: String
-        $responseLength: String
-        $responsePerspective: String
-        $followUpEncouragement: String
-        $disclaimerText: String
-        $disclaimerLink: String
-        $customFooterText: String
-        $customFooterLink: String
-        $hideFooter: Boolean
-        $addBadge: Boolean
-        $showContactMe: Boolean
-        $isHubVisible: Boolean
-        $isMarketingVisible: Boolean
-        $isMarketplaceVisible: Boolean
-        $isSEOVisible: Boolean
-        $dailyReport: Boolean
-        $visibilitySocials: [String]
-        $showTestimonialForMarketing: Boolean
-        $testimonial: String
-        $noOfExampleQuestions: Int
-        $typeOfExampleQuestions: Int
-        $exampleQuestions: [String]
-        $hubDescription: String
-        $hour30: String
       ) {
         updateUser(
           userId: $userId
           ownerId: $ownerId
           knowledgebaseId: $knowledgebaseId
           networkId: $networkId
-          email: $email
           title: $title
           caption: $caption
           description: $description
-          status: $status
-          mimeType: $mimeType
-          interactionStyle: $interactionStyle
-          responseLength: $responseLength
-          responsePerspective: $responsePerspective
-          followUpEncouragement: $followUpEncouragement
-          disclaimerText: $disclaimerText
-          disclaimerLink: $disclaimerLink
-          customFooterText: $customFooterText
-          customFooterLink: $customFooterLink
-          hideFooter: $hideFooter
-          addBadge: $addBadge
-          showContactMe: $showContactMe
-          isHubVisible: $isHubVisible
-          isMarketingVisible: $isMarketingVisible
-          isMarketplaceVisible: $isMarketplaceVisible
-          isSEOVisible: $isSEOVisible
-          dailyReport: $dailyReport
-          visibilitySocials: $visibilitySocials
-          showTestimonialForMarketing: $showTestimonialForMarketing
-          testimonial: $testimonial
-          noOfExampleQuestions: $noOfExampleQuestions
-          typeOfExampleQuestions: $typeOfExampleQuestions
-          exampleQuestions: $exampleQuestions
-          hubDescription: $hubDescription
-          hour30: $hour30
         ) {
           userId
         }
