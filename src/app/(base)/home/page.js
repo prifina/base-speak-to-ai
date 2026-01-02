@@ -58,13 +58,14 @@ export default function HomePage() {
   // console.log("IS MOBILE ", isMobile);
   const { user, loaded: authLoaded } = useContext(AuthContext);
 
-  const { cognitoId, knowledgebaseId, language, setUserStatus, activeGroup } = useStore(
+  const { cognitoId, knowledgebaseId, language, setUserStatus, activeGroup, setKnowledgebaseId } = useStore(
     useShallow((state) => ({
       cognitoId: state.cognitoId,
       knowledgebaseId: state.knowledgebaseId,
       language: state.language,
       setUserStatus: state.setUserStatus,
       activeGroup: state.getActiveGroup(),
+      setKnowledgebaseId: state.setKnowledgebaseId,
     }))
   );
 
@@ -301,6 +302,9 @@ export default function HomePage() {
 
       // Update Cognito user attribute
       await updateKnowledgebaseId(knowledgebaseId);
+      
+      // Update sessionStore knowledgebaseId
+      setKnowledgebaseId(knowledgebaseId);
 
       setShowProfileDialog(false);
       setState({ saving: false });
