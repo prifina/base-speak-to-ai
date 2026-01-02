@@ -3,9 +3,8 @@ import "./globals.css";
 import AppProviders from "./providers/AppProviders";
 
 export const metadata = {
-  title: "Next Cognito Nav Example (src/app)",
-  description:
-    "Example app with Cognito + middleware-based navigation using src/app",
+  title: "Prifina Base App",
+  description: "",
 };
 
 export default function RootLayout({ children }) {
