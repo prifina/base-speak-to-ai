@@ -32,6 +32,25 @@ import { useShallow } from "zustand/react/shallow";
 import useStore from "@/lib/sessionStore";
 import { isEmail } from "@/utils";
 
+/*
+
+login scenarios
+- cognito username exists
+  - authenticator status = 99  (authenticator is not verified)
+  - authenticator status = 1 username is random, automatically created
+  - authenticator status = 2  username is valid, normal signup
+  //- email not verified => has to verify email first
+
+- email as login username => check login keys
+  - when the cognito username is created and email validated, add new login key with cognito username. 
+  
+
+- ai-name as login username => check login keys
+  - when new knowledgebase is created, add new login key with cognito username.
+  - if login key exists, but no username then create new cognito user (auth status 1)
+
+*/
+
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
