@@ -12,10 +12,12 @@ import { EVALS } from "@/lib/appConfig";
 import useStore from "@/lib/sessionStore";
 
 import { UI_TEXT } from "@/lib/uiStrings";
+import BaseAppIcon from "@/assets/prifina_icons/base_app.svg";
+import PrifinaAccountIcon from "@/assets/prifina_icons/prifina_account.svg";
 
 const APPS = [
-  { key: "base", label: UI_TEXT.app.title, href: "/home", icon: "/assets/prifina_icons/base_app.svg" },
-  { key: "account", label: "Prifina Account", href: "/account", icon: "/assets/prifina_icons/prifina_account.svg" },
+  { key: "base", label: UI_TEXT.app.title, href: "/home", icon: BaseAppIcon },
+  { key: "account", label: "Prifina Account", href: "/account", icon: PrifinaAccountIcon },
 ];
 
 export function UserMenuFloating() {
