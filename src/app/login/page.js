@@ -22,6 +22,8 @@ import {
   VStack,
   Alert,
   Field,
+  Flex,
+  Image,
 } from "@chakra-ui/react";
 
 import { AuthContext } from "@/app/providers/AuthProvider";
@@ -275,6 +277,14 @@ export default function LoginPage() {
         borderRadius="lg"
       >
         <Heading mb={6}>Login</Heading>
+        <Flex justifyContent="center" mb={6}>
+          <Image
+            src="/assets/data-center.svg"
+            alt="Data Center"
+            width="160px"
+            height="auto"
+          />
+        </Flex>
         
         {!state.showPinInput ? (
           <VStack spacing={4} align="stretch">
