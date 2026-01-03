@@ -37,6 +37,8 @@ export const EVALS = {
   generalGuideDoc: "https://prifina.notion.site/ai-twin-owners-guide",
   uploadQuota: 5 * 1024 * 1024,
   newInteractionStyleRequest: "https://www.prifina.com/ai-twin-styles.html",
+  termsOfUse: "https://prifina.com/terms-of-use",
+  privacyPolicy: "https://prifina.com/privacy",
 };
 
 export const fileSupport = {

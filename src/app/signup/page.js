@@ -16,8 +16,9 @@ import {
   Image,
   Checkbox,
 } from "@chakra-ui/react";
-import ReCAPTCHA from "react-google-recaptcha";
 import { UI_TEXT } from "@/lib/uiStrings";
+import ReCAPTCHA from "react-google-recaptcha";
+import { EVALS } from "@/lib/appConfig";
 import { toaster } from "@/components/ui/toaster";
 import {
   validateUsername,
@@ -426,7 +427,9 @@ export default function SignupPage() {
                   >
                     {UI_TEXT.signup.termsText}{" "}
                     <Link
-                      href="/terms-of-use"
+                      href={EVALS.termsOfUse}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       color="blue.500"
                       textDecoration="underline"
                       _hover={{ color: "blue.700" }}
@@ -435,7 +438,9 @@ export default function SignupPage() {
                     </Link>{" "}
                     {UI_TEXT.signup.andText}{" "}
                     <Link
-                      href="/privacy"
+                      href={EVALS.privacyPolicy}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       color="blue.500"
                       textDecoration="underline"
                       _hover={{ color: "blue.700" }}
