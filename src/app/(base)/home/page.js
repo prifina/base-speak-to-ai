@@ -170,10 +170,12 @@ export default function HomePage() {
       } else {
         console.log("AVATAR UPLOADED", result.url);
         const fileExtension = result.fileName.split(".").pop();
+        // Add cache-busting parameter to force browser to reload the image
+        const cacheBustingUrl = `${result.url}?t=${Date.now()}`;
         setState({
           editedUser: {
             ...state.editedUser,
-            avatar: result.url,
+            avatar: cacheBustingUrl,
             avatarKey: `avatars/${result.fileName}`,
             mimeType: `image/${fileExtension}`,
           },

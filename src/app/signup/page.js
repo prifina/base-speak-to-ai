@@ -14,6 +14,7 @@ import {
   Text,
   Flex,
   Image,
+  Checkbox,
 } from "@chakra-ui/react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { UI_TEXT } from "@/lib/uiStrings";
@@ -28,7 +29,10 @@ import useStore from "@/lib/sessionStore";
 import { signUp, signIn, signOut } from "aws-amplify/auth";
 import CustomPINInput from "@/components/CustomPINInput";
 import { v4 as uuidv4 } from "uuid";
-import { verifyEmailAttribute, requestEmailVerificationCode } from "@/lib/userAttributes";
+import {
+  verifyEmailAttribute,
+  requestEmailVerificationCode,
+} from "@/lib/userAttributes";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -51,6 +55,7 @@ export default function SignupPage() {
   const [cognitoUsername, setCognitoUsername] = useState("");
   const [tempPassword, setTempPassword] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -128,6 +133,16 @@ export default function SignupPage() {
       return;
     }
 
+    if (!agreedToTerms) {
+      toaster.create({
+        title: "Terms Agreement Required",
+        type: "error",
+        description:
+          "Please agree to the Terms and Privacy Policy to continue.",
+      });
+      return;
+    }
+
     if (!captchaValidated) {
       toaster.create({
         title: UI_TEXT.signup.messages.captchaRequired,
@@ -153,12 +168,12 @@ export default function SignupPage() {
       const randomPassword = Math.random().toString(36).slice(-12) + "A1!";
       // Generate UUID for Cognito username
       const cognitoUserId = uuidv4();
-      
+
       console.log("SIGNUP: Starting signup process");
       console.log("SIGNUP: Form data:", formData);
       console.log("SIGNUP: Generated password:", randomPassword);
       console.log("SIGNUP: Generated Cognito username:", cognitoUserId);
-      
+
       const signUpParams = {
         username: cognitoUserId,
         password: randomPassword,
@@ -172,31 +187,31 @@ export default function SignupPage() {
           },
         },
       };
-      
+
       console.log("SIGNUP: SignUp parameters:", signUpParams);
-      
+
       const result = await signUp(signUpParams);
-      
+
       console.log("SIGNUP: SignUp result:", result);
       console.log("SIGNUP: User ID:", result.userId);
       console.log("SIGNUP: Next step:", result.nextStep);
-      
+
       setCognitoUsername(result.userId);
       setTempPassword(randomPassword);
-      
+
       // Sign in with the random password to enable email verification
       console.log("SIGNUP: Signing in with temporary password");
       await signIn({
         username: cognitoUserId,
         password: randomPassword,
       });
-      
+
       // Request email verification code
       console.log("SIGNUP: Requesting email verification code");
       await requestEmailVerificationCode();
-      
+
       setShowConfirmation(true);
-      
+
       toaster.create({
         title: UI_TEXT.signup.messages.accountCreated,
         type: "success",
@@ -210,7 +225,8 @@ export default function SignupPage() {
       toaster.create({
         title: UI_TEXT.signup.messages.signupFailed,
         type: "error",
-        description: error.message || UI_TEXT.signup.messages.createAccountFailed,
+        description:
+          error.message || UI_TEXT.signup.messages.createAccountFailed,
       });
     } finally {
       setIsLoading(false);
@@ -222,21 +238,21 @@ export default function SignupPage() {
     try {
       console.log("VERIFY: Starting email verification process");
       console.log("VERIFY: Verification code:", code);
-      
+
       const result = await verifyEmailAttribute(code);
-      
+
       console.log("VERIFY: Verification result:", result);
-      
+
       toaster.create({
         title: UI_TEXT.signup.messages.emailVerified,
         type: "success",
         description: UI_TEXT.signup.messages.accountVerified,
       });
-      
+
       // Sign out before redirecting to login
       console.log("VERIFY: Signing out before redirect");
       await signOut();
-      
+
       router.push("/login");
       return true;
     } catch (error) {
@@ -296,9 +312,12 @@ export default function SignupPage() {
               />
             </Flex>
             <form onSubmit={handleSubmit}>
-              <VStack spacing={4} align="stretch">
-                <Flex gap={4} direction={{ base: "column", sm: "row" }}>
-                  <Field.Root invalid={!!errors.firstName} flex={{ base: 1, sm: 0.4 }}>
+              <VStack spacing={3} align="stretch">
+                <Flex gap={3} direction={{ base: "column", sm: "row" }}>
+                  <Field.Root
+                    invalid={!!errors.firstName}
+                    flex={{ base: 1, sm: 0.4 }}
+                  >
                     <Field.Label>{UI_TEXT.account.givenName}</Field.Label>
                     <Input
                       name="firstName"
@@ -311,7 +330,10 @@ export default function SignupPage() {
                     )}
                   </Field.Root>
 
-                  <Field.Root invalid={!!errors.lastName} flex={{ base: 1, sm: 0.6 }}>
+                  <Field.Root
+                    invalid={!!errors.lastName}
+                    flex={{ base: 1, sm: 0.6 }}
+                  >
                     <Field.Label>{UI_TEXT.account.familyName}</Field.Label>
                     <Input
                       name="lastName"
@@ -372,29 +394,72 @@ export default function SignupPage() {
                   )}
                 </Field.Root>
 
-                <Flex justifyContent="center" mt={4}>
-                  <ReCAPTCHA
-                    ref={captchaRef}
-                    sitekey={process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY}
-                    onChange={onCaptchaChange}
-                  />
+                <Flex justifyContent="center" mt={2}>
+                  <Box
+                    sx={{
+                      transform: "scale(0.80)",
+                      transformOrigin: "center",
+                    }}
+                  >
+                    <ReCAPTCHA
+                      ref={captchaRef}
+                      sitekey={process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY}
+                      onChange={onCaptchaChange}
+                    />
+                  </Box>
+                </Flex>
+
+                <Flex align="start" gap={3} mt={2}>
+                  <Checkbox.Root
+                    checked={agreedToTerms}
+                    onCheckedChange={(e) => setAgreedToTerms(!!e.checked)}
+                  >
+                    <Checkbox.HiddenInput />
+                    <Checkbox.Control />
+                  </Checkbox.Root>
+                  <Text
+                    fontSize="sm"
+                    color="gray.600"
+                    cursor="pointer"
+                    lineHeight="1.4"
+                    onClick={() => setAgreedToTerms(!agreedToTerms)}
+                  >
+                    {UI_TEXT.signup.termsText}{" "}
+                    <Link
+                      href="/terms-of-use"
+                      color="blue.500"
+                      textDecoration="underline"
+                      _hover={{ color: "blue.700" }}
+                    >
+                      {UI_TEXT.signup.termsLink}
+                    </Link>{" "}
+                    {UI_TEXT.signup.andText}{" "}
+                    <Link
+                      href="/privacy"
+                      color="blue.500"
+                      textDecoration="underline"
+                      _hover={{ color: "blue.700" }}
+                    >
+                      {UI_TEXT.signup.privacyLink}
+                    </Link>
+                  </Text>
                 </Flex>
 
                 <Button
                   type="submit"
                   colorScheme="blue"
                   width="100%"
-                  mt={4}
+                  mt={2}
                   loading={isLoading}
                   loadingText={UI_TEXT.signup.loadingText}
-                  disabled={!captchaValidated}
+                  disabled={!captchaValidated || !agreedToTerms}
                 >
                   {UI_TEXT.signup.createButton}
                 </Button>
               </VStack>
             </form>
 
-            <Text textAlign="center" mt={4} fontSize="sm">
+            <Text textAlign="center" mt={3} fontSize="sm">
               {UI_TEXT.signup.alreadyHaveAccount}{" "}
               <Link color="blue.500" onClick={() => router.push("/login")}>
                 {UI_TEXT.signup.signInHere}
@@ -407,7 +472,10 @@ export default function SignupPage() {
               {UI_TEXT.signup.verification.title}
             </Heading>
             <Text textAlign="center" mb={6}>
-              {UI_TEXT.signup.verification.description.replace("{email}", formData.email)}
+              {UI_TEXT.signup.verification.description.replace(
+                "{email}",
+                formData.email
+              )}
             </Text>
             <VStack spacing={6}>
               <CustomPINInput
@@ -425,7 +493,10 @@ export default function SignupPage() {
                   <Button variant="outline" onClick={handleResendCode}>
                     {UI_TEXT.account.resendCode}
                   </Button>
-                  <Button variant="outline" onClick={() => setShowConfirmation(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowConfirmation(false)}
+                  >
                     {UI_TEXT.signup.verification.goBack}
                   </Button>
                 </Flex>
@@ -440,3 +511,14 @@ export default function SignupPage() {
     </AbsoluteCenter>
   );
 }
+/*
+<div class="flex items-start space-x-3">
+<button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground mt-0.5" id="agreedToTerms">
+</button>
+<input type="checkbox" aria-hidden="true" tabindex="-1" value="on" style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 16px; height: 16px;">
+<label for="agreedToTerms" class="text-sm text-muted-foreground cursor-pointer">
+By checking this box I agree to Prifina's 
+<a class="underline hover:text-foreground transition-colors" href="/terms-of-use">Terms</a>
+ and <a class="underline hover:text-foreground transition-colors" href="/privacy">Privacy Policy</a>
+ </label></div>
+*/

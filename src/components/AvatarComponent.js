@@ -1,7 +1,6 @@
 import { appColors } from "@/lib/appConfig";
 import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
 import { UI_TEXT } from "@/lib/uiStrings";
-import { imagePlaceholder } from "@/assets/bse64Images";
 
 const Container = (props) => (
   <Flex
@@ -37,7 +36,7 @@ export const AvatarComponent = ({
         width="fit-content"
       >
         <Avatar.Root boxSize={size} size="2xl">
-          <Avatar.Image objectFit="cover" src={avatar || imagePlaceholder} />
+          <Avatar.Image objectFit="cover" src={avatar || "/assets/pios-logo-avatar.png"} />
         </Avatar.Root>
         {aiIcon && (
           <Box

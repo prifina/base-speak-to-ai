@@ -401,6 +401,10 @@ export const UI_TEXT = {
     loadingText: "Creating account...",
     alreadyHaveAccount: "Already have an account?",
     signInHere: "Sign in here",
+    termsText: "By checking this box I agree to Prifina's",
+    termsLink: "Terms",
+    andText: "and",
+    privacyLink: "Privacy Policy",
     verification: {
       title: "Verify Your Email",
       description: "We've sent a verification code to {email}",
