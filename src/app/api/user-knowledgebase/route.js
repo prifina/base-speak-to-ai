@@ -141,6 +141,10 @@ export async function GET(request) {
       return NextResponse.json({ available: false });
     }
 
+    if (!data.getUserKnowledgebase) {
+      return NextResponse.json({ error: "Knowledgebase not found" }, { status: 404 });
+    }
+
     if (opt === "EMAIL" || opt === "STATUS") {
       return NextResponse.json(data.getUserKnowledgebase);
     }

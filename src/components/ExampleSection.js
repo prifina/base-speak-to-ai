@@ -27,7 +27,7 @@ import InfoToolTip from "./InfoToolTip";
 const disclaimerTextMaxLength = 150;
 const exampleQuestionsArrMaxLength = 6;
 
-const ExampleSection = ({ profileTempState, updateProfileTempState, opts }) => {
+const ExampleSection = ({ profileTempState, updateProfileTempState, opts, config = {} }) => {
   const {
     exampleQuestions,
     disclaimerText,
@@ -45,14 +45,14 @@ const ExampleSection = ({ profileTempState, updateProfileTempState, opts }) => {
   const [state, setState] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
-      noOfQuestionsOptions,
-      typeOfQuestionsOptions,
+      noOfQuestionsOptions: config.noOfQuestionsOptions || noOfQuestionsOptions,
+      typeOfQuestionsOptions: config.typeOfQuestionsOptions || typeOfQuestionsOptions,
     }
   );
   const effectCalled = useRef(false);
 
   useEffect(() => {
-    if (!effectCalled.current) {
+    if (!effectCalled.current && Object.keys(config).length === 0) {
       effectCalled.current = true;
       (async () => {
         try {
@@ -77,7 +77,7 @@ const ExampleSection = ({ profileTempState, updateProfileTempState, opts }) => {
         }
       })();
     }
-  }, [authFetch, language]);
+  }, [authFetch, language, config]);
 
   const openModal = (index = undefined) => {
     setIsModalOpen(true);

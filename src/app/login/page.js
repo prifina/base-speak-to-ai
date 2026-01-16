@@ -91,6 +91,13 @@ function LoginContent() {
   const [error, setError] = useState("");
   const [isBusy, setIsBusy] = useState(false);
 
+  useEffect(() => {
+    const urlUsername = searchParams.get("username");
+    if (urlUsername) {
+      setState({ loginName: urlUsername });
+    }
+  }, [searchParams]);
+
   const verify = useCallback(
     async (code) => {
       setLoginName(state.loginName);
@@ -103,6 +110,9 @@ function LoginContent() {
           const cognitoId = idToken["cognito:username"];
           let knowledgebaseId = idToken["custom:knowledgebaseId"] || "";
 
+          // Get knowledgebaseId from URL if provided
+          const urlKnowledgebaseId = searchParams.get("knowledgebaseId");
+
           if (!knowledgebaseId) {
             const res = await fetch(
               `/api/cognito-user-knowledgebase?cognitoId=${cognitoId}`
@@ -112,6 +122,12 @@ function LoginContent() {
               knowledgebaseId = data[0].knowledgebaseId;
               await updateUserProfile({
                 "custom:knowledgebaseId": knowledgebaseId,
+              });
+            } else if (urlKnowledgebaseId) {
+              // Only set from URL if no existing knowledgebaseId
+              knowledgebaseId = urlKnowledgebaseId;
+              await updateUserProfile({
+                "custom:knowledgebaseId": urlKnowledgebaseId,
               });
             }
           }
@@ -140,6 +156,7 @@ function LoginContent() {
       state.loginName,
       setLoginName,
       setKnowledgebaseId,
+      searchParams,
     ]
   );
 

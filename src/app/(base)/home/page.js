@@ -89,6 +89,7 @@ export default function HomePage() {
       },
       validatingAiName: false,
       aiNameValidated: false,
+      config: {},
     }
   );
 
@@ -101,24 +102,50 @@ export default function HomePage() {
         "[HOME] Fetching data with knowledgebaseId:",
         knowledgebaseId
       );
-      const res = await authFetch(
-        `/api/user-knowledgebase?knowledgebaseId=${knowledgebaseId}`,
-        {
-          method: "GET",
-        }
-      );
+      const [userRes, configRes] = await Promise.all([
+        authFetch(
+          `/api/user-knowledgebase?knowledgebaseId=${knowledgebaseId}`,
+          { method: "GET" }
+        ),
+        authFetch(`/api/get-config?language=${language}`, { method: "GET" }),
+      ]);
 
-      if (!res.ok) {
-        const errorData = await res.json();
+      const configData = configRes.ok ? await configRes.json() : { config: {} };
+
+      if (!userRes.ok) {
+        const errorData = await userRes.json();
         console.log("ERROR RES ", errorData);
+        if (userRes.status === 404) {
+          const participantRes = await authFetch(
+            `/api/get-participant-knowledgebase?knowledgebaseId=${knowledgebaseId}`,
+            { method: "GET" }
+          );
+          
+          if (participantRes.ok) {
+            const participantData = await participantRes.json();
+            setState({
+              loading: false,
+              config: configData.config,
+              profileData: {
+                title: "",
+                caption: "",
+                useCase: "",
+                aiName: participantData.participant?.aiName || "",
+              },
+            });
+          }
+          
+          setShowProfileDialog(true);
+          setState({ loading: false, config: configData.config });
+          return;
+        }
         throw new Error("Failed to get appsync response");
       }
-      const data = await res.json();
+      const data = await userRes.json();
       console.log("RES ", data);
-      // Update userStatus in sessionStore
       console.log("[HOME] Setting userStatus to:", data.user?.status);
       setUserStatus(data.user?.status);
-      setState({ loading: false, user: data.user, editedUser: data.user });
+      setState({ loading: false, user: data.user, editedUser: data.user, config: configData.config });
     }
     console.log(
       "[HOME] Effect check - authLoaded:",
@@ -285,13 +312,13 @@ export default function HomePage() {
       }
 
       const { v4: uuidv4 } = await import('uuid');
-      const knowledgebaseId = uuidv4();
+      const newKnowledgebaseId = knowledgebaseId || uuidv4();
       const networkId = activeGroup || "x_prifina";
       
       const profilePayload = {
         userId: state.profileData.aiName,
         ownerId: cognitoId,
-        knowledgebaseId,
+        knowledgebaseId: newKnowledgebaseId,
         networkId,
         title: state.profileData.title || "",
         caption: state.profileData.caption || "",
@@ -308,11 +335,10 @@ export default function HomePage() {
         throw new Error("Failed to create profile");
       }
 
-      // Update Cognito user attribute
-      await updateKnowledgebaseId(knowledgebaseId);
-      
-      // Update sessionStore knowledgebaseId
-      setKnowledgebaseId(knowledgebaseId);
+      if (!knowledgebaseId) {
+        await updateKnowledgebaseId(newKnowledgebaseId);
+        setKnowledgebaseId(newKnowledgebaseId);
+      }
 
       setShowProfileDialog(false);
       setState({ saving: false });
@@ -355,7 +381,7 @@ export default function HomePage() {
         validateAiName={validateAiName}
       />
 
-      {state.user?.userId && (
+      {!showProfileDialog && state.user?.userId && (
         <HStack justify="space-between" mb="20px">
           <Box>
             <Box fontSize="24px" fontWeight={600}>
@@ -391,6 +417,9 @@ export default function HomePage() {
           />
         </Suspense>
       )}
+
+      {!showProfileDialog && (
+        <>
 
       <Box mt="40px">
         <AvatarComponent
@@ -456,6 +485,7 @@ export default function HomePage() {
                 });
               }}
               opts={{ language }}
+              config={state.config}
             />
           </PersonalizationAccordionItem>
           <PersonalizationAccordionItem
@@ -473,6 +503,7 @@ export default function HomePage() {
                 });
               }}
               opts={{ language }}
+              config={state.config}
             />
           </PersonalizationAccordionItem>
           <PersonalizationAccordionItem
@@ -500,6 +531,8 @@ export default function HomePage() {
           disabled={state.saving || !hasChanges}
         />
       </Box>
+        </>
+      )}
     </Flex>
   );
 }

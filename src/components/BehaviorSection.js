@@ -15,6 +15,7 @@ const BehaviorSection = ({
   profileTempState,
   updateProfileTempState,
   opts,
+  config = {},
 }) => {
   const {
     responsePerspective,
@@ -30,10 +31,10 @@ const BehaviorSection = ({
   const [state, setState] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
-      responsePerspectiveOptions: [],
-      interactionStyleOptions: [],
-      responseLengthOptions: [],
-      followUpEncouragementOptions: [],
+      responsePerspectiveOptions: config.responsePerspectiveList || [],
+      interactionStyleOptions: config.interactionStyleList || [],
+      responseLengthOptions: config.responseLengthList || [],
+      followUpEncouragementOptions: config.followUpEncouragementList || [],
     }
   );
   const effectCalled = useRef(false);
@@ -42,11 +43,10 @@ const BehaviorSection = ({
     updateProfileTempState({ [attr]: value === null ? "" : value.value });
   };
   useEffect(() => {
-    if (!effectCalled.current) {
+    if (!effectCalled.current && Object.keys(config).length === 0) {
       effectCalled.current = true;
       (async () => {
         try {
-          // just in case have to do more than one request
           const res = await authFetch(`/api/get-config?language=${language}`, {
             method: "GET",
           });
@@ -69,7 +69,7 @@ const BehaviorSection = ({
         }
       })();
     }
-  }, [authFetch, language]);
+  }, [authFetch, language, config]);
 
   return (
     <Flex flexDirection="column" gap="40px">

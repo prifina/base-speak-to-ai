@@ -22,11 +22,9 @@ export async function GET(request) {
     const query = `
       query GetConfig($id: String!, $isProd: Boolean) {
         getConfig(id: $id, isProd: $isProd) {
-          responseLengthList { label value }
-          followUpEncouragementList { label value }
-          interactionStyleList { label value }
-          responsePerspectiveList { label value }
-          listUpdated
+          id
+          data
+          modifiedAt
         }
       }
     `;
@@ -36,7 +34,26 @@ export async function GET(request) {
       variables: { id: "speak-to", isProd: environment === "prod" },
     });
 
-    return NextResponse.json({ config: data.getConfig || {} });
+    const config = data.getConfig?.data ? JSON.parse(data.getConfig.data) : {};
+    
+    // Transform config lists to match SelectField format (value/label instead of key/title)
+    const transformList = (list) => 
+      list?.map(item => ({ value: item.key, label: item.title })) || [];
+    
+    if (config.interactionStyleList) {
+      config.interactionStyleList = transformList(config.interactionStyleList);
+    }
+    if (config.responseLengthList) {
+      config.responseLengthList = transformList(config.responseLengthList);
+    }
+    if (config.responsePerspectiveList) {
+      config.responsePerspectiveList = transformList(config.responsePerspectiveList);
+    }
+    if (config.followUpEncouragementList) {
+      config.followUpEncouragementList = transformList(config.followUpEncouragementList);
+    }
+    
+    return NextResponse.json({ config });
   } catch (err) {
     return handleApiError(err, "get config failed");
   }

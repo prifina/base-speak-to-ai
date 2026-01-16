@@ -46,8 +46,8 @@ export const SelectField = ({
         <Portal>
           <Select.Positioner>
             <Select.Content>
-              {options.map((option) => (
-                <Select.Item key={option.value} item={option}>
+              {options.map((option, index) => (
+                <Select.Item key={option.value || index} item={option}>
                   {option.label}
                   <Select.ItemIndicator />
                 </Select.Item>

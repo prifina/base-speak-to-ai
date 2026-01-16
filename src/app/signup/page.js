@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   AbsoluteCenter,
   Box,
@@ -37,6 +37,7 @@ import {
 
 export default function SignupPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const captchaRef = useRef();
   const { usernameAvailable } = useStore(
     useShallow((state) => ({
@@ -57,6 +58,38 @@ export default function SignupPage() {
   const [tempPassword, setTempPassword] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [hasVerifiedEmail, setHasVerifiedEmail] = useState(false);
+  const [knowledgebaseId, setKnowledgebaseId] = useState(null);
+
+  useEffect(() => {
+    const eventId = searchParams.get("eventId");
+    const participantId = searchParams.get("participantId");
+
+    if (eventId && participantId) {
+      fetch(`/api/get-participant?eventId=${eventId}&participantId=${encodeURIComponent(participantId)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const participant = data.participant;
+          if (participant) {
+            setFormData({
+              firstName: participant.firstName || "",
+              lastName: participant.lastName || "",
+              username: "",
+              email: participant.userEmail || "",
+            });
+            if (participant.userEmail) {
+              setHasVerifiedEmail(true);
+            }
+            if (participant.knowledgebaseId) {
+              setKnowledgebaseId(participant.knowledgebaseId);
+            }
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching participant:", error);
+        });
+    }
+  }, [searchParams]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -254,7 +287,20 @@ export default function SignupPage() {
       console.log("VERIFY: Signing out before redirect");
       await signOut();
 
-      router.push("/login");
+      // Build login URL with username and knowledgebaseId if available
+      let loginUrl = "/login";
+      const params = new URLSearchParams();
+      if (formData.username) {
+        params.append("username", formData.username);
+      }
+      if (knowledgebaseId) {
+        params.append("knowledgebaseId", knowledgebaseId);
+      }
+      if (params.toString()) {
+        loginUrl += `?${params.toString()}`;
+      }
+
+      router.push(loginUrl);
       return true;
     } catch (error) {
       console.error("VERIFY ERROR: Full error object:", error);
@@ -385,9 +431,14 @@ export default function SignupPage() {
                     onKeyDown={handleEmailKeyDown}
                     autoComplete="email"
                     required
+                    disabled={hasVerifiedEmail}
                   />
                   {errors.email ? (
                     <Field.ErrorText>{errors.email}</Field.ErrorText>
+                  ) : hasVerifiedEmail ? (
+                    <Field.HelperText color="green.600">
+                      Email verified from event registration
+                    </Field.HelperText>
                   ) : (
                     <Field.HelperText>
                       {UI_TEXT.account.emailHelper}
