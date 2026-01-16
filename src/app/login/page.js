@@ -91,26 +91,20 @@ function LoginContent() {
   const [error, setError] = useState("");
   const [isBusy, setIsBusy] = useState(false);
 
-  useEffect(() => {
-    const urlUsername = searchParams.get("username");
-    if (urlUsername) {
-      setState({ loginName: urlUsername });
-    }
-  }, [searchParams]);
+  const effectRan = useRef(false);
 
   const verify = useCallback(
-    async (code) => {
-      setLoginName(state.loginName);
-      const signInResponse = await signIn(state.username);
+    async (code, username, loginName, loginType) => {
+      setLoginName(loginName || state.loginName);
+      const signInResponse = await signIn(username || state.username);
       if (signInResponse) {
-        const confirmSignInResponse = await confirmSignIn(code, state.loginType);
+        const confirmSignInResponse = await confirmSignIn(code, loginType ?? state.loginType);
         if (confirmSignInResponse) {
           const { tokens } = await fetchAuthSession();
           const idToken = tokens.idToken.payload;
           const cognitoId = idToken["cognito:username"];
           let knowledgebaseId = idToken["custom:knowledgebaseId"] || "";
 
-          // Get knowledgebaseId from URL if provided
           const urlKnowledgebaseId = searchParams.get("knowledgebaseId");
 
           if (!knowledgebaseId) {
@@ -124,7 +118,6 @@ function LoginContent() {
                 "custom:knowledgebaseId": knowledgebaseId,
               });
             } else if (urlKnowledgebaseId) {
-              // Only set from URL if no existing knowledgebaseId
               knowledgebaseId = urlKnowledgebaseId;
               await updateUserProfile({
                 "custom:knowledgebaseId": urlKnowledgebaseId,
@@ -159,6 +152,52 @@ function LoginContent() {
       searchParams,
     ]
   );
+
+  useEffect(() => {
+    if (effectRan.current) return;
+    
+    const urlUsername = searchParams.get("username");
+    const urlKnowledgebaseId = searchParams.get("knowledgebaseId");
+    const urlOtp = searchParams.get("otp");
+    
+    if (urlUsername) {
+      setState({ loginName: urlUsername });
+    }
+    
+    // Auto-verify if both knowledgebaseId and otp are present (email link flow)
+    if (urlKnowledgebaseId && urlOtp) {
+      effectRan.current = true;
+      (async () => {
+        setIsBusy(true);
+        try {
+          const res = await fetch("/api/get-knowledgebase-user", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ knowledgebaseId: urlKnowledgebaseId }),
+          });
+          
+          if (res.ok) {
+            const data = await res.json();
+            if (data.preferred_username) {
+              setState({ 
+                username: data.preferred_username,
+                loginName: data.preferred_username,
+                showPinInput: true,
+                loginType: 2
+              });
+              await verify(urlOtp, data.preferred_username, data.preferred_username, 2);
+            }
+          }
+        } catch (error) {
+          console.error("[LOGIN] Error in email link flow:", error);
+          setError("Invalid login link");
+        }
+        setIsBusy(false);
+      })();
+    }
+  }, [searchParams, verify]);
+
+
 
   const checkUser = useCallback(
     async (user) => {
