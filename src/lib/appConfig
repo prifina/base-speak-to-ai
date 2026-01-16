@@ -1,0 +1,61 @@
+export const appColors = {
+  starRating: "#dba43a",
+  errorColor: "#e64a4a",
+  errorColor2: "#be0817",
+  success: "#04752b",
+  success2: "#49a34d",
+  errorBackground: "#f5e7e8",
+  successBackground: "#d3e5d9",
+  black: "#212529",
+  black2: "#1e1e23",
+  black3: "#393D46",
+  black4: "#2b2f3a",
+  gray: "#6C757D",
+  gray2: "#cbcbcb",
+  gray3: "#8d9096",
+  gray4: "#7d7d7e",
+  gray5: "#818688",
+  gray6: "#4a4a4a",
+  gray7: "#667080",
+  gray8: "#52575b",
+  gray9: "#969696",
+  gray10: "#53575B",
+  purple: "#6f84fe",
+  purple2: "#e1e4fa",
+  purple3: "#e2e8f0",
+  link: "#2770de",
+  white: "#f8f8f8",
+  white2: "#fafafa",
+  blue: "#0085ff",
+};
+
+export const EVALS = {
+  baseSession: "prifina_base_session",
+  appStorage: "prifina_base_app",
+  speakToDomain: "https://hey.speak-to.ai/",
+  //generalGuideDoc: "https://www.prifina.com/ai-twin-owners-guide.html",
+  generalGuideDoc: "https://prifina.notion.site/ai-twin-owners-guide",
+  uploadQuota: 5 * 1024 * 1024,
+  newInteractionStyleRequest: "https://www.prifina.com/ai-twin-styles.html",
+  termsOfUse: "https://prifina.com/terms-of-use",
+  privacyPolicy: "https://prifina.com/privacy",
+};
+
+export const fileSupport = {
+  "text/markdown": [".md", ".markdown"],
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
+    ".docx",
+  ],
+  "application/epub+zip": [".epub"],
+  "application/vnd.oasis.opendocument.text": [".odt"],
+  "application/pdf": [".pdf"],
+  "application/rtf": [".rtf"],
+  "text/plain": [".txt"],
+  "text/html": [".html", ".htm"],
+};
+
+export const imageFileSupport = {
+  "image/png": [".png"],
+  "image/jpeg": [".jpeg"],
+  "image/jpg": [".jpg"],
+};

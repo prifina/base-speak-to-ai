@@ -1,0 +1,40 @@
+import { NextResponse } from "next/server";
+import { graphqlRequestUserPool } from "@/lib/graphqlRequestUserPool";
+import { handleApiError } from "@/lib/apiErrorHandler";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export async function GET(request) {
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const aiName = searchParams.get("aiName");
+
+    if (!aiName) {
+      return NextResponse.json({ error: "AI name is required" }, { status: 400 });
+    }
+
+    const query = `
+      query GetUser($userId: ID!) {
+        getUser(userId: $userId) {
+          userId
+        }
+      }
+    `;
+
+    const data = await graphqlRequestUserPool({
+      query,
+      variables: { userId: aiName },
+    });
+
+    // If user exists, AI name is taken (return 200)
+    // If user doesn't exist, AI name is available (return 404)
+    if (data.getUser) {
+      return NextResponse.json({ available: false });
+    } else {
+      return NextResponse.json({ available: true }, { status: 404 });
+    }
+  } catch (err) {
+    return handleApiError(err, "AI name validation failed");
+  }
+}
