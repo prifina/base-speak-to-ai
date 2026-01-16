@@ -48,11 +48,13 @@ import ProfileCreationModal from "@/components/Modals/ProfileCreation";
 import { updateKnowledgebaseId } from "@/lib/userAttributes";
 import { useAvatarUpload } from "@/lib/useFileUpload";
 
+export const dynamic = 'force-dynamic';
+
 const visibleDescriptionMaxLength = 100;
 
 // Profile creation dialog component
 
-export default function HomePage() {
+function HomePageContent() {
   const authFetch = useAuthFetch();
   const [isMobile] = useMediaQuery("(max-width: 992px)");
   // console.log("IS MOBILE ", isMobile);
@@ -165,7 +167,7 @@ export default function HomePage() {
       }
       effectCalled.current = true;
     }
-  }, [cognitoId, authFetch, knowledgebaseId, authLoaded, setUserStatus]);
+  }, [cognitoId, authFetch, knowledgebaseId, authLoaded, setUserStatus, language]);
 
   const loading = !authLoaded || state.loading;
 
@@ -409,13 +411,11 @@ export default function HomePage() {
       )}
 
       {isOpen && (
-        <Suspense>
-          <SharingModal
-            isOpen={isOpen}
-            onClose={onClose}
-            url={`${process.env.NEXT_PUBLIC_SPEAK_TO_USER}/${state.user.userId}`}
-          />
-        </Suspense>
+        <SharingModal
+          isOpen={isOpen}
+          onClose={onClose}
+          url={`${process.env.NEXT_PUBLIC_SPEAK_TO_USER}/${state.user.userId}`}
+        />
       )}
 
       {!showProfileDialog && (
@@ -534,5 +534,13 @@ export default function HomePage() {
         </>
       )}
     </Flex>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <HomePageContent />
+    </Suspense>
   );
 }

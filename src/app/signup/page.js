@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   AbsoluteCenter,
@@ -35,7 +35,9 @@ import {
   requestEmailVerificationCode,
 } from "@/lib/userAttributes";
 
-export default function SignupPage() {
+export const dynamic = 'force-dynamic';
+
+function SignupPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const captchaRef = useRef();
@@ -565,6 +567,14 @@ export default function SignupPage() {
         )}
       </Box>
     </AbsoluteCenter>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={<AbsoluteCenter><Box>Loading...</Box></AbsoluteCenter>}>
+      <SignupPageContent />
+    </Suspense>
   );
 }
 /*

@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Box, Heading, Text, Link as ChakraLink } from "@chakra-ui/react";
 import Link from "next/link";
 
-export default function HomePage() {
+function HomePageContent() {
   const searchParams = useSearchParams();
   const invitationCode = searchParams.get("invitationCode");
   const eventId = searchParams.get("eventId");
@@ -138,5 +138,13 @@ export default function HomePage() {
         to see protected navigation in action.
       </Text>
     </Box>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<Box maxW="2xl" mx="auto" mt={10}>Loading...</Box>}>
+      <HomePageContent />
+    </Suspense>
   );
 }
