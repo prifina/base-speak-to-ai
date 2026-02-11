@@ -340,6 +340,22 @@ function HomePageContent() {
         throw new Error("User not authenticated - missing cognitoId");
       }
 
+      // Check if AI name is available
+      const checkRes = await authFetch(
+        `/api/validate-ai-name?aiName=${state.profileData.aiName}`,
+        { method: "GET" },
+      );
+
+      if (checkRes.status !== 404) {
+        setState({ saving: false });
+        toaster.create({
+          title: "AI name is not available",
+          type: "error",
+          description: "Please choose a different AI name",
+        });
+        return;
+      }
+
       const { v4: uuidv4 } = await import("uuid");
       const newKnowledgebaseId = knowledgebaseId || uuidv4();
       const networkId = activeGroup || "x_prifina";
@@ -399,12 +415,8 @@ function HomePageContent() {
               ...state.profileData,
               ...updates,
             },
-            aiNameValidated: updates.aiName ? false : state.aiNameValidated,
           })
         }
-        validatingAiName={state.validatingAiName}
-        aiNameValidated={state.aiNameValidated}
-        onValidateAiName={handleValidateAiName}
         onCreateProfile={handleCreateProfile}
         saving={state.saving}
         validateAiName={validateAiName}

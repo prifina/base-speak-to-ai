@@ -117,11 +117,6 @@ const nextConfig = {
     COGNITO_CLIENT_ID: process.env.COGNITO_CLIENT_ID,
     COGNITO_IDENTITY_POOL_ID: process.env.COGNITO_IDENTITY_POOL_ID,
     GRAPHQL_API: process.env.GRAPHQL_API,
-    MY_ACCESS_KEY: process.env.MY_ACCESS_KEY,
-    MY_SECRET_KEY: process.env.MY_SECRET_KEY,
-    NEXT_PUBLIC_SPEAK_TO_USER: process.env.NEXT_PUBLIC_SPEAK_TO_USER,
-    NEXT_PUBLIC_APP_ID: process.env.NEXT_PUBLIC_APP_ID,
-    NEXT_PUBLIC_CAPTCHA_SITE_KEY: process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY,
     WEB_SOCKET_URL: process.env.WEB_SOCKET_URL,
   },
   // async headers() {

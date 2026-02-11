@@ -157,15 +157,15 @@ const usePersistentStore = create((set, get) => {
           activeGroup = isSuper
             ? "super"
             : isAdmin.length > 0
-            ? isAdmin[0]
-            : "";
+              ? isAdmin[0]
+              : "";
         }
         if (activeGroup === "") {
           activeGroup = isSuper
             ? "super"
             : isAdmin.length > 0
-            ? isAdmin[0]
-            : "";
+              ? isAdmin[0]
+              : "";
         }
 
         console.log("STORE ACTIVE GROUP END ", activeGroup);
@@ -205,6 +205,7 @@ const usePersistentStore = create((set, get) => {
       }
     },
     usernameAvailable: async (username) => {
+      console.log("CHECKING IF USERNAME IS AVAILABLE...", username);
       /* 
     Uncheck this in cognito app client integration...
     Prevent user existence errors
@@ -230,12 +231,12 @@ const usePersistentStore = create((set, get) => {
         // this should always throw an error of some kind, but if for some reason this succeeds then the user probably exists.
         return false;
       } catch (err) {
-        /*  console.log(err);
-             console.log(err.message);
-             console.log(err.code);
-             console.log(Object.keys(err));
-             console.log(err.name)
-      */
+        console.log(err);
+        console.log(err.message);
+        console.log(err.code);
+        console.log(Object.keys(err));
+        console.log(err.name);
+
         switch (err.name) {
           case "UserNotFoundException":
             return true;

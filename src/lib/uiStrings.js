@@ -275,16 +275,17 @@ export const UI_TEXT = {
     sectionTitle: "Twin Profile",
     aiTwin: "AI Twin",
     namePlaceholder: "e.g., Bob AI, Worker AI, Alice AI, etc",
-    nameLabel: "AI Twin Name",
+    nameLabel: "AI Twin Title",
     visibleDescription: "Short Intro",
     descriptionPlaceholder:
       "e.g., Amplifying expertise in digital marketing & strategy",
     invisibleDescription: "Link Sharing Preview",
     dialog: {
-      title: "Complete Your Twin Profile",
+      title: "Create Your AI Twin Profile",
       aiNameLabel: "AI-Name",
       aiNamePlaceholder: "your-ai-name",
-      aiNameHelper: "Minimum 4 characters, must include hyphen (-). Valid: a-z, 0-9, -, _, ., ~",
+      aiNameHelper:
+        "Minimum 4 characters, must include hyphen (-). Valid: a-z, 0-9, -, _, ., ~",
       aiNameInvalid: "Invalid AI name format",
       useCaseLabel: "Use Case Description",
       useCasePlaceholder: "Briefly describe your use case for this AI Twin.",
@@ -336,7 +337,8 @@ export const UI_TEXT = {
     saveFailed: "Failed to update account information",
     statusModal: {
       title: "Subscription Required",
-      message: "Your AI-Status is {status} and before you can continue, you need to subscribe.",
+      message:
+        "Your AI-Status is {status} and before you can continue, you need to subscribe.",
       learnMore: "Learn more about {status} status",
       subscribeButton: "Subscribe Here",
       homeButton: "Home",
@@ -432,7 +434,7 @@ export const UI_TEXT = {
     title: "Login",
     usernameLabel: "Username",
     usernamePlaceholder: "e.g., john_doe",
-    usernameHelper: "Enter your username, email, or AI-name",
+    usernameHelper: "Enter your username, email",
     checkingText: "Checking...",
     nextButton: "Next",
     pinLabel: "Enter PIN",
