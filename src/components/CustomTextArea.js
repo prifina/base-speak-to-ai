@@ -7,8 +7,6 @@ const CustomTextArea = ({
   noOfLines,
   isValid = true,
   onChange,
-  defaultValue,
-  onDefault,
   ...props
 }) => {
   const hasError = value?.length >= maxLength || !isValid;
@@ -23,21 +21,7 @@ const CustomTextArea = ({
   
   return (
     <Field.Root style="bold">
-      {label && (
-        <Flex justify="space-between" align="center" width="100%">
-          <Field.Label>{label}</Field.Label>
-          {onDefault && (
-            <Text
-              cursor="pointer"
-              onClick={onDefault}
-              fontWeight={600}
-              color="#929496"
-            >
-              Default
-            </Text>
-          )}
-        </Flex>
-      )}
+      {label && <Field.Label>{label}</Field.Label>}
       <Flex position="relative" width="100%">
       {noOfLines === 1 ? (
         <Input

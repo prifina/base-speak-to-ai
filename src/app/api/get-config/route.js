@@ -1,15 +1,16 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestUserPool } from "@/lib/graphqlRequestUserPool";
 import { handleApiError } from "@/lib/apiErrorHandler";
+import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function GET(request) {
+async function handler(request) {
   try {
     const host = request.headers.get("host");
     let environment = "dev";
-    
+
     if (
       host.startsWith("base.") ||
       host.startsWith("hub.") ||
@@ -35,11 +36,11 @@ export async function GET(request) {
     });
 
     const config = data.getConfig?.data ? JSON.parse(data.getConfig.data) : {};
-    
+
     // Transform config lists to match SelectField format (value/label instead of key/title)
-    const transformList = (list) => 
-      list?.map(item => ({ value: item.key, label: item.title })) || [];
-    
+    const transformList = (list) =>
+      list?.map((item) => ({ value: item.key, label: item.title })) || [];
+
     if (config.interactionStyleList) {
       config.interactionStyleList = transformList(config.interactionStyleList);
     }
@@ -47,14 +48,20 @@ export async function GET(request) {
       config.responseLengthList = transformList(config.responseLengthList);
     }
     if (config.responsePerspectiveList) {
-      config.responsePerspectiveList = transformList(config.responsePerspectiveList);
+      config.responsePerspectiveList = transformList(
+        config.responsePerspectiveList,
+      );
     }
     if (config.followUpEncouragementList) {
-      config.followUpEncouragementList = transformList(config.followUpEncouragementList);
+      config.followUpEncouragementList = transformList(
+        config.followUpEncouragementList,
+      );
     }
-    
+
     return NextResponse.json({ config });
   } catch (err) {
     return handleApiError(err, "get config failed");
   }
 }
+
+export const GET = withTelemetryRoute(handler);

@@ -23,6 +23,7 @@ const usePersistentStore = create((set, get) => {
   const initialState = {
     isAuthenticated: false,
     cognitoId: "",
+    userId: "",
     idToken: {},
     jwtIdToken: "",
     groups: [],
@@ -46,6 +47,9 @@ const usePersistentStore = create((set, get) => {
     queueStatus: undefined,
     setLoginName: (name) => {
       set({ loginName: name });
+    },
+    setUserId: (id) => {
+      set({ userId: id });
     },
     setKnowledgebaseId: (id) => {
       set({ knowledgebaseId: id });

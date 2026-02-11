@@ -40,7 +40,7 @@ const navItems = [
   {
     key: "insights",
     label: UI_TEXT.insights.sectionTitle,
-    href: "/insights/daily-report",
+    href: "/insights",
     icon: InsightsIcon,
   },
 ];

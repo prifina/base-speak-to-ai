@@ -1,0 +1,2925 @@
+{
+  "/home/ec2-user/projects/core-ai-services-v2/ai-chunking/template.yaml": {
+    "hash": "f18ee18260d2e2109f757dec1b4dd1e22489a768beab2f2316862d15547d16c5",
+    "timestamp": "2026-01-24T10:24:17.041Z",
+    "data": {
+      "stackName": "prifina-core-chunking",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/ai-chunking/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/ai-chunking",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": "AI Chunking Service - Document processing and content extraction",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [
+            {
+              "logicalId": "DocumentProcessor",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/document-processor/index.handler",
+              "runtime": null,
+              "codeUri": "./",
+              "memorySize": 3008,
+              "timeout": 900,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [],
+              "policies": {
+                "policyCount": 5
+              },
+              "physicalId": "prifina-core-chunking-DocumentProcessor-GS7YbKe6F6X4",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "ContentExtractor",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/content-extractor/index.handler",
+              "runtime": null,
+              "codeUri": "./",
+              "memorySize": 2048,
+              "timeout": 900,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [],
+              "policies": {
+                "policyCount": 5
+              },
+              "physicalId": "prifina-core-chunking-ContentExtractor-3nFtHBimHqg1",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "BatchResultProcessor",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/batch-result-processor/index.handler",
+              "runtime": null,
+              "codeUri": "./",
+              "memorySize": 2048,
+              "timeout": 900,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [],
+              "policies": {
+                "policyCount": 4
+              },
+              "physicalId": "prifina-core-chunking-BatchResultProcessor-uGkxzJgHvJnX",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "TableInitializer",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/table-initializer/index.handler",
+              "runtime": null,
+              "codeUri": "./",
+              "memorySize": 512,
+              "timeout": 300,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [],
+              "policies": {
+                "policyCount": 3
+              },
+              "physicalId": "prifina-core-chunking-TableInitializer-8yxLBfxJOunv",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "ClusteringDataExporter",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/clustering-data-exporter/index.handler",
+              "runtime": null,
+              "codeUri": "./",
+              "memorySize": 2048,
+              "timeout": 900,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [],
+              "policies": {
+                "policyCount": 4
+              },
+              "physicalId": "prifina-core-chunking-ClusteringDataExporter-tZndXUqdzkjf",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "apis": [],
+          "stateMachines": [],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [],
+          "otherResourceCounts": {
+            "AWS::SSM::Parameter": 5
+          }
+        },
+        "outputs": {
+          "DocumentProcessorArn": {
+            "Description": "ARN of the Document Processor Lambda function",
+            "Value": {
+              "Fn::GetAtt": [
+                "DocumentProcessor",
+                "Arn"
+              ]
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${AWS::StackName}-DocumentProcessorArn"
+              }
+            }
+          },
+          "ContentExtractorArn": {
+            "Description": "ARN of the Content Extractor Lambda function",
+            "Value": {
+              "Fn::GetAtt": [
+                "ContentExtractor",
+                "Arn"
+              ]
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${AWS::StackName}-ContentExtractorArn"
+              }
+            }
+          },
+          "BatchResultProcessorArn": {
+            "Description": "ARN of the Batch Result Processor Lambda function",
+            "Value": {
+              "Fn::GetAtt": [
+                "BatchResultProcessor",
+                "Arn"
+              ]
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${AWS::StackName}-BatchResultProcessorArn"
+              }
+            }
+          },
+          "TableInitializerArn": {
+            "Description": "ARN of the Table Initializer Lambda function",
+            "Value": {
+              "Fn::GetAtt": [
+                "TableInitializer",
+                "Arn"
+              ]
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${AWS::StackName}-TableInitializerArn"
+              }
+            }
+          },
+          "ClusteringDataExporterArn": {
+            "Description": "ARN of the Clustering Data Exporter Lambda function",
+            "Value": {
+              "Fn::GetAtt": [
+                "ClusteringDataExporter",
+                "Arn"
+              ]
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${AWS::StackName}-ClusteringDataExporterArn"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/ai-clustering-python/template.yaml": {
+    "hash": "7e1451de98b3b2a993368de2f6aa47561a347574fe5778a95e8b051eee2d4d36",
+    "timestamp": "2026-01-24T10:24:17.041Z",
+    "data": {
+      "stackName": "prifina-core-clustering-python",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/ai-clustering-python/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/ai-clustering-python",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": null,
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [
+            {
+              "logicalId": "ClusteringFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "index.lambda_handler",
+              "runtime": "python3.12",
+              "codeUri": "src/functions/clustering",
+              "memorySize": 3008,
+              "timeout": 900,
+              "architectures": [
+                "x86_64"
+              ],
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "S3Bucket"
+              ],
+              "layersCount": 1,
+              "physicalId": "prifina-core-clustering-python-ClusteringFunction-DPWQzj5Xs617",
+              "status": "CREATE_COMPLETE"
+            }
+          ],
+          "apis": [],
+          "stateMachines": [],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [],
+          "otherResourceCounts": {
+            "AWS::Serverless::LayerVersion": 1,
+            "AWS::IAM::Role": 1,
+            "AWS::SSM::Parameter": 1
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/ai-clustering-v2/template.yaml": {
+    "hash": "a88787f47e4cdf03d166fe26f96f0624325e48eed0e708cd2e01a61824a8f82f",
+    "timestamp": "2026-01-24T10:24:17.041Z",
+    "data": {
+      "stackName": "prifina-core-clustering",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/ai-clustering-v2/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/ai-clustering-v2",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": null,
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [
+            {
+              "logicalId": "GroupUpdater",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/group-updater/index.handler",
+              "runtime": null,
+              "codeUri": ".",
+              "memorySize": 2048,
+              "timeout": 900,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "S3_BUCKET"
+              ],
+              "policies": {
+                "policyCount": 4
+              },
+              "physicalId": "prifina-core-clustering-GroupUpdater-wgqN8JT7Qmfv",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "ClusterProcessor",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/cluster-processor/index.handler",
+              "runtime": null,
+              "codeUri": ".",
+              "memorySize": 2048,
+              "timeout": 900,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "S3_BUCKET"
+              ],
+              "policies": {
+                "policyCount": 4
+              },
+              "physicalId": "prifina-core-clustering-ClusterProcessor-e9sizz6sDo2L",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "SummaryUpdater",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/summary-updater/index.handler",
+              "runtime": null,
+              "codeUri": ".",
+              "memorySize": 2048,
+              "timeout": 900,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "S3_BUCKET"
+              ],
+              "policies": {
+                "policyCount": 5
+              },
+              "physicalId": "prifina-core-clustering-SummaryUpdater-GVp841BWi8MW",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "GroupMetadataGenerator",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/group-metadata-generator/index.handler",
+              "runtime": null,
+              "codeUri": ".",
+              "memorySize": 2048,
+              "timeout": 900,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "GROUPS_TABLE_NAME",
+                "EXAMPLE_QUESTIONS_TABLE_NAME",
+                "METADATA_MODEL_ID"
+              ],
+              "physicalId": "prifina-core-clustering-GroupMetadataGenerator-PyBpHY1h50c0",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "apis": [],
+          "stateMachines": [],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [],
+          "otherResourceCounts": {
+            "AWS::SSM::Parameter": 4,
+            "AWS::IAM::Role": 1
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/ai-email/template.yaml": {
+    "hash": "e8ebd3a743a471cf68640157b16a72f11f5d9d9e55bbbd6126bcc2d644b70c8e",
+    "timestamp": "2026-01-24T10:24:17.041Z",
+    "data": {
+      "stackName": "prifina-core-ai-email",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/ai-email/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/ai-email",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": "AI Email Processing Service",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [
+            {
+              "logicalId": "ProcessEmailFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/process-email/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 512,
+              "timeout": 60,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "GENERATE_API_URL",
+                "USERS_TABLE",
+                "CORE_API_KEY"
+              ],
+              "policies": {
+                "policyCount": 3
+              },
+              "physicalId": "prifina-core-ai-email-ProcessEmailFunction-6UwsshY7s2Di",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "apis": [],
+          "stateMachines": [
+            {
+              "logicalId": "EmailProcessorStateMachine",
+              "type": "AWS::Serverless::StateMachine",
+              "name": null,
+              "role": null,
+              "definition": "statemachine/email-processor.asl.json",
+              "loggingEnabled": true,
+              "logging": "{\"Destinations\":[{\"CloudWatchLogsLogGroup\":{\"LogGroupArn\":{\"Fn::GetAtt\":[\"StateMachineLogGroup\",\"Arn\"]}}}],\"IncludeExecutionData\":true,\"Level\":\"ALL\"}",
+              "physicalId": "arn:aws:states:us-east-1:429117803886:stateMachine:EmailProcessorStateMachine-4ouBPK4DEGkA",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [
+            {
+              "logicalId": "StateMachineLogGroup",
+              "type": "AWS::Logs::LogGroup",
+              "logGroupName": {
+                "Fn::Sub": "/aws/states/${AWS::StackName}-email-processor"
+              },
+              "retentionInDays": 7,
+              "physicalId": "/aws/states/prifina-core-ai-email-email-processor",
+              "status": "CREATE_COMPLETE"
+            }
+          ],
+          "otherResourceCounts": {}
+        },
+        "outputs": {
+          "StateMachineArn": {
+            "Description": "Email Processor State Machine ARN",
+            "Value": {
+              "Ref": "EmailProcessorStateMachine"
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${AWS::StackName}-StateMachineArn"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/ai-orchestration/template.yaml": {
+    "hash": "a5892f40a58165f898b5f48d69d6809221ef531cf5325c9e5cc19a25d749f3a4",
+    "timestamp": "2026-01-24T10:24:17.041Z",
+    "data": {
+      "stackName": "prifina-core-ai-orchestarion",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/ai-orchestration/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/ai-orchestration",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": "AI Orchestration - State machines for complex AI processing tasks",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [],
+          "apis": [],
+          "stateMachines": [
+            {
+              "logicalId": "FileConversionStateMachine",
+              "type": "AWS::Serverless::StateMachine",
+              "name": "FileConversionStateMachine",
+              "role": {
+                "Fn::GetAtt": [
+                  "StateMachineRole",
+                  "Arn"
+                ]
+              },
+              "definition": "statemachines/file-conversion.asl.json",
+              "loggingEnabled": true,
+              "logging": "{\"Destinations\":[{\"CloudWatchLogsLogGroup\":{\"LogGroupArn\":{\"Fn::GetAtt\":[\"StateMachineLogGroup\",\"Arn\"]}}}],\"Level\":\"ALL\",\"IncludeExecutionData\":true}",
+              "physicalId": "arn:aws:states:us-east-1:429117803886:stateMachine:FileConversionStateMachine",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "FileChunkingStateMachine",
+              "type": "AWS::Serverless::StateMachine",
+              "name": "FileChunkingStateMachine",
+              "role": {
+                "Fn::GetAtt": [
+                  "StateMachineRole",
+                  "Arn"
+                ]
+              },
+              "definition": "statemachines/file-chunking.asl.json",
+              "loggingEnabled": true,
+              "logging": "{\"Destinations\":[{\"CloudWatchLogsLogGroup\":{\"LogGroupArn\":{\"Fn::GetAtt\":[\"ChunkingLogGroup\",\"Arn\"]}}}],\"Level\":\"ALL\",\"IncludeExecutionData\":true}",
+              "physicalId": "arn:aws:states:us-east-1:429117803886:stateMachine:FileChunkingStateMachine",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "ClusteringOrchestrationStateMachine",
+              "type": "AWS::Serverless::StateMachine",
+              "name": "ClusteringOrchestrationStateMachine",
+              "role": {
+                "Fn::GetAtt": [
+                  "StateMachineRole",
+                  "Arn"
+                ]
+              },
+              "definition": "statemachines/clustering-orchestration.asl.json",
+              "loggingEnabled": true,
+              "logging": "{\"Destinations\":[{\"CloudWatchLogsLogGroup\":{\"LogGroupArn\":{\"Fn::GetAtt\":[\"ClusteringLogGroup\",\"Arn\"]}}}],\"Level\":\"ALL\",\"IncludeExecutionData\":true}",
+              "physicalId": "arn:aws:states:us-east-1:429117803886:stateMachine:ClusteringOrchestrationStateMachine",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "MasterOrchestratorStateMachine",
+              "type": "AWS::Serverless::StateMachine",
+              "name": "MasterOrchestratorStateMachine",
+              "role": {
+                "Fn::GetAtt": [
+                  "StateMachineRole",
+                  "Arn"
+                ]
+              },
+              "definition": "statemachines/master-orchestrator.asl.json",
+              "loggingEnabled": true,
+              "logging": "{\"Destinations\":[{\"CloudWatchLogsLogGroup\":{\"LogGroupArn\":{\"Fn::GetAtt\":[\"MasterOrchestratorLogGroup\",\"Arn\"]}}}],\"Level\":\"ALL\",\"IncludeExecutionData\":true}",
+              "physicalId": "arn:aws:states:us-east-1:429117803886:stateMachine:MasterOrchestratorStateMachine",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "BatchJobProcessorStateMachine",
+              "type": "AWS::Serverless::StateMachine",
+              "name": "BatchJobProcessorStateMachine",
+              "role": {
+                "Fn::GetAtt": [
+                  "StateMachineRole",
+                  "Arn"
+                ]
+              },
+              "definition": "statemachines/batch-job-processor.asl.json",
+              "loggingEnabled": true,
+              "logging": "{\"Destinations\":[{\"CloudWatchLogsLogGroup\":{\"LogGroupArn\":{\"Fn::GetAtt\":[\"BatchJobProcessorLogGroup\",\"Arn\"]}}}],\"Level\":\"ALL\",\"IncludeExecutionData\":true}",
+              "physicalId": "arn:aws:states:us-east-1:429117803886:stateMachine:BatchJobProcessorStateMachine",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [
+            {
+              "logicalId": "StateMachineLogGroup",
+              "type": "AWS::Logs::LogGroup",
+              "logGroupName": {
+                "Fn::Sub": "/aws/stepfunctions/${AWS::StackName}-FileConversionStateMachine"
+              },
+              "retentionInDays": 30,
+              "physicalId": "/aws/stepfunctions/prifina-core-ai-orchestarion-FileConversionStateMachine",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "ChunkingLogGroup",
+              "type": "AWS::Logs::LogGroup",
+              "logGroupName": {
+                "Fn::Sub": "/aws/stepfunctions/${AWS::StackName}-FileChunkingStateMachine"
+              },
+              "retentionInDays": 30,
+              "physicalId": "/aws/stepfunctions/prifina-core-ai-orchestarion-FileChunkingStateMachine",
+              "status": "CREATE_COMPLETE"
+            },
+            {
+              "logicalId": "ClusteringLogGroup",
+              "type": "AWS::Logs::LogGroup",
+              "logGroupName": {
+                "Fn::Sub": "/aws/stepfunctions/${AWS::StackName}-ClusteringOrchestrationStateMachine"
+              },
+              "retentionInDays": 30,
+              "physicalId": "/aws/stepfunctions/prifina-core-ai-orchestarion-ClusteringOrchestrationStateMachine",
+              "status": "CREATE_COMPLETE"
+            },
+            {
+              "logicalId": "MasterOrchestratorLogGroup",
+              "type": "AWS::Logs::LogGroup",
+              "logGroupName": {
+                "Fn::Sub": "/aws/stepfunctions/${AWS::StackName}-MasterOrchestratorStateMachine"
+              },
+              "retentionInDays": 30,
+              "physicalId": "/aws/stepfunctions/prifina-core-ai-orchestarion-MasterOrchestratorStateMachine",
+              "status": "CREATE_COMPLETE"
+            },
+            {
+              "logicalId": "BatchJobProcessorLogGroup",
+              "type": "AWS::Logs::LogGroup",
+              "logGroupName": {
+                "Fn::Sub": "/aws/stepfunctions/${AWS::StackName}-BatchJobProcessorStateMachine"
+              },
+              "retentionInDays": 30,
+              "physicalId": "/aws/stepfunctions/prifina-core-ai-orchestarion-BatchJobProcessorStateMachine",
+              "status": "CREATE_COMPLETE"
+            }
+          ],
+          "otherResourceCounts": {
+            "AWS::IAM::Role": 1
+          }
+        },
+        "outputs": {
+          "FileConversionStateMachineArn": {
+            "Description": "File Conversion State Machine ARN",
+            "Value": {
+              "Ref": "FileConversionStateMachine"
+            },
+            "Export": {
+              "Name": "Core:Orchestration:FileConversionStateMachineArn"
+            }
+          },
+          "FileConversionStateMachineName": {
+            "Description": "File Conversion State Machine Name",
+            "Value": {
+              "Fn::GetAtt": [
+                "FileConversionStateMachine",
+                "Name"
+              ]
+            },
+            "Export": {
+              "Name": "Core:Orchestration:FileConversionStateMachineName"
+            }
+          },
+          "FileChunkingStateMachineArn": {
+            "Description": "File Chunking State Machine ARN",
+            "Value": {
+              "Ref": "FileChunkingStateMachine"
+            },
+            "Export": {
+              "Name": "Core:Orchestration:FileChunkingStateMachineArn"
+            }
+          },
+          "FileChunkingStateMachineName": {
+            "Description": "File Chunking State Machine Name",
+            "Value": {
+              "Fn::GetAtt": [
+                "FileChunkingStateMachine",
+                "Name"
+              ]
+            },
+            "Export": {
+              "Name": "Core:Orchestration:FileChunkingStateMachineName"
+            }
+          },
+          "ClusteringOrchestrationStateMachineArn": {
+            "Description": "Clustering Orchestration State Machine ARN",
+            "Value": {
+              "Ref": "ClusteringOrchestrationStateMachine"
+            },
+            "Export": {
+              "Name": "Core:Orchestration:ClusteringOrchestrationStateMachineArn"
+            }
+          },
+          "ClusteringOrchestrationStateMachineName": {
+            "Description": "Clustering Orchestration State Machine Name",
+            "Value": {
+              "Fn::GetAtt": [
+                "ClusteringOrchestrationStateMachine",
+                "Name"
+              ]
+            },
+            "Export": {
+              "Name": "Core:Orchestration:ClusteringOrchestrationStateMachineName"
+            }
+          },
+          "MasterOrchestratorStateMachineArn": {
+            "Description": "Master Orchestrator State Machine ARN",
+            "Value": {
+              "Ref": "MasterOrchestratorStateMachine"
+            },
+            "Export": {
+              "Name": "Core:Orchestration:MasterOrchestratorStateMachineArn"
+            }
+          },
+          "MasterOrchestratorStateMachineName": {
+            "Description": "Master Orchestrator State Machine Name",
+            "Value": {
+              "Fn::GetAtt": [
+                "MasterOrchestratorStateMachine",
+                "Name"
+              ]
+            },
+            "Export": {
+              "Name": "Core:Orchestration:MasterOrchestratorStateMachineName"
+            }
+          },
+          "BatchJobProcessorStateMachineArn": {
+            "Description": "Batch Job Processor State Machine ARN",
+            "Value": {
+              "Ref": "BatchJobProcessorStateMachine"
+            },
+            "Export": {
+              "Name": "Core:Orchestration:BatchJobProcessorStateMachineArn"
+            }
+          },
+          "BatchJobProcessorStateMachineName": {
+            "Description": "Batch Job Processor State Machine Name",
+            "Value": {
+              "Fn::GetAtt": [
+                "BatchJobProcessorStateMachine",
+                "Name"
+              ]
+            },
+            "Export": {
+              "Name": "Core:Orchestration:BatchJobProcessorStateMachineName"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/appsync-api/template.yaml": {
+    "hash": "b895bd5b34ef2adab43e362b9f0cd70a17fc7e3f4c746d4b4d99c33aac447f27",
+    "timestamp": "2026-01-24T10:24:17.041Z",
+    "data": {
+      "stackName": "prifina-appsync-api",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/appsync-api/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/appsync-api",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": "AppSync GraphQL API - Parent Stack",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [],
+          "apis": [],
+          "stateMachines": [],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [],
+          "otherResourceCounts": {
+            "AWS::Serverless::Application": 11
+          }
+        },
+        "outputs": {
+          "GraphQLApiId": {
+            "Value": {
+              "Fn::GetAtt": [
+                "FoundationStack",
+                "Outputs"
+              ]
+            }
+          },
+          "GraphQLApiUrl": {
+            "Value": {
+              "Fn::GetAtt": [
+                "FoundationStack",
+                "Outputs"
+              ]
+            }
+          },
+          "GraphQLApiArn": {
+            "Value": {
+              "Fn::GetAtt": [
+                "FoundationStack",
+                "Outputs"
+              ]
+            }
+          },
+          "ApiKey": {
+            "Value": {
+              "Fn::GetAtt": [
+                "FoundationStack",
+                "Outputs"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/cognito/template.yaml": {
+    "hash": "0f988d5e15ea59f7fa40250c9a7d5f53e195627194d7e204a0d647d9dd8bab43",
+    "timestamp": "2026-01-24T10:24:17.041Z",
+    "data": {
+      "stackName": "prifina-core-cognito-auth",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/cognito/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/cognito",
+      "template": {
+        "formatVersion": "2010-09-09T00:00:00.000Z",
+        "description": "prifina-core-cognito-auth",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [
+            {
+              "logicalId": "DefineAuthChallengeTrigger",
+              "type": "AWS::Serverless::Function",
+              "functionName": "Core-Cognito-Define-Auth-Challenge",
+              "handler": "handler.defineAuthChallengeTriggerHandler",
+              "runtime": null,
+              "codeUri": "auth",
+              "memorySize": null,
+              "timeout": null,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [],
+              "physicalId": "Core-Cognito-Define-Auth-Challenge",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "CreateAuthChallengeTrigger",
+              "type": "AWS::Serverless::Function",
+              "functionName": "Core-Cognito-Create-Auth-Challenge",
+              "handler": "handler.createAuthChallengeTriggerHandler",
+              "runtime": null,
+              "codeUri": "auth",
+              "memorySize": null,
+              "timeout": null,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [],
+              "physicalId": "Core-Cognito-Create-Auth-Challenge",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "VerifyAuthChallengeResponseTrigger",
+              "type": "AWS::Serverless::Function",
+              "functionName": "Core-Cognito-Verify-Auth-Challenge-Response",
+              "handler": "handler.verifyAuthChallengeResponseTriggerHandler",
+              "runtime": null,
+              "codeUri": "auth",
+              "memorySize": null,
+              "timeout": null,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "SERVICE_OTP_TABLE"
+              ],
+              "policies": {
+                "policyCount": 1
+              },
+              "physicalId": "Core-Cognito-Verify-Auth-Challenge-Response",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "PostSignupConfirmationTrigger",
+              "type": "AWS::Serverless::Function",
+              "functionName": "Core-Cognito-Post-Confirmation",
+              "handler": "handler.postConfirmation",
+              "runtime": null,
+              "codeUri": "auth",
+              "memorySize": null,
+              "timeout": null,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "STATE_MACHINE_ARN"
+              ],
+              "physicalId": "Core-Cognito-Post-Confirmation",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "PreSignUpTrigger",
+              "type": "AWS::Serverless::Function",
+              "functionName": "Core-Cognito-Pre-SignUp",
+              "handler": "handler.preSignUp",
+              "runtime": null,
+              "codeUri": "auth",
+              "memorySize": null,
+              "timeout": null,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [],
+              "physicalId": "Core-Cognito-Pre-SignUp",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "PostAuthenticationTrigger",
+              "type": "AWS::Serverless::Function",
+              "functionName": "Core-Cognito-Post-Authentication",
+              "handler": "handler.postAuthentication",
+              "runtime": null,
+              "codeUri": "auth",
+              "memorySize": null,
+              "timeout": null,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "STATE_MACHINE_ARN"
+              ],
+              "physicalId": "Core-Cognito-Post-Authentication",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "apis": [],
+          "stateMachines": [],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [],
+          "otherResourceCounts": {
+            "AWS::IAM::Role": 1,
+            "AWS::Lambda::Permission": 6
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/cognito-events/template.yaml": {
+    "hash": "ab4c0fdd65be0b8243e255217e3f05a6ffd846a99b7c10db9220703d19a8d809",
+    "timestamp": "2026-01-24T10:24:17.041Z",
+    "data": {
+      "stackName": "prifina-core-cognito-events",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/cognito-events/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/cognito-events",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": "Cognito Events Processing",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [],
+          "apis": [],
+          "stateMachines": [
+            {
+              "logicalId": "ProcessEventStateMachine",
+              "type": "AWS::Serverless::StateMachine",
+              "name": null,
+              "role": null,
+              "definition": "statemachines/process-event.asl.json",
+              "loggingEnabled": false,
+              "logging": null,
+              "physicalId": "arn:aws:states:us-east-1:429117803886:stateMachine:ProcessEventStateMachine-PEsPS98Q9A4R",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [],
+          "otherResourceCounts": {
+            "AWS::SSM::Parameter": 1
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/core-api-v2/template.yaml": {
+    "hash": "99d1e1461625b8e7912bf95f2a6d86bea9ef71e98c75969dced5a6eee566d88d",
+    "timestamp": "2026-01-24T10:24:17.041Z",
+    "data": {
+      "stackName": "prifina-core-api-v2",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/core-api-v2/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/core-api-v2",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": "Core API v2 - REST API endpoints and business logic",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [
+            {
+              "logicalId": "FileUploadFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/file-upload/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 512,
+              "timeout": 20,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "FileUploadApi",
+                  "type": "Api",
+                  "path": "/core/file-upload",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "DOC_FILES",
+                "S3_BUCKET",
+                "ORCHESTRATION_STATE_MACHINE_ARN"
+              ],
+              "policies": {
+                "policyCount": 3
+              },
+              "physicalId": "prifina-core-api-v2-FileUploadFunction-S12zO2ccfymu",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "PingFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/ping/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 128,
+              "timeout": 10,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "PingApi",
+                  "type": "Api",
+                  "path": "/ping",
+                  "method": "GET",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": "NONE"
+                }
+              ],
+              "envKeys": [],
+              "physicalId": "prifina-core-api-v2-PingFunction-CNbDWPaW4nh3",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "PreSignedUrlFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/get-pre-signed-url/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 512,
+              "timeout": 10,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "PreSignedUrlApi",
+                  "type": "Api",
+                  "path": "/core/get-pre-signed-url",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "S3_BUCKET"
+              ],
+              "policies": {
+                "policyCount": 2
+              },
+              "physicalId": "prifina-core-api-v2-PreSignedUrlFunction-PtaGVUs74sD7",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "NotifyFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/notify/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 512,
+              "timeout": 10,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "NotifyApi",
+                  "type": "Api",
+                  "path": "/core/notify",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "WEBSOCKET_CONNECTIONS_TABLE",
+                "WEBSOCKET_ENDPOINT"
+              ],
+              "policies": {
+                "policyCount": 1
+              },
+              "physicalId": "prifina-core-api-v2-NotifyFunction-dWF2QwnRuJ3s",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "TestRdsFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/test-rds/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 128,
+              "timeout": 10,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "TestRdsApi",
+                  "type": "Api",
+                  "path": "/core/test-rds",
+                  "method": "GET",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "RDS_CLUSTER_ARN",
+                "RDS_SECRET_ARN"
+              ],
+              "policies": {
+                "policyCount": 1
+              },
+              "physicalId": "prifina-core-api-v2-TestRdsFunction-ubrDmKTtuTpy",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "TwinGetUserFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/twin/get-user/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 256,
+              "timeout": 10,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "TwinGetUserApi",
+                  "type": "Api",
+                  "path": "/core/twin/get-user",
+                  "method": "GET",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "SPEAK_TO_USERS_TABLE"
+              ],
+              "policies": {
+                "policyCount": 1
+              },
+              "physicalId": "prifina-core-api-v2-TwinGetUserFunction-H9kW9IeNwkV6",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "ClaimTwinFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/claim-twin/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 256,
+              "timeout": 10,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "ClaimTwinApi",
+                  "type": "Api",
+                  "path": "/core/twin/claim-twin",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "SPEAK_TO_USERS_TABLE"
+              ],
+              "policies": {
+                "policyCount": 1
+              },
+              "physicalId": "prifina-core-api-v2-ClaimTwinFunction-sonDjheANE6P",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "TranslateFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/translate/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 512,
+              "timeout": 30,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "TranslateApi",
+                  "type": "Api",
+                  "path": "/core/translate",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "TRANSLATIONS_TABLE",
+                "TRANSLATIONS_TABLE_NAME"
+              ],
+              "policies": {
+                "policyCount": 2
+              },
+              "physicalId": "prifina-core-api-v2-TranslateFunction-8x2pmmRisjJ6",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "DetectFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/detect/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 1024,
+              "timeout": 30,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "DetectApi",
+                  "type": "Api",
+                  "path": "/core/detect",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "CORE_CACHE_TABLE",
+                "CORE_GROUPS_TABLE",
+                "RDS_CLUSTER_ARN",
+                "RDS_SECRET_ARN",
+                "DB_SCHEMA"
+              ],
+              "policies": {
+                "policyCount": 3
+              },
+              "physicalId": "prifina-core-api-v2-DetectFunction-cBn1zzDm5SoT",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "DetectV2Function",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/detect-v2/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 1024,
+              "timeout": 30,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "DetectV2Api",
+                  "type": "Api",
+                  "path": "/core/detect-v2",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "CORE_CACHE_TABLE",
+                "CORE_GROUPS_TABLE",
+                "RDS_CLUSTER_ARN",
+                "RDS_SECRET_ARN",
+                "DB_SCHEMA"
+              ],
+              "policies": {
+                "policyCount": 3
+              },
+              "layersCount": 1,
+              "physicalId": "prifina-core-api-v2-DetectV2Function-3zeVp4SlmYFK",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "TwinInitFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/twin/init/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 512,
+              "timeout": 20,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "TwinInitApi",
+                  "type": "Api",
+                  "path": "/core/twin/init",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "CORE_GROUPS_TABLE",
+                "LOGS_BUCKET",
+                "RDS_CLUSTER_ARN",
+                "RDS_SECRET_ARN",
+                "EXAMPLE_QUESTIONS_TABLE"
+              ],
+              "policies": {
+                "policyCount": 3
+              },
+              "physicalId": "prifina-core-api-v2-TwinInitFunction-hTcrvea7KmNx",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "McpFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/mcp/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 256,
+              "timeout": 10,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "McpPost",
+                  "type": "Api",
+                  "path": "/mcp",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "McpApi"
+                  },
+                  "authorizer": null
+                },
+                {
+                  "eventName": "McpGet",
+                  "type": "Api",
+                  "path": "/mcp",
+                  "method": "GET",
+                  "apiRef": {
+                    "Ref": "McpApi"
+                  },
+                  "authorizer": "NONE"
+                },
+                {
+                  "eventName": "McpHead",
+                  "type": "Api",
+                  "path": "/mcp",
+                  "method": "HEAD",
+                  "apiRef": {
+                    "Ref": "McpApi"
+                  },
+                  "authorizer": "NONE"
+                }
+              ],
+              "envKeys": [],
+              "physicalId": "prifina-core-api-v2-McpFunction-cibYxLFtiWSX",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "UpdateParticipantFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/events/update-participant/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 256,
+              "timeout": 10,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "UpdateParticipantApi",
+                  "type": "Api",
+                  "path": "/events/update-participant",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "NETWORK_EVENT_PARTICIPANTS_TABLE"
+              ],
+              "policies": {
+                "policyCount": 1
+              },
+              "physicalId": "prifina-core-api-v2-UpdateParticipantFunction-4jNYb37GYLw7",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "GetParticipantFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/events/get-participant/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 256,
+              "timeout": 10,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "GetParticipantApi",
+                  "type": "Api",
+                  "path": "/events/get-participant",
+                  "method": "GET",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "NETWORK_EVENT_PARTICIPANTS_TABLE"
+              ],
+              "policies": {
+                "policyCount": 1
+              },
+              "physicalId": "prifina-core-api-v2-GetParticipantFunction-AqQv1LGdUxJh",
+              "status": "CREATE_COMPLETE"
+            },
+            {
+              "logicalId": "RegisterEventFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/events/register-event/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 512,
+              "timeout": 20,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "RegisterEventApi",
+                  "type": "Api",
+                  "path": "/events/register-event",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "NETWORK_EVENT_PARTICIPANTS_TABLE",
+                "EMAIL_SENDER"
+              ],
+              "policies": {
+                "policyCount": 2
+              },
+              "physicalId": "prifina-core-api-v2-RegisterEventFunction-wfFSLufn4zv5",
+              "status": "CREATE_COMPLETE"
+            },
+            {
+              "logicalId": "GetEventFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/events/get-event/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 256,
+              "timeout": 10,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "GetEventApi",
+                  "type": "Api",
+                  "path": "/events/get-event",
+                  "method": "GET",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "NETWORK_EVENTS_TABLE"
+              ],
+              "policies": {
+                "policyCount": 1
+              },
+              "physicalId": "prifina-core-api-v2-GetEventFunction-FidSIGuYiWUd",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "NewAiReadyFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/events/new-ai-ready/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 512,
+              "timeout": 20,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "NewAiReadyApi",
+                  "type": "Api",
+                  "path": "/events/new-ai-ready",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "EMAIL_SENDER",
+                "BASE_APP"
+              ],
+              "policies": {
+                "policyCount": 1
+              },
+              "physicalId": "prifina-core-api-v2-NewAiReadyFunction-CpdMPD9tQmZd",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "CheckAvailabilityFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/events/check-availability/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 256,
+              "timeout": 10,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "CheckAvailabilityApi",
+                  "type": "Api",
+                  "path": "/events/check-availability",
+                  "method": "GET",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "SPEAK_TO_USERS_TABLE",
+                "NETWORK_EVENT_PARTICIPANTS_TABLE"
+              ],
+              "policies": {
+                "policyCount": 2
+              },
+              "physicalId": "prifina-core-api-v2-CheckAvailabilityFunction-ACnFDRxSK3iI",
+              "status": "CREATE_COMPLETE"
+            },
+            {
+              "logicalId": "GetParticipantKnowledgebaseFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/events/get-participant-knowledgebase/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 256,
+              "timeout": 10,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "GetParticipantKnowledgebaseApi",
+                  "type": "Api",
+                  "path": "/events/get-participant-knowledgebase",
+                  "method": "GET",
+                  "apiRef": {
+                    "Ref": "CoreApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "NETWORK_EVENT_PARTICIPANTS_TABLE"
+              ],
+              "policies": {
+                "policyCount": 1
+              },
+              "physicalId": "prifina-core-api-v2-GetParticipantKnowledgebaseFun-kYg9Gzlu4Ybi",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "apis": [
+            {
+              "logicalId": "McpApi",
+              "type": "AWS::Serverless::Api",
+              "name": "mcp-api",
+              "stageName": "mcp",
+              "cors": {
+                "AllowMethods": "'GET,POST,OPTIONS,HEAD'",
+                "AllowHeaders": "'Content-Type,x-api-key,mcp-protocol-version'",
+                "AllowOrigin": "'*'",
+                "MaxAge": "'600'"
+              },
+              "endpointConfiguration": "REGIONAL",
+              "auth": {
+                "DefaultAuthorizer": "NONE"
+              }
+            },
+            {
+              "logicalId": "CoreApi",
+              "type": "AWS::Serverless::Api",
+              "name": null,
+              "stageName": "dev",
+              "cors": {
+                "AllowMethods": "'GET,POST,PUT,DELETE,OPTIONS,HEAD'",
+                "AllowHeaders": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+                "AllowOrigin": "'*'",
+                "MaxAge": "'600'"
+              },
+              "endpointConfiguration": null,
+              "auth": {
+                "DefaultAuthorizer": "NONE"
+              }
+            }
+          ],
+          "stateMachines": [],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [
+            {
+              "logicalId": "ApiLogGroup",
+              "type": "AWS::Logs::LogGroup",
+              "logGroupName": {
+                "Fn::Sub": "/aws/apigateway/${AWS::StackName}-core-api"
+              },
+              "retentionInDays": 14,
+              "physicalId": "/aws/apigateway/prifina-core-api-v2-core-api",
+              "status": "CREATE_COMPLETE"
+            },
+            {
+              "logicalId": "McpApiLogGroup",
+              "type": "AWS::Logs::LogGroup",
+              "logGroupName": {
+                "Fn::Sub": "/aws/apigateway/${AWS::StackName}-mcp-api"
+              },
+              "retentionInDays": 14,
+              "physicalId": "/aws/apigateway/prifina-core-api-v2-mcp-api",
+              "status": "CREATE_COMPLETE"
+            }
+          ],
+          "otherResourceCounts": {
+            "AWS::Serverless::LayerVersion": 1,
+            "AWS::SSM::Parameter": 1
+          }
+        },
+        "outputs": {
+          "ApiUrl": {
+            "Description": "API Gateway endpoint URL",
+            "Value": {
+              "Fn::Sub": "https://${CoreApi}.execute-api.${AWS::Region}.amazonaws.com/dev"
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${AWS::StackName}-ApiUrl"
+              }
+            }
+          },
+          "McpApiUrl": {
+            "Description": "MCP API endpoint URL",
+            "Value": {
+              "Fn::Sub": "https://${McpApi}.execute-api.${AWS::Region}.amazonaws.com/mcp"
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${AWS::StackName}-McpApiUrl"
+              }
+            }
+          },
+          "DetectLayerArn": {
+            "Description": "ARN of the detect-core Lambda layer",
+            "Value": {
+              "Ref": "DetectLayer"
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${AWS::StackName}-DetectLayerArn"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/core-kpi-updates/template.yml": {
+    "hash": "4e0f670fd803a6b7fdbbbd685a52ea28fa25753fa234b7e2237848e895e2bf3d",
+    "timestamp": "2026-01-24T10:24:17.041Z",
+    "data": {
+      "stackName": "prifina-core-services-scheduled-kpi-processing",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/core-kpi-updates/template.yml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/core-kpi-updates",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": "Core Service Scheduled KPI processing",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [
+            {
+              "logicalId": "ProcessingKPIFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/updateKpi/index.handler",
+              "runtime": null,
+              "codeUri": "./",
+              "memorySize": 3008,
+              "timeout": 900,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "MESSAGES",
+                "CORE_CONFIG",
+                "SPEAK_TO_USERS_TABLE"
+              ],
+              "policies": {
+                "policyCount": 7
+              },
+              "physicalId": "prifina-core-services-schedu-ProcessingKPIFunction-nEq6yv7hYiki",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "LogUpdateFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/updateHeaderLogs/index.handler",
+              "runtime": null,
+              "codeUri": "./",
+              "memorySize": 3008,
+              "timeout": 900,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "LOG_BUCKET"
+              ],
+              "policies": {
+                "policyCount": 7
+              },
+              "physicalId": "prifina-core-services-scheduled--LogUpdateFunction-rfnp2LnIYR34",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "apis": [],
+          "stateMachines": [],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [],
+          "otherResourceCounts": {
+            "AWS::IAM::ManagedPolicy": 3
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/core-timers/template.yaml": {
+    "hash": "2990a38369c63adcb5e4c0c637541840327ae90b8ca08c79961af5cbe4177b0d",
+    "timestamp": "2026-01-24T10:24:17.041Z",
+    "data": {
+      "stackName": "prifina-core-timer",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/core-timers/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/core-timers",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": "Core Timers Service - Scalable notification system using DynamoDB TTL",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [
+            {
+              "logicalId": "TimerHandler",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/timer-handler/index.handler",
+              "runtime": null,
+              "codeUri": "./",
+              "memorySize": 512,
+              "timeout": 10,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "SNS_TOPIC_ARN"
+              ],
+              "policies": {
+                "policyCount": 3
+              },
+              "physicalId": "prifina-core-timer-TimerHandler-tNJZq9u7SA4e",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "DateQueryChecker",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/date-query-checker/index.handler",
+              "runtime": null,
+              "codeUri": "./",
+              "memorySize": 512,
+              "timeout": 30,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "TIMERS_TABLE",
+                "ITEM_TYPES",
+                "SNS_TOPIC_ARN"
+              ],
+              "policies": {
+                "policyCount": 3
+              },
+              "physicalId": "prifina-core-timer-DateQueryChecker-1nNUigdDRbUr",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "AddTimerFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/add-timer/index.handler",
+              "runtime": null,
+              "codeUri": "./",
+              "memorySize": 256,
+              "timeout": 10,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "ApiEvent",
+                  "type": "Api",
+                  "path": "/timers",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "TimersApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "TIMERS_TABLE",
+                "USER_POOL_ID",
+                "KNOWLEDGEBASE_TABLE",
+                "CORE_SUBSCRIPTION_TABLE",
+                "STRIPE_SECRET_KEY",
+                "SNS_TOPIC_ARN"
+              ],
+              "policies": {
+                "policyCount": 6
+              },
+              "physicalId": "prifina-core-timer-AddTimerFunction-Ga7YDJUhXaVc",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "apis": [
+            {
+              "logicalId": "TimersApi",
+              "type": "AWS::Serverless::Api",
+              "name": null,
+              "stageName": "prod",
+              "cors": null,
+              "endpointConfiguration": null,
+              "auth": {}
+            }
+          ],
+          "stateMachines": [],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [],
+          "otherResourceCounts": {
+            "AWS::DynamoDB::Table": 1,
+            "AWS::Scheduler::Schedule": 1,
+            "AWS::IAM::Role": 1,
+            "AWS::Lambda::Permission": 1,
+            "AWS::SSM::Parameter": 1
+          }
+        },
+        "outputs": {
+          "TimersTableArn": {
+            "Description": "ARN of the Core Timers DynamoDB table",
+            "Value": {
+              "Fn::GetAtt": [
+                "TimersTable",
+                "Arn"
+              ]
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${AWS::StackName}-TimersTableArn"
+              }
+            }
+          },
+          "TimerHandlerArn": {
+            "Description": "ARN of the Timer Handler Lambda function",
+            "Value": {
+              "Fn::GetAtt": [
+                "TimerHandler",
+                "Arn"
+              ]
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${AWS::StackName}-TimerHandlerArn"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/core-upload-conversions/template.yaml": {
+    "hash": "46ac34d686e620a95590b055b9c95892c3cd73c613513b535bd61fec6bd42c07",
+    "timestamp": "2026-01-24T10:24:17.042Z",
+    "data": {
+      "stackName": "prifina-ai-core-uploads",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/core-upload-conversions/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/core-upload-conversions",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": "Convert a single S3 object to Markdown using MarkItDown and write result to S3.",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [
+            {
+              "logicalId": "PdfToMarkdownFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "handler.handler",
+              "runtime": null,
+              "codeUri": "src/pdf/",
+              "memorySize": null,
+              "timeout": null,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [],
+              "policies": {
+                "policyCount": 2
+              },
+              "physicalId": "prifina-ai-core-uploads-PdfToMarkdownFunction-wupBEuhMwpeC",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "ConvertToMarkdownFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "handler.handler",
+              "runtime": null,
+              "codeUri": "src/docs/",
+              "memorySize": null,
+              "timeout": null,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "OUTPUT_BUCKET",
+                "OUTPUT_PREFIX"
+              ],
+              "policies": {
+                "policyCount": 2
+              },
+              "physicalId": "prifina-ai-core-uploads-ConvertToMarkdownFunction-QOt51ssWyHwF",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "PandocConverterFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "handler.handler",
+              "runtime": null,
+              "codeUri": "src/pandoc/",
+              "memorySize": null,
+              "timeout": null,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "OUTPUT_BUCKET",
+                "PANDOC_TO",
+                "PANDOC_EXTRACT_MEDIA",
+                "PATH"
+              ],
+              "policies": {
+                "policyCount": 2
+              },
+              "layersCount": 1,
+              "physicalId": "prifina-ai-core-uploads-PandocConverterFunction-uPieu5RVgSMX",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "apis": [],
+          "stateMachines": [],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [],
+          "otherResourceCounts": {
+            "AWS::Serverless::LayerVersion": 1,
+            "AWS::SSM::Parameter": 3
+          }
+        },
+        "outputs": {
+          "ConvertToMarkdownFunctionArn": {
+            "Description": "ConvertToMarkdown Lambda ARN",
+            "Value": {
+              "Fn::GetAtt": [
+                "ConvertToMarkdownFunction",
+                "Arn"
+              ]
+            }
+          },
+          "PdfToMarkdownFunctionArn": {
+            "Description": "PdfToMarkdown Lambda ARN",
+            "Value": {
+              "Fn::GetAtt": [
+                "PdfToMarkdownFunction",
+                "Arn"
+              ]
+            }
+          },
+          "PandocConverterFunctionArn": {
+            "Description": "PandocConverter Lambda ARN",
+            "Value": {
+              "Fn::GetAtt": [
+                "PandocConverterFunction",
+                "Arn"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/dev-api/template.yaml": {
+    "hash": "e7d7ba083f8cc6ab4d2bd13ee5cdd72ce15c95570616bc2153a35e68899851d5",
+    "timestamp": "2026-01-24T10:24:17.042Z",
+    "data": {
+      "stackName": "prifina-dev-api-v1",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/dev-api/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/dev-api",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": "Prifina Dev API - API Key authenticated endpoints",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [
+            {
+              "logicalId": "PreSignedUrlFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/handlers/pre-signed-url.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 256,
+              "timeout": 10,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "ApiEvent",
+                  "type": "Api",
+                  "path": "/pre-signed-url",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "DevApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "S3_BUCKET",
+                "SPEAK_TO_USERS_TABLE"
+              ],
+              "policies": {
+                "policyCount": 3
+              },
+              "physicalId": "prifina-dev-api-v1-PreSignedUrlFunction-xqyZhphrGUCi",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "PingFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/handlers/ping.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 128,
+              "timeout": 5,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "ApiEvent",
+                  "type": "Api",
+                  "path": "/ping",
+                  "method": "GET",
+                  "apiRef": {
+                    "Ref": "DevApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [],
+              "physicalId": "prifina-dev-api-v1-PingFunction-HdR17Ygsl9dw",
+              "status": "CREATE_COMPLETE"
+            },
+            {
+              "logicalId": "FileUploadFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/handlers/file-upload.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 512,
+              "timeout": 20,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "ApiEvent",
+                  "type": "Api",
+                  "path": "/file-upload",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "DevApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "S3_BUCKET",
+                "DOC_FILES_TABLE",
+                "STATE_MACHINE_ARN"
+              ],
+              "policies": {
+                "policyCount": 3
+              },
+              "physicalId": "prifina-dev-api-v1-FileUploadFunction-AsGb5kbiVpgJ",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "MessageObjectsFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/handlers/message-objects.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 512,
+              "timeout": 30,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "ApiEvent",
+                  "type": "Api",
+                  "path": "/message-objects",
+                  "method": "GET",
+                  "apiRef": {
+                    "Ref": "DevApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "API_KEYS_TABLE",
+                "DB_CLUSTER_ARN",
+                "DB_SECRET_ARN",
+                "DB_NAME"
+              ],
+              "policies": {
+                "policyCount": 2
+              },
+              "physicalId": "prifina-dev-api-v1-MessageObjectsFunction-gwC6Ouweyp5c",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "apis": [
+            {
+              "logicalId": "DevApi",
+              "type": "AWS::Serverless::Api",
+              "name": "prifina-dev-api",
+              "stageName": "dev",
+              "cors": {
+                "AllowMethods": "'GET,POST,OPTIONS'",
+                "AllowHeaders": "'Content-Type,X-Api-Key'",
+                "AllowOrigin": "'*'",
+                "MaxAge": "'600'"
+              },
+              "endpointConfiguration": "REGIONAL",
+              "auth": {}
+            }
+          ],
+          "stateMachines": [],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [
+            {
+              "logicalId": "ApiLogGroup",
+              "type": "AWS::Logs::LogGroup",
+              "logGroupName": {
+                "Fn::Sub": "/aws/apigateway/${AWS::StackName}-dev-api"
+              },
+              "retentionInDays": 14,
+              "physicalId": "/aws/apigateway/prifina-dev-api-v1-dev-api",
+              "status": "CREATE_COMPLETE"
+            }
+          ],
+          "otherResourceCounts": {}
+        },
+        "outputs": {
+          "ApiUrl": {
+            "Description": "API Gateway endpoint URL",
+            "Value": {
+              "Fn::Sub": "https://${DevApi}.execute-api.${AWS::Region}.amazonaws.com/dev"
+            }
+          },
+          "ApiId": {
+            "Description": "API Gateway ID",
+            "Value": {
+              "Ref": "DevApi"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/environment/template.yaml": {
+    "hash": "2c8a3dfd8668205b5ef6b3b31cc88cc13072b154481f3b7d9c0c60d0aa9404f8",
+    "timestamp": "2026-01-24T10:24:17.042Z",
+    "data": {
+      "stackName": "prifina-core-environment",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/environment/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/environment",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": "Environment configuration - SSM parameters for cross-stack configuration",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [],
+          "apis": [],
+          "stateMachines": [],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [],
+          "otherResourceCounts": {
+            "AWS::SSM::Parameter": 11,
+            "AWS::DynamoDB::Table": 5
+          }
+        },
+        "outputs": {
+          "ApiEndpointParamName": {
+            "Description": "SSM Parameter name for API endpoint",
+            "Value": {
+              "Ref": "ApiEndpointParam"
+            }
+          },
+          "ConnectionArnParamName": {
+            "Description": "SSM Parameter name for Connection ARN",
+            "Value": {
+              "Ref": "ConnectionArnParam"
+            }
+          },
+          "WssPointParamName": {
+            "Description": "SSM Parameter name for WebSocket point",
+            "Value": {
+              "Ref": "WssPointParam"
+            }
+          },
+          "UserPoolIdParamName": {
+            "Description": "SSM Parameter name for User Pool ID",
+            "Value": {
+              "Ref": "UserPoolIdParam"
+            }
+          },
+          "UserPoolArnParamName": {
+            "Description": "SSM Parameter name for User Pool ARN",
+            "Value": {
+              "Ref": "UserPoolArnParam"
+            }
+          },
+          "AppClientIdParamName": {
+            "Description": "SSM Parameter name for App Client ID",
+            "Value": {
+              "Ref": "AppClientIdParam"
+            }
+          },
+          "StripeSecretKeyParamName": {
+            "Description": "SSM Parameter name for Stripe Secret Key",
+            "Value": {
+              "Ref": "StripeSecretKeyParam"
+            }
+          },
+          "CoreTimerConnectionArnParamName": {
+            "Description": "SSM Parameter name for Core Timer Connection ARN",
+            "Value": {
+              "Ref": "CoreTimerConnectionArnParam"
+            }
+          },
+          "CoreTranslationsTable": {
+            "Description": "Translations table",
+            "Value": {
+              "Ref": "CoreTranslationsTable"
+            },
+            "Export": {
+              "Name": "Core:Tables:Translations"
+            }
+          },
+          "ExampleQuestionsTable": {
+            "Description": "Example questions table",
+            "Value": {
+              "Ref": "ExampleQuestionsTable"
+            },
+            "Export": {
+              "Name": "Core:Tables:ExampleQuestions"
+            }
+          },
+          "ServiceApiKeysTable": {
+            "Description": "Service API keys table",
+            "Value": {
+              "Ref": "ServiceApiKeysTable"
+            },
+            "Export": {
+              "Name": "Core:Tables:ServiceApiKeys"
+            }
+          },
+          "ServiceOtpTable": {
+            "Description": "Service OTP table",
+            "Value": {
+              "Ref": "ServiceOtpTable"
+            },
+            "Export": {
+              "Name": "Core:Tables:ServiceOtp"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/gate-api/template.yaml": {
+    "hash": "70b4c3aa6f9b33dc889e00c373a1329540035bb57d8db824e1247994c750472a",
+    "timestamp": "2026-01-24T10:24:17.042Z",
+    "data": {
+      "stackName": "prifina-gate-api",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/gate-api/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/gate-api",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": "Quota Gate: API Gateway REST + Usage Plan + API Key + MOCK 204 at /_meter",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [],
+          "apis": [
+            {
+              "logicalId": "MeterApi",
+              "type": "AWS::Serverless::Api",
+              "name": {
+                "Ref": "ApiName"
+              },
+              "stageName": "dev",
+              "cors": null,
+              "endpointConfiguration": "REGIONAL"
+            }
+          ],
+          "stateMachines": [],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [],
+          "otherResourceCounts": {}
+        },
+        "outputs": {
+          "MeterUrl": {
+            "Description": "Invoke URL for the quota gate endpoint (use this in your streaming Lambda as METER_URL)",
+            "Value": {
+              "Fn::Sub": "https://${MeterApi}.execute-api.${AWS::Region}.amazonaws.com/dev/_meter"
+            }
+          },
+          "ApiId": {
+            "Description": "API Gateway REST API ID",
+            "Value": {
+              "Ref": "MeterApi"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/iam-policies/template.yaml": {
+    "hash": "2bf80337343545887f8b839ba1c2a127e5f0e9af8d05b1471efe49891ae21b7f",
+    "timestamp": "2026-01-24T10:24:17.042Z",
+    "data": {
+      "stackName": "prifina-core-policies",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/iam-policies/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/iam-policies",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": null,
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [],
+          "apis": [],
+          "stateMachines": [],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [],
+          "otherResourceCounts": {
+            "AWS::IAM::ManagedPolicy": 5,
+            "AWS::IAM::Role": 1
+          }
+        },
+        "outputs": {
+          "CloudWatchPolicyArn": {
+            "Value": {
+              "Ref": "CloudWatchPolicy"
+            },
+            "Export": {
+              "Name": "Core:Policies:CloudWatchPolicy"
+            }
+          },
+          "S3PolicyArn": {
+            "Value": {
+              "Ref": "S3Policy"
+            },
+            "Export": {
+              "Name": "Core:Policies:S3Policy"
+            }
+          },
+          "BedrockPolicyArn": {
+            "Value": {
+              "Ref": "BedrockPolicy"
+            },
+            "Export": {
+              "Name": "Core:Policies:BedrockPolicy"
+            }
+          },
+          "RDSDataAPIPolicyArn": {
+            "Value": {
+              "Ref": "RDSDataAPIPolicy"
+            },
+            "Export": {
+              "Name": "Core:Policies:RDSDataAPIPolicy"
+            }
+          },
+          "SSMPolicyArn": {
+            "Value": {
+              "Ref": "SSMPolicy"
+            },
+            "Export": {
+              "Name": "Core:Policies:SSMPolicy"
+            }
+          },
+          "BedrockBatchJobRoleArn": {
+            "Description": "Bedrock Batch Job Role ARN",
+            "Value": {
+              "Fn::GetAtt": [
+                "BedrockBatchJobRole",
+                "Arn"
+              ]
+            },
+            "Export": {
+              "Name": "Core:BedrockBatchJobRoleArn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/middleware/template.yaml": {
+    "hash": "2a547642af40ca2f4a12151983cfe8df8d21b6053e1833129def0599d565684d",
+    "timestamp": "2026-01-24T10:24:17.042Z",
+    "data": {
+      "stackName": "prifina-core-middleware",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/middleware/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/middleware",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": "Middleware Generate API - AI-powered conversational response generation",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [
+            {
+              "logicalId": "GenerateFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 1024,
+              "timeout": 30,
+              "architectures": null,
+              "packageType": null,
+              "events": [
+                {
+                  "eventName": "GenerateApi",
+                  "type": "Api",
+                  "path": "/generate",
+                  "method": "POST",
+                  "apiRef": {
+                    "Ref": "GenerateApi"
+                  },
+                  "authorizer": null
+                }
+              ],
+              "envKeys": [
+                "RDS_CLUSTER_ARN",
+                "RDS_SECRET_ARN",
+                "DB_SCHEMA",
+                "CORE_GROUPS_TABLE",
+                "SPEAK_TO_USERS_TABLE",
+                "CORE_CONFIG_TABLE",
+                "CORE_CACHE_TABLE",
+                "LOGS_BUCKET",
+                "CORE_API_URL",
+                "CORE_API_KEY",
+                "OPENAI_API_KEY"
+              ],
+              "policies": {
+                "policyCount": 3
+              },
+              "layersCount": 2,
+              "physicalId": "prifina-core-middleware-GenerateFunction-eAfVa0XMIYqX",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "apis": [
+            {
+              "logicalId": "GenerateApi",
+              "type": "AWS::Serverless::Api",
+              "name": null,
+              "stageName": "ai",
+              "cors": {
+                "AllowMethods": "'GET,POST,PUT,DELETE,OPTIONS,HEAD'",
+                "AllowHeaders": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+                "AllowOrigin": "'*'",
+                "MaxAge": "'600'"
+              },
+              "endpointConfiguration": null,
+              "auth": {
+                "DefaultAuthorizer": "NONE"
+              }
+            }
+          ],
+          "stateMachines": [],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [
+            {
+              "logicalId": "ApiLogGroup",
+              "type": "AWS::Logs::LogGroup",
+              "logGroupName": {
+                "Fn::Sub": "/aws/apigateway/${AWS::StackName}-generate-api"
+              },
+              "retentionInDays": 14,
+              "physicalId": "/aws/apigateway/prifina-core-middleware-generate-api",
+              "status": "CREATE_COMPLETE"
+            }
+          ],
+          "otherResourceCounts": {
+            "AWS::Serverless::LayerVersion": 1
+          }
+        },
+        "outputs": {
+          "ApiUrl": {
+            "Description": "API Gateway endpoint URL",
+            "Value": {
+              "Fn::Sub": "https://${GenerateApi}.execute-api.${AWS::Region}.amazonaws.com/ai"
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${AWS::StackName}-ApiUrl"
+              }
+            }
+          },
+          "GenerateFunctionArn": {
+            "Description": "Generate Lambda Function ARN",
+            "Value": {
+              "Fn::GetAtt": [
+                "GenerateFunction",
+                "Arn"
+              ]
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${AWS::StackName}-GenerateFunctionArn"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/msg-processing/template.yaml": {
+    "hash": "c7f5276f558e126925cf252bc20d5cd26ae64a00b3b37c4289df90c21cfa8797",
+    "timestamp": "2026-01-24T10:24:17.042Z",
+    "data": {
+      "stackName": "prifina-core-twin-msg-services",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/msg-processing/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/msg-processing",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": "Core AI Message Processing Service",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [
+            {
+              "logicalId": "ProcessMessageFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/functions/processMessage/index.handler",
+              "runtime": null,
+              "codeUri": "./",
+              "memorySize": 3008,
+              "timeout": 900,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "OLD_MESSAGING"
+              ],
+              "policies": {
+                "policyCount": 7
+              },
+              "physicalId": "prifina-core-twin-msg-servi-ProcessMessageFunction-BYE8SuhAYsbd",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "apis": [],
+          "stateMachines": [
+            {
+              "logicalId": "MessageProcessorStateMachine",
+              "type": "AWS::Serverless::StateMachine",
+              "name": "MessageProcessorStateMachine",
+              "role": {
+                "Fn::GetAtt": [
+                  "StateMachineRole",
+                  "Arn"
+                ]
+              },
+              "definition": "statemachines/message-processor.asl.json",
+              "loggingEnabled": true,
+              "logging": "{\"Destinations\":[{\"CloudWatchLogsLogGroup\":{\"LogGroupArn\":{\"Fn::GetAtt\":[\"StateMachineLogGroup\",\"Arn\"]}}}],\"Level\":\"ALL\",\"IncludeExecutionData\":true}",
+              "physicalId": "arn:aws:states:us-east-1:429117803886:stateMachine:MessageProcessorStateMachine",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [
+            {
+              "logicalId": "StateMachineLogGroup",
+              "type": "AWS::Logs::LogGroup",
+              "logGroupName": {
+                "Fn::Sub": "/aws/stepfunctions/${AWS::StackName}-MessageProcessorStateMachine"
+              },
+              "retentionInDays": 30,
+              "physicalId": "/aws/stepfunctions/prifina-core-twin-msg-services-MessageProcessorStateMachine",
+              "status": "CREATE_COMPLETE"
+            }
+          ],
+          "otherResourceCounts": {
+            "AWS::DynamoDB::Table": 1,
+            "AWS::IAM::ManagedPolicy": 2,
+            "AWS::IAM::Role": 1
+          }
+        },
+        "outputs": {
+          "MessageProcessorStateMachineArn": {
+            "Description": "Message Processor State Machine ARN",
+            "Value": {
+              "Ref": "MessageProcessorStateMachine"
+            },
+            "Export": {
+              "Name": "Core:MessageProcessing:StateMachineArn"
+            }
+          },
+          "ProcessMessageFunctionArn": {
+            "Description": "Process Message Function ARN",
+            "Value": {
+              "Fn::GetAtt": [
+                "ProcessMessageFunction",
+                "Arn"
+              ]
+            },
+            "Export": {
+              "Name": "Core:MessageProcessing:FunctionArn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/scheduled-events/template.yaml": {
+    "hash": "5c6f19f2c28c45a33153348f6f91534e5a15cab34b388672f55318c13f252901",
+    "timestamp": "2026-01-24T10:24:17.042Z",
+    "data": {
+      "stackName": "prifina-core-scheduled-events",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/scheduled-events/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/scheduled-events",
+      "template": {
+        "formatVersion": "2010-09-09",
+        "description": null,
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [
+            {
+              "logicalId": "DailyEmailProcessFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "src/index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "./",
+              "memorySize": 3008,
+              "timeout": 600,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [
+                "SPEAK_TO_USERS_TABLE",
+                "RDS_CLUSTER_ARN",
+                "RDS_SECRET_ARN"
+              ],
+              "policies": {
+                "policyCount": 4
+              },
+              "physicalId": "prifina-core-scheduled-ev-DailyEmailProcessFunctio-fegFnQBNKGRs",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "apis": [],
+          "stateMachines": [],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [],
+          "otherResourceCounts": {}
+        },
+        "outputs": {
+          "DailyEmailProcessFunctionArn": {
+            "Description": "Daily Email Process Function ARN",
+            "Value": {
+              "Fn::GetAtt": [
+                "DailyEmailProcessFunction",
+                "Arn"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "/home/ec2-user/projects/core-ai-services-v2/stripe/template.yaml": {
+    "hash": "366f22118a2652258761352900769eb3bd5c3e27cb576bc7298ccb0abb34d7da",
+    "timestamp": "2026-01-24T10:24:17.042Z",
+    "data": {
+      "stackName": "prifina-stripe-resources",
+      "path": "/home/ec2-user/projects/core-ai-services-v2/stripe/template.yaml",
+      "dir": "/home/ec2-user/projects/core-ai-services-v2/stripe",
+      "template": {
+        "formatVersion": "2010-09-09T00:00:00.000Z",
+        "description": "Core Services Stripe App Resources",
+        "transform": "AWS::Serverless-2016-10-31",
+        "resources": {
+          "functions": [
+            {
+              "logicalId": "StripeProcessFunction",
+              "type": "AWS::Serverless::Function",
+              "functionName": null,
+              "handler": "index.handler",
+              "runtime": "nodejs22.x",
+              "codeUri": "functions",
+              "memorySize": 256,
+              "timeout": 300,
+              "architectures": null,
+              "packageType": null,
+              "events": [],
+              "envKeys": [],
+              "physicalId": "prifina-stripe-resources-StripeProcessFunction-ZWaXCXcU6JoD",
+              "status": "UPDATE_COMPLETE"
+            }
+          ],
+          "apis": [],
+          "stateMachines": [
+            {
+              "logicalId": "SubscriptionOrchestrator",
+              "type": "AWS::Serverless::StateMachine",
+              "name": null,
+              "role": {
+                "Fn::GetAtt": [
+                  "SFNExecutionRole",
+                  "Arn"
+                ]
+              },
+              "definition": "statemachine/stripe.json",
+              "loggingEnabled": false,
+              "logging": null,
+              "physicalId": "arn:aws:states:us-east-1:429117803886:stateMachine:SubscriptionOrchestrator-mlLFbI7tqLhx",
+              "status": "UPDATE_COMPLETE"
+            },
+            {
+              "logicalId": "SubscriptionOrchestratorProd",
+              "type": "AWS::Serverless::StateMachine",
+              "name": null,
+              "role": {
+                "Fn::GetAtt": [
+                  "SFNExecutionRole",
+                  "Arn"
+                ]
+              },
+              "definition": "statemachine/stripe.json",
+              "loggingEnabled": false,
+              "logging": null,
+              "physicalId": "arn:aws:states:us-east-1:429117803886:stateMachine:SubscriptionOrchestratorProd-pRip2r6mQYYK",
+              "status": "CREATE_COMPLETE"
+            }
+          ],
+          "appsync": {
+            "apis": [],
+            "resolvers": [],
+            "dataSources": [],
+            "functionConfigs": []
+          },
+          "logGroups": [],
+          "otherResourceCounts": {
+            "AWS::IAM::ManagedPolicy": 1,
+            "AWS::IAM::Role": 3
+          }
+        },
+        "outputs": {
+          "StripeProcessFunctionArn": {
+            "Description": "ARN of the Stripe Process Lambda Function",
+            "Value": {
+              "Fn::GetAtt": [
+                "StripeProcessFunction",
+                "Arn"
+              ]
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${AppName}-stripe-process-function-arn"
+              }
+            }
+          },
+          "StripeProcessFunctionName": {
+            "Description": "Name of the Stripe Process Lambda Function",
+            "Value": {
+              "Ref": "StripeProcessFunction"
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${AppName}-stripe-process-function-name"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

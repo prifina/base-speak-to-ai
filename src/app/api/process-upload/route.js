@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { handleApiError } from "@/lib/apiErrorHandler";
+import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function POST(request) {
+async function handler(request) {
   try {
     const body = await request.json();
     console.log("UPLOAD BODY ", body);
@@ -19,7 +20,7 @@ export async function POST(request) {
           "x-api-key": process.env.CORE_API_KEY,
         },
         body: JSON.stringify(body),
-      }
+      },
     );
 
     console.log("Result", response);
@@ -36,3 +37,5 @@ export async function POST(request) {
     return handleApiError(err, "process upload failed");
   }
 }
+
+export const POST = withTelemetryRoute(handler);

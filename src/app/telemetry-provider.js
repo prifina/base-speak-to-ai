@@ -2,7 +2,7 @@
 import {
   initBrowserTelemetry,
   TelemetryErrorBoundary,
-} from "next-telemetry/client";
+} from "@prifina-dev/next-telemetry";
 import { useEffect } from "react";
 
 export function TelemetryProvider({ children }) {

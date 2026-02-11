@@ -20,7 +20,9 @@ function HomePageContent() {
       setLoading(true);
       Promise.all([
         fetch(`/api/get-event?eventId=${eventId}`).then((res) => res.json()),
-        fetch(`/api/get-participant?eventId=${eventId}&participantId=${encodeURIComponent(participantId)}`).then((res) => res.json()),
+        fetch(
+          `/api/get-participant?eventId=${eventId}&participantId=${encodeURIComponent(participantId)}`,
+        ).then((res) => res.json()),
       ])
         .then(async ([eventResult, participantResult]) => {
           setEventData(eventResult.event);
@@ -30,17 +32,19 @@ function HomePageContent() {
           // Check if user has an account
           if (participant?.knowledgebaseId) {
             try {
-              const kbResponse = await fetch('/api/get-knowledgebase-user', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ knowledgebaseId: participant.knowledgebaseId }),
+              const kbResponse = await fetch("/api/get-knowledgebase-user", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  knowledgebaseId: participant.knowledgebaseId,
+                }),
               });
               const kbData = await kbResponse.json();
               if (kbData.preferred_username) {
                 setPreferredUsername(kbData.preferred_username);
               }
             } catch (error) {
-              console.error('Error checking knowledgebase user:', error);
+              console.error("Error checking knowledgebase user:", error);
             }
           }
 
@@ -83,22 +87,28 @@ function HomePageContent() {
             )}
             {eventData.eventDate && (
               <Text mb={4}>
-                Date: <strong>{new Date(eventData.eventDate).toLocaleString()}</strong>
+                Date:{" "}
+                <strong>
+                  {new Date(eventData.eventDate).toLocaleString()}
+                </strong>
               </Text>
             )}
             {participantData && (
               <Text mb={4}>
-                Participant: <strong>{participantData.firstName} {participantData.lastName}</strong>
+                Participant:{" "}
+                <strong>
+                  {participantData.firstName} {participantData.lastName}
+                </strong>
               </Text>
             )}
             <Box mt={6} p={4} borderWidth="1px" borderRadius="md">
               {preferredUsername ? (
                 <>
                   <Text mb={4}>You already have an account!</Text>
-                  <ChakraLink 
-                    as={Link} 
+                  <ChakraLink
+                    as={Link}
                     href={`/login?username=${preferredUsername}`}
-                    color="blue.500" 
+                    color="blue.500"
                     fontWeight="semibold"
                   >
                     Continue with Login
@@ -107,10 +117,10 @@ function HomePageContent() {
               ) : (
                 <>
                   <Text mb={4}>Get started with your event participation</Text>
-                  <ChakraLink 
-                    as={Link} 
+                  <ChakraLink
+                    as={Link}
                     href={`/signup?eventId=${eventId}&participantId=${encodeURIComponent(participantId)}`}
-                    color="blue.500" 
+                    color="blue.500"
                     fontWeight="semibold"
                   >
                     Continue with Signup
@@ -143,7 +153,13 @@ function HomePageContent() {
 
 export default function HomePage() {
   return (
-    <Suspense fallback={<Box maxW="2xl" mx="auto" mt={10}>Loading...</Box>}>
+    <Suspense
+      fallback={
+        <Box maxW="2xl" mx="auto" mt={10}>
+          Loading...
+        </Box>
+      }
+    >
       <HomePageContent />
     </Suspense>
   );

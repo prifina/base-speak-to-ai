@@ -8,7 +8,7 @@ export default function InsightsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace("/insights/daily-report");
+    router.replace("/insights/sessions");
   }, [router]);
 
   return null;

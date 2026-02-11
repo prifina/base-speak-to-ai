@@ -9,9 +9,9 @@ export default function InsightsLayout({ children }) {
   const router = useRouter();
 
   const tabs = [
-    { id: "daily-report", label: "Daily Report", path: "/insights/daily-report" },
     { id: "sessions", label: "Sessions", path: "/insights/sessions" },
     { id: "live-feed", label: "Live Feed", path: "/insights/live-feed" },
+    { id: "daily-report", label: "Daily Report", path: "/insights/daily-report" },
   ];
 
   const currentTab = tabs.findIndex((tab) => pathname === tab.path);

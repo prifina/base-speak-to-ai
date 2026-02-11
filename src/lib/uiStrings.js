@@ -3,6 +3,7 @@ export const UI_TEXT = {
     title: "Base",
     menu: "Menu",
     help: "Help",
+    aiTwinGuide: "AI Twin Guide",
     logout: "Logout",
     allApps: "All Apps",
   },

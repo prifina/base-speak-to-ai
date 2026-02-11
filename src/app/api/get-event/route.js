@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
+import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
 
-export async function GET(request) {
+//export async function GET(request) {
+async function handler(request) {
   const { searchParams } = new URL(request.url);
   const eventId = searchParams.get("eventId");
 
   if (!eventId) {
     return NextResponse.json(
       { error: "Query option eventId is missing" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -20,7 +22,7 @@ export async function GET(request) {
         headers: {
           "x-api-key": coreApiKey,
         },
-      }
+      },
     );
 
     if (!response.ok) {
@@ -31,9 +33,8 @@ export async function GET(request) {
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error fetching event:", error);
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+export const GET = withTelemetryRoute(handler);

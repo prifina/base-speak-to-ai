@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestUserPool } from "@/lib/graphqlRequestUserPool";
 import { handleApiError } from "@/lib/apiErrorHandler";
+import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+async function handler() {
   try {
     // Skip during build time
-    if (process.env.NODE_ENV === 'production' && !process.env.NEXT_RUNTIME) {
+    if (process.env.NODE_ENV === "production" && !process.env.NEXT_RUNTIME) {
       return NextResponse.json({ health: "build-time-skip" });
     }
 
@@ -19,6 +20,8 @@ export async function GET() {
     return handleApiError(err, "Health check failed");
   }
 }
+
+export const GET = withTelemetryRoute(handler);
 
 /*
 import { NextResponse } from "next/server";

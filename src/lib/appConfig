@@ -32,13 +32,14 @@ export const appColors = {
 export const EVALS = {
   baseSession: "prifina_base_session",
   appStorage: "prifina_base_app",
-  speakToDomain: "https://hey.speak-to.ai/",
+  speakToDomain: "https://beta.www.speak-to.ai/",
   //generalGuideDoc: "https://www.prifina.com/ai-twin-owners-guide.html",
-  generalGuideDoc: "https://prifina.notion.site/ai-twin-owners-guide",
+  generalGuideDoc: "https://a.jmp.lc/rtry",
   uploadQuota: 5 * 1024 * 1024,
-  newInteractionStyleRequest: "https://www.prifina.com/ai-twin-styles.html",
-  termsOfUse: "https://prifina.com/terms-of-use",
-  privacyPolicy: "https://prifina.com/privacy",
+  newInteractionStyleRequest: "https://a.jmp.lc/uuyt",
+  termsOfUse: "https://a.jmp.lc/ujkk",
+  privacyPolicy: "https://a.jmp.lc/htrd",
+  baseDoc: "https://a.jmp.lc/ggrt",
 };
 
 export const fileSupport = {

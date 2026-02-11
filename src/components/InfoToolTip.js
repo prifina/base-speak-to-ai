@@ -1,6 +1,6 @@
 import { Box, Tooltip, Portal } from "@chakra-ui/react";
 import { useState } from "react";
-import { IoIosInformationCircle } from "react-icons/io";
+import { HiOutlineQuestionMarkCircle } from "react-icons/hi2";
 
 const InfoToolTip = ({ children, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,8 +15,9 @@ const InfoToolTip = ({ children, ...props }) => {
           cursor="pointer"
           display="inline-flex"
           alignItems="center"
+          color="gray.500"
         >
-          <IoIosInformationCircle size={20} />
+          <HiOutlineQuestionMarkCircle size={20} />
         </Box>
       </Tooltip.Trigger>
       <Portal>
@@ -26,8 +27,11 @@ const InfoToolTip = ({ children, ...props }) => {
             py={2}
             fontSize="sm"
             borderRadius="md"
-            bg="gray.700"
-            color="white"
+            bg="bg"
+            color="fg"
+            borderWidth="1px"
+            borderColor="border"
+            shadow="sm"
           >
             {children}
           </Tooltip.Content>

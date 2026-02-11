@@ -75,7 +75,7 @@ const SharingModal = ({ isOpen, onClose, url }) => {
           >
             <Flex direction="column" alignItems="center" gap="2">
               <QrCode.Root value={url} size="xl" encoding={{ ecc: "H" }}>
-                <QrCode.Frame>
+                <QrCode.Frame style={{ background: "white" }}>
                   <QrCode.Pattern />
                   <foreignObject x="0" y="0" width="100%" height="100%">
                     <QrCode.Overlay

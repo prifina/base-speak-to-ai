@@ -48,7 +48,7 @@ import ProfileCreationModal from "@/components/Modals/ProfileCreation";
 import { updateKnowledgebaseId } from "@/lib/userAttributes";
 import { useAvatarUpload } from "@/lib/useFileUpload";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 const visibleDescriptionMaxLength = 100;
 
@@ -60,7 +60,16 @@ function HomePageContent() {
   // console.log("IS MOBILE ", isMobile);
   const { user, loaded: authLoaded } = useContext(AuthContext);
 
-  const { cognitoId, knowledgebaseId, language, setUserStatus, activeGroup, setKnowledgebaseId, verifiedEmail } = useStore(
+  const {
+    cognitoId,
+    knowledgebaseId,
+    language,
+    setUserStatus,
+    activeGroup,
+    setKnowledgebaseId,
+    setUserId,
+    verifiedEmail,
+  } = useStore(
     useShallow((state) => ({
       cognitoId: state.cognitoId,
       knowledgebaseId: state.knowledgebaseId,
@@ -68,8 +77,9 @@ function HomePageContent() {
       setUserStatus: state.setUserStatus,
       activeGroup: state.getActiveGroup(),
       setKnowledgebaseId: state.setKnowledgebaseId,
+      setUserId: state.setUserId,
       verifiedEmail: state.verifiedEmail,
-    }))
+    })),
   );
 
   const [showProfileDialog, setShowProfileDialog] = useState(false);
@@ -92,7 +102,7 @@ function HomePageContent() {
       validatingAiName: false,
       aiNameValidated: false,
       config: {},
-    }
+    },
   );
 
   const { open: isOpen, onOpen, onClose } = useDisclosure();
@@ -102,12 +112,12 @@ function HomePageContent() {
     async function fetchData() {
       console.log(
         "[HOME] Fetching data with knowledgebaseId:",
-        knowledgebaseId
+        knowledgebaseId,
       );
       const [userRes, configRes] = await Promise.all([
         authFetch(
           `/api/user-knowledgebase?knowledgebaseId=${knowledgebaseId}`,
-          { method: "GET" }
+          { method: "GET" },
         ),
         authFetch(`/api/get-config?language=${language}`, { method: "GET" }),
       ]);
@@ -120,9 +130,9 @@ function HomePageContent() {
         if (userRes.status === 404) {
           const participantRes = await authFetch(
             `/api/get-participant-knowledgebase?knowledgebaseId=${knowledgebaseId}`,
-            { method: "GET" }
+            { method: "GET" },
           );
-          
+
           if (participantRes.ok) {
             const participantData = await participantRes.json();
             setState({
@@ -136,7 +146,7 @@ function HomePageContent() {
               },
             });
           }
-          
+
           setShowProfileDialog(true);
           setState({ loading: false, config: configData.config });
           return;
@@ -147,7 +157,15 @@ function HomePageContent() {
       console.log("RES ", data);
       console.log("[HOME] Setting userStatus to:", data.user?.status);
       setUserStatus(data.user?.status);
-      setState({ loading: false, user: data.user, editedUser: data.user, config: configData.config });
+      if (data.user?.userId) {
+        setUserId(data.user.userId);
+      }
+      setState({
+        loading: false,
+        user: data.user,
+        editedUser: data.user,
+        config: configData.config,
+      });
     }
     console.log(
       "[HOME] Effect check - authLoaded:",
@@ -155,7 +173,7 @@ function HomePageContent() {
       "knowledgebaseId:",
       knowledgebaseId,
       "effectCalled:",
-      effectCalled.current
+      effectCalled.current,
     );
     if (!effectCalled.current && authLoaded) {
       if (!knowledgebaseId) {
@@ -167,7 +185,14 @@ function HomePageContent() {
       }
       effectCalled.current = true;
     }
-  }, [cognitoId, authFetch, knowledgebaseId, authLoaded, setUserStatus, language]);
+  }, [
+    cognitoId,
+    authFetch,
+    knowledgebaseId,
+    authLoaded,
+    setUserStatus,
+    language,
+  ]);
 
   const loading = !authLoaded || state.loading;
 
@@ -244,7 +269,9 @@ function HomePageContent() {
         throw new Error("Failed to update user");
       }
 
-      setState({ user: state.editedUser, saving: false });
+      // Create a deep copy to prevent reference issues
+      const savedUser = { ...state.editedUser };
+      setState({ user: savedUser, saving: false });
       toaster.create({
         title: "Changes saved",
         type: "success",
@@ -278,7 +305,7 @@ function HomePageContent() {
         `/api/validate-ai-name?aiName=${state.profileData.aiName}`,
         {
           method: "GET",
-        }
+        },
       );
 
       if (res.status === 404) {
@@ -313,10 +340,10 @@ function HomePageContent() {
         throw new Error("User not authenticated - missing cognitoId");
       }
 
-      const { v4: uuidv4 } = await import('uuid');
+      const { v4: uuidv4 } = await import("uuid");
       const newKnowledgebaseId = knowledgebaseId || uuidv4();
       const networkId = activeGroup || "x_prifina";
-      
+
       const profilePayload = {
         userId: state.profileData.aiName,
         ownerId: cognitoId,
@@ -344,7 +371,7 @@ function HomePageContent() {
 
       setShowProfileDialog(false);
       setState({ saving: false });
-      
+
       // Refresh the page to load the new profile
       window.location.reload();
 
@@ -384,28 +411,24 @@ function HomePageContent() {
       />
 
       {!showProfileDialog && state.user?.userId && (
-        <HStack justify="space-between" mb="20px">
-          <Box>
-            <Box fontSize="24px" fontWeight={600}>
-              <Link
-                href={`${process.env.NEXT_PUBLIC_SPEAK_TO_USER}/${state.user.userId}`}
-                target="_blank"
-              >
-                <Text>{UI_TEXT.profile.aiTwin}</Text>
-                <Text
-                  textDecoration="underline"
-                  fontSize="initial"
-                  fontWeight="normal"
-                >{`${process.env.NEXT_PUBLIC_SPEAK_TO_USER}/${state.user.userId}`}</Text>
-              </Link>
+        <HStack gap="20px" mb="20px" mr={cognitoId && cognitoId !== "" ? "80px" : "65px"}>
+          {!isMobile && (
+            <Box cursor="pointer" onClick={onOpen}>
+              <MdOutlineQrCode2 size="80px" />
             </Box>
-          </Box>
-          <Box mr={cognitoId && cognitoId !== "" ? "80px" : "65px"}>
-            {!isMobile && (
-              <Box cursor="pointer" onClick={onOpen}>
-                <MdOutlineQrCode2 size="40px" />
-              </Box>
-            )}
+          )}
+          <Box fontSize="24px" fontWeight={600}>
+            <Link
+              href={`${process.env.NEXT_PUBLIC_SPEAK_TO_USER}/${state.user.userId}`}
+              target="_blank"
+            >
+              <Text>{UI_TEXT.profile.aiTwin}</Text>
+              <Text
+                textDecoration="underline"
+                fontSize="initial"
+                fontWeight="normal"
+              >{`${process.env.NEXT_PUBLIC_SPEAK_TO_USER}/${state.user.userId}`}</Text>
+            </Link>
           </Box>
         </HStack>
       )}
@@ -420,117 +443,108 @@ function HomePageContent() {
 
       {!showProfileDialog && (
         <>
+          <Box mt="40px">
+            <AvatarComponent
+              avatar={state.editedUser.avatar}
+              changeImage={changeProfileAvatar}
+              aiIcon={state.user.addBadge || true}
+            />
+          </Box>
 
-      <Box mt="40px">
-        <AvatarComponent
-          avatar={state.editedUser.avatar}
-          changeImage={changeProfileAvatar}
-          aiIcon={state.user.addBadge || true}
-        />
-      </Box>
-
-      <Box mt="40px">
-        <LabelInput
-          label={UI_TEXT.profile.nameLabel}
-          value={state.editedUser.title}
-          name="title"
-          onChange={inputOnChange}
-          placeholder={UI_TEXT.profile.namePlaceholder}
-        />
-      </Box>
-      <Box mt="20px">
-        <CustomTextArea
-          label={UI_TEXT.profile.visibleDescription}
-          maxLength={visibleDescriptionMaxLength}
-          resize={"none"}
-          name="caption"
-          value={state.editedUser.caption || ""}
-          onChange={inputOnChange}
-          onDefault={() => {
-            setState({
-              editedUser: {
-                ...state.editedUser,
-                caption: "Amplifying expertise in digital marketing & strategy",
-              },
-            });
-          }}
-          placeholder={UI_TEXT.profile.descriptionPlaceholder}
-        />
-      </Box>
-      <Box mt="20px">
-        <Text fontWeight={600} fontSize={"20px"}>
-          {UI_TEXT.personalization.sectionTitle}
-        </Text>
-        <Box
-          width={"100%"}
-          height={"1px"}
-          mb={"30px"}
-          backgroundColor={"#CBCBCB"}
-        />
-      </Box>
-      <Box>
-        <Accordion.Root multiple>
-          <PersonalizationAccordionItem
-            title={UI_TEXT.personalization.disclaimerAndExamples.title}
-          >
-            <ExampleSection
-              profileTempState={state.editedUser}
-              updateProfileTempState={(obj) => {
-                console.log("UPDATE PROFILE TEMP STATE", obj);
-                setState({
-                  editedUser: {
-                    ...state.editedUser,
-                    ...obj,
-                  },
-                });
-              }}
-              opts={{ language }}
-              config={state.config}
+          <Box mt="40px">
+            <LabelInput
+              label={UI_TEXT.profile.nameLabel}
+              value={state.editedUser.title}
+              name="title"
+              onChange={inputOnChange}
+              placeholder={UI_TEXT.profile.namePlaceholder}
             />
-          </PersonalizationAccordionItem>
-          <PersonalizationAccordionItem
-            title={UI_TEXT.personalization.behavior.title}
-          >
-            <BehaviorSection
-              profileTempState={state.editedUser}
-              updateProfileTempState={(obj) => {
-                // console.log("UPDATE PROFILE TEMP STATE", obj);
-                setState({
-                  editedUser: {
-                    ...state.editedUser,
-                    ...obj,
-                  },
-                });
-              }}
-              opts={{ language }}
-              config={state.config}
+          </Box>
+          <Box mt="20px">
+            <CustomTextArea
+              label={UI_TEXT.profile.visibleDescription}
+              maxLength={visibleDescriptionMaxLength}
+              resize={"none"}
+              name="caption"
+              value={state.editedUser.caption || ""}
+              onChange={inputOnChange}
+              placeholder={UI_TEXT.profile.descriptionPlaceholder}
             />
-          </PersonalizationAccordionItem>
-          <PersonalizationAccordionItem
-            title={UI_TEXT.personalization.footer.title}
-          >
-            <FooterSection
-              profileTempState={state.editedUser}
-              updateProfileTempState={(obj) => {
-                console.log("UPDATE PROFILE TEMP STATE", obj);
-                setState({
-                  editedUser: {
-                    ...state.editedUser,
-                    ...obj,
-                  },
-                });
-              }}
+          </Box>
+          <Box mt="20px">
+            <Text fontWeight={600} fontSize={"20px"}>
+              {UI_TEXT.personalization.sectionTitle}
+            </Text>
+            <Box
+              width={"100%"}
+              height={"1px"}
+              mb={"30px"}
+              backgroundColor={"#CBCBCB"}
             />
-          </PersonalizationAccordionItem>
-        </Accordion.Root>
-      </Box>
-      <Box mt="40px">
-        <SaveButton
-          onClick={handleSave}
-          loading={state.saving}
-          disabled={state.saving || !hasChanges}
-        />
-      </Box>
+          </Box>
+          <Box>
+            <Accordion.Root multiple>
+              <PersonalizationAccordionItem
+                title={UI_TEXT.personalization.disclaimerAndExamples.title}
+              >
+                <ExampleSection
+                  profileTempState={state.editedUser}
+                  updateProfileTempState={(obj) => {
+                    console.log("UPDATE PROFILE TEMP STATE", obj);
+                    setState({
+                      editedUser: {
+                        ...state.editedUser,
+                        ...obj,
+                      },
+                    });
+                  }}
+                  opts={{ language }}
+                  config={state.config}
+                />
+              </PersonalizationAccordionItem>
+              <PersonalizationAccordionItem
+                title={UI_TEXT.personalization.behavior.title}
+              >
+                <BehaviorSection
+                  profileTempState={state.editedUser}
+                  updateProfileTempState={(obj) => {
+                    // console.log("UPDATE PROFILE TEMP STATE", obj);
+                    setState({
+                      editedUser: {
+                        ...state.editedUser,
+                        ...obj,
+                      },
+                    });
+                  }}
+                  opts={{ language }}
+                  config={state.config}
+                />
+              </PersonalizationAccordionItem>
+              <PersonalizationAccordionItem
+                title={UI_TEXT.personalization.footer.title}
+              >
+                <FooterSection
+                  profileTempState={state.editedUser}
+                  updateProfileTempState={(obj) => {
+                    console.log("UPDATE PROFILE TEMP STATE", obj);
+                    setState({
+                      editedUser: {
+                        ...state.editedUser,
+                        ...obj,
+                      },
+                    });
+                  }}
+                />
+              </PersonalizationAccordionItem>
+            </Accordion.Root>
+          </Box>
+          <Box mt="40px">
+            <SaveButton
+              onClick={handleSave}
+              loading={state.saving}
+              disabled={state.saving || !hasChanges}
+            />
+          </Box>
         </>
       )}
     </Flex>

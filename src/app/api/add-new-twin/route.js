@@ -1,14 +1,22 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestUserPool } from "@/lib/graphqlRequestUserPool";
 import { handleApiError } from "@/lib/apiErrorHandler";
+import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function POST(request) {
+async function handler(request) {
   try {
     const body = await request.json();
-    const { userId, knowledgebaseId, networkId, ownerId, verifiedEmail, ...rest } = body;
+    const {
+      userId,
+      knowledgebaseId,
+      networkId,
+      ownerId,
+      verifiedEmail,
+      ...rest
+    } = body;
 
     if (!userId) {
       return NextResponse.json({ error: "userId is missing" }, { status: 400 });
@@ -17,7 +25,7 @@ export async function POST(request) {
     // Set defaults
     const trialEnds = new Date();
     trialEnds.setDate(trialEnds.getDate() + 30);
-    
+
     const variables = {
       userId,
       ownerId,
@@ -25,7 +33,7 @@ export async function POST(request) {
       networkId,
       status: "Trial",
       trialEnds: trialEnds.toISOString().split("T")[0],
-      ...rest
+      ...rest,
     };
 
     // Add email and dailyReport only if verifiedEmail exists
@@ -36,7 +44,7 @@ export async function POST(request) {
 
     // Build mutation dynamically based on available fields
     const hasEmail = verifiedEmail && verifiedEmail.trim() !== "";
-    
+
     const mutation = `
       mutation UpdateUser(
         $userId: ID!
@@ -85,9 +93,9 @@ export async function POST(request) {
           userId,
           knowledgebaseId,
           networkId,
-          ownerType: 0
-        }
-      }
+          ownerType: 0,
+        },
+      },
     });
 
     // Create CognitoUserKnowledgebase relationship
@@ -155,3 +163,5 @@ export async function POST(request) {
     return handleApiError(err, "add new twin failed");
   }
 }
+
+export const POST = withTelemetryRoute(handler);

@@ -6,7 +6,10 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { system } from "@/theme/system";
 import AuthProvider, { AuthContext } from "./AuthProvider";
 import { UserMenuFloating } from "@/components/UserMenuFloating";
-import { initBrowserTelemetry, TelemetryErrorBoundary } from "next-telemetry/client";
+import {
+  initBrowserTelemetry,
+  TelemetryErrorBoundary,
+} from "@prifina-dev/next-telemetry/client";
 
 function ConditionalUserMenu() {
   const { user } = useContext(AuthContext);

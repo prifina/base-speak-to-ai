@@ -85,7 +85,7 @@ const BehaviorSection = ({
             variant={"underline"}
           >
             <Text textDecoration="underline">
-              {EVALS.newInteractionStyleRequest}
+              New Interaction Style Request
             </Text>
           </Link>
         </HStack>

@@ -192,55 +192,65 @@ const ExampleSection = ({ profileTempState, updateProfileTempState, opts, config
           {UI_TEXT.personalization.disclaimerAndExamples.examples.title}
         </Text>
 
-        <VStack align="stretch" spacing="20px">
-          <SelectField
-            title={UI_TEXT.personalization.disclaimerAndExamples.examples.count}
-            options={state.noOfQuestionsOptions}
-            value={noOfExampleQuestions}
-            onChange={(value) => updateState("noOfExampleQuestions", value)}
-          />
+        <HStack align="flex-end" spacing="20px">
+          <HStack align="flex-end" spacing="8px" flex="1">
+            <Box flex="1">
+              <SelectField
+                title={UI_TEXT.personalization.disclaimerAndExamples.examples.count}
+                options={state.noOfQuestionsOptions}
+                value={noOfExampleQuestions}
+                onChange={(value) => updateState("noOfExampleQuestions", value)}
+              />
+            </Box>
+            <Box pb="2px">
+              <InfoToolTip>
+                <Text>Choose how many example questions to show users</Text>
+              </InfoToolTip>
+            </Box>
+          </HStack>
 
-          <HStack align="flex-end" spacing="8px">
+          <HStack align="flex-end" spacing="8px" flex="1">
             <Box flex="1">
               <SelectField
                 title={UI_TEXT.personalization.disclaimerAndExamples.examples.types}
                 options={state.typeOfQuestionsOptions}
                 value={typeOfExampleQuestions}
                 onChange={(value) => updateState("typeOfExampleQuestions", value)}
+                disabled={noOfExampleQuestions === 0}
               />
             </Box>
-            <Box pb="2px">
-              <InfoToolTip>
-                <VStack align="stretch" gap="3">
-                  <Box>
-                    <Text textStyle="tooltipTerm">
-                      {UI_TEXT.personalization.disclaimerAndExamples.examples.tooltip.automated.title}
-                    </Text>
-                    <Text textStyle="tooltipDescription">
-                      {UI_TEXT.personalization.disclaimerAndExamples.examples.tooltip.automated.description}
-                    </Text>
-                  </Box>
-                  <Box>
-                    <Text textStyle="tooltipTerm">
-                      {UI_TEXT.personalization.disclaimerAndExamples.examples.tooltip.manual.title}
-                    </Text>
-                    <Text textStyle="tooltipDescription">
-                      {UI_TEXT.personalization.disclaimerAndExamples.examples.tooltip.manual.description}
-                    </Text>
-                  </Box>
-                  <Box>
-                    <Text textStyle="tooltipTerm">
-                      {UI_TEXT.personalization.disclaimerAndExamples.examples.tooltip.mix.title}
-                    </Text>
-                    <Text textStyle="tooltipDescription">
-                      {UI_TEXT.personalization.disclaimerAndExamples.examples.tooltip.mix.description}
-                    </Text>
-                  </Box>
-                </VStack>
-              </InfoToolTip>
-            </Box>
-          </HStack>
-        </VStack>
+              <Box pb="2px">
+                <InfoToolTip>
+                  <VStack align="stretch" gap="3">
+                    <Box>
+                      <Text textStyle="tooltipTerm">
+                        {UI_TEXT.personalization.disclaimerAndExamples.examples.tooltip.automated.title}
+                      </Text>
+                      <Text textStyle="tooltipDescription">
+                        {UI_TEXT.personalization.disclaimerAndExamples.examples.tooltip.automated.description}
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text textStyle="tooltipTerm">
+                        {UI_TEXT.personalization.disclaimerAndExamples.examples.tooltip.manual.title}
+                      </Text>
+                      <Text textStyle="tooltipDescription">
+                        {UI_TEXT.personalization.disclaimerAndExamples.examples.tooltip.manual.description}
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text textStyle="tooltipTerm">
+                        {UI_TEXT.personalization.disclaimerAndExamples.examples.tooltip.mix.title}
+                      </Text>
+                      <Text textStyle="tooltipDescription">
+                        {UI_TEXT.personalization.disclaimerAndExamples.examples.tooltip.mix.description}
+                      </Text>
+                    </Box>
+                  </VStack>
+                </InfoToolTip>
+              </Box>
+            </HStack>
+        </HStack>
       </Box>
 
       <Box>
@@ -251,7 +261,11 @@ const ExampleSection = ({ profileTempState, updateProfileTempState, opts, config
           <Button
             variant="outline"
             size="md"
-            disabled={exampleQuestions?.length >= exampleQuestionsArrMaxLength}
+            disabled={
+              exampleQuestions?.length >= exampleQuestionsArrMaxLength ||
+              typeOfExampleQuestions === 0 ||
+              noOfExampleQuestions === 0
+            }
             colorScheme="blue"
             onClick={() => openModal()}
           >

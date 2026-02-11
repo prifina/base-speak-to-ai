@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { verifyJwtFromCognito } from "@/lib/auth-helpers";
+import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
 
-export async function GET() {
+async function handler() {
   const cookieStore = cookies();
   const token = cookieStore.get("cognitoIdToken")?.value;
 
@@ -22,3 +23,5 @@ export async function GET() {
     username: payload["cognito:username"],
   });
 }
+
+export const GET = withTelemetryRoute(handler);

@@ -42,7 +42,7 @@ export function middleware(req) {
 
   const isProtectedPage = PROTECTED_PATHS.some((p) => pathname.startsWith(p));
   const isProtectedApi = PROTECTED_API_PATHS.some((p) =>
-    pathname.startsWith(p)
+    pathname.startsWith(p),
   );
   const isPublicApi = PUBLIC_API_PATHS.some((p) => pathname.startsWith(p));
 
@@ -52,7 +52,7 @@ export function middleware(req) {
     "isProtectedApi:",
     isProtectedApi,
     "isPublicApi:",
-    isPublicApi
+    isPublicApi,
   );
 
   if (isPublicApi) {
@@ -66,11 +66,10 @@ export function middleware(req) {
   }
 
   const cookies = parse(req.headers.get("cookie") || "");
-  const clientId = process.env.COGNITO_CLIENT_ID || process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID;
+  const clientId =
+    process.env.COGNITO_CLIENT_ID || process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID;
   const lastAuthUser =
-    cookies[
-      `CognitoIdentityServiceProvider.${clientId}.LastAuthUser`
-    ];
+    cookies[`CognitoIdentityServiceProvider.${clientId}.LastAuthUser`];
   const idToken = `CognitoIdentityServiceProvider.${clientId}.${lastAuthUser}.idToken`;
   const token = cookies[idToken];
 

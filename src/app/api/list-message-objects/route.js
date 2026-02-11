@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestUserPool } from "@/lib/graphqlRequestUserPool";
 import { handleApiError } from "@/lib/apiErrorHandler";
+import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function GET(request) {
+async function handler(request) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const knowledgebaseId = searchParams.get("knowledgebaseId");
@@ -16,7 +17,7 @@ export async function GET(request) {
     if (!knowledgebaseId) {
       return NextResponse.json(
         { error: "Query parameter knowledgebaseId is missing" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -26,7 +27,7 @@ export async function GET(request) {
           error:
             "Query parameters createdAtStart and createdAtEnd are required",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -91,7 +92,7 @@ export async function GET(request) {
     const sessions = Object.entries(sessionGroups)
       .map(([sessionId, messages]) => {
         const sortedMessages = messages.sort(
-          (a, b) => new Date(a.created_at) - new Date(b.created_at)
+          (a, b) => new Date(a.created_at) - new Date(b.created_at),
         );
         const startTime = sortedMessages[0].created_at;
         const endTime = sortedMessages[sortedMessages.length - 1].created_at;
@@ -105,7 +106,7 @@ export async function GET(request) {
               scoresWithValue.length
             : 0;
         const zeroScoreCount = sortedMessages.filter(
-          (m) => m.score === 0
+          (m) => m.score === 0,
         ).length;
 
         return {
@@ -126,3 +127,5 @@ export async function GET(request) {
     return handleApiError(err, "list message objects failed");
   }
 }
+
+export const GET = withTelemetryRoute(handler);

@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestUserPool } from "@/lib/graphqlRequestUserPool";
 import { handleApiError } from "@/lib/apiErrorHandler";
+import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function GET(request) {
+async function handler(request) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const userId = searchParams.get("userId");
@@ -14,7 +15,7 @@ export async function GET(request) {
     if (!userId) {
       return NextResponse.json(
         { error: "Query parameter userId is missing" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -86,3 +87,5 @@ export async function GET(request) {
     return handleApiError(err, "get live feed failed");
   }
 }
+
+export const GET = withTelemetryRoute(handler);

@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
-import { CognitoIdentityProviderClient, ListUsersCommand } from "@aws-sdk/client-cognito-identity-provider";
+import {
+  CognitoIdentityProviderClient,
+  ListUsersCommand,
+} from "@aws-sdk/client-cognito-identity-provider";
 import { transformCognitoUser } from "@/lib/cognitoUserTransform";
+import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,7 +17,7 @@ const client = new CognitoIdentityProviderClient({
   },
 });
 
-export async function GET(request) {
+async function handler(request) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const email = searchParams.get("email");
@@ -22,12 +26,14 @@ export async function GET(request) {
     if (!email) {
       return NextResponse.json(
         { error: "Email parameter is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const command = new ListUsersCommand({
-      UserPoolId: process.env.COGNITO_USER_POOL_ID || process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID,
+      UserPoolId:
+        process.env.COGNITO_USER_POOL_ID ||
+        process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID,
       Filter: `email = "${email}"`,
       Limit: 1,
     });
@@ -46,7 +52,9 @@ export async function GET(request) {
     console.error("Error checking email availability:", error);
     return NextResponse.json(
       { error: "Failed to check email availability" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
+
+export const GET = withTelemetryRoute(handler);

@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestUserPool } from "@/lib/graphqlRequestUserPool";
 import { handleApiError } from "@/lib/apiErrorHandler";
+import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function GET(request) {
+async function handler(request) {
   try {
     const { searchParams } = new URL(request.url);
     const networkId = searchParams.get("networkId");
@@ -14,7 +15,7 @@ export async function GET(request) {
     if (!networkId) {
       return NextResponse.json(
         { error: "networkId is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -72,11 +73,11 @@ export async function GET(request) {
       name: group.name,
       items: Array.isArray(group.items)
         ? group.items.map((item) =>
-            typeof item === "string" ? JSON.parse(item) : item
+            typeof item === "string" ? JSON.parse(item) : item,
           )
         : typeof group.items === "string"
-        ? JSON.parse(group.items)
-        : group.items,
+          ? JSON.parse(group.items)
+          : group.items,
     }));
 
     return NextResponse.json({
@@ -87,3 +88,5 @@ export async function GET(request) {
     return handleApiError(err, "get network config failed");
   }
 }
+
+export const GET = withTelemetryRoute(handler);

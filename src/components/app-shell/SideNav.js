@@ -25,7 +25,7 @@ import {
   LuChevronLeft,
   LuChevronRight,
   LuMenu,
-  LuCircleHelp,
+  LuExternalLink,
 } from "react-icons/lu";
 import { UI_TEXT } from "@/lib/uiStrings";
 import { EVALS } from "@/lib/appConfig";
@@ -111,7 +111,7 @@ function SideNavContent({ items, collapsed, onToggleCollapsed, onNavigate }) {
 
       <Box h="30px" />
 
-      <Stack gap="5" p="2" overflowY="auto">
+      <Stack gap="5" p="2" flex="1" overflowY="auto">
         {items.map((it) => {
           const active =
             pathname === it.href || (pathname || "").startsWith(it.href + "/");
@@ -156,10 +156,6 @@ function SideNavContent({ items, collapsed, onToggleCollapsed, onNavigate }) {
         })}
       </Stack>
 
-      <Box px="2" py="3">
-        <Separator />
-      </Box>
-
       <Box px="2" pb="3">
         <NavItem
           role="button"
@@ -174,15 +170,13 @@ function SideNavContent({ items, collapsed, onToggleCollapsed, onNavigate }) {
           <HStack
             gap="3"
             w="full"
-            justify={collapsed ? "center" : "flex-start"}
+            justify={collapsed ? "center" : "space-between"}
           >
-            <Icon as={LuCircleHelp} boxSize="30px" />
-            {!collapsed && <Text truncate>{UI_TEXT.app.help}</Text>}
+            {!collapsed && <Text truncate>{UI_TEXT.app.aiTwinGuide}</Text>}
+            <Icon as={LuExternalLink} boxSize="20px" />
           </HStack>
         </NavItem>
       </Box>
-
-      <Box flex="1" />
     </Flex>
   );
 }

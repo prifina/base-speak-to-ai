@@ -14,6 +14,7 @@ export const SelectField = ({
   value,
   onChange,
   isClearable,
+  disabled,
 }) => {
   const collection = useMemo(
     () => createListCollection({ items: options }),
@@ -28,10 +29,11 @@ export const SelectField = ({
       </Text>
       <Select.Root
         collection={collection}
-        value={value ? [value] : []}
+        value={value !== null && value !== undefined ? [value] : []}
         onValueChange={(details) => {
-          onChange(details.value[0] ? { value: details.value[0] } : null);
+          onChange(details.value[0] !== undefined ? { value: details.value[0] } : null);
         }}
+        disabled={disabled}
       >
         <Select.HiddenSelect />
         <Select.Control>

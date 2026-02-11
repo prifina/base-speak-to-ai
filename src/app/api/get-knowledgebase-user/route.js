@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestIAM } from "@/lib/graphqlRequestIAM";
+import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function POST(request) {
+async function handler(request) {
   try {
     const { knowledgebaseId } = await request.json();
 
     if (!knowledgebaseId) {
       return NextResponse.json(
         { error: "knowledgebaseId is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -35,10 +36,7 @@ export async function POST(request) {
     const user = users[0];
 
     if (!user || !user.cognitoId) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     // Get Cognito user attributes
@@ -61,7 +59,7 @@ export async function POST(request) {
 
     const cognitoUser = cognitoData?.getCognitoUser;
     const preferredUsername = cognitoUser?.Attributes?.find(
-      (attr) => attr.Name === "preferred_username"
+      (attr) => attr.Name === "preferred_username",
     )?.Value;
 
     return NextResponse.json({
@@ -71,7 +69,9 @@ export async function POST(request) {
     console.error("Error getting knowledgebase user:", error);
     return NextResponse.json(
       { error: "Failed to get knowledgebase user" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
+
+export const POST = withTelemetryRoute(handler);

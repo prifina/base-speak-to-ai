@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestIAM } from "@/lib/graphqlRequestIAM";
+import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-export async function GET() {
+async function handler() {
   try {
     // Skip during build time
-    if (process.env.NODE_ENV === 'production' && !process.env.NEXT_RUNTIME) {
+    if (process.env.NODE_ENV === "production" && !process.env.NEXT_RUNTIME) {
       return NextResponse.json({ health: "build-time-skip" });
     }
 
@@ -24,3 +25,5 @@ export async function GET() {
     return NextResponse.json({ error: "Health check failed" }, { status: 500 });
   }
 }
+
+export const GET = withTelemetryRoute(handler);

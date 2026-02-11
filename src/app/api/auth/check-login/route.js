@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestIAM } from "@/lib/graphqlRequestIAM";
+import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-export async function GET(request) {
+async function handler(request) {
   try {
     const host = request.headers.get("host");
     const env = host?.includes("localhost") ? "dev" : "prod";
@@ -37,9 +38,11 @@ export async function GET(request) {
     return NextResponse.json({ login: data?.getLoginKey });
   } catch (err) {
     console.log("Error", err);
-    if (err.message?.includes('404') || err.message?.includes('not found')) {
+    if (err.message?.includes("404") || err.message?.includes("not found")) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
     return NextResponse.json({ error: "Login check failed" }, { status: 500 });
   }
 }
+
+export const GET = withTelemetryRoute(handler);
