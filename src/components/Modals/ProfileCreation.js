@@ -6,7 +6,6 @@ import {
   Field,
   Input,
   Textarea,
-  HStack,
   Button,
 } from "@chakra-ui/react";
 import { UI_TEXT } from "@/lib/uiStrings";
@@ -15,9 +14,6 @@ export default function ProfileCreationModal({
   isOpen,
   profileData,
   onProfileDataChange,
-  validatingAiName,
-  aiNameValidated,
-  onValidateAiName,
   onCreateProfile,
   saving,
   validateAiName,
@@ -43,26 +39,15 @@ export default function ProfileCreationModal({
                   {UI_TEXT.profile.dialog.aiNameLabel}
                   <Field.RequiredIndicator />
                 </Field.Label>
-                <HStack spacing={2}>
-                  <Input
-                    value={profileData.aiName}
-                    onChange={(e) =>
-                      onProfileDataChange({
-                        aiName: e.target.value.toLowerCase(),
-                      })
-                    }
-                    placeholder={UI_TEXT.profile.dialog.aiNamePlaceholder}
-                    flex={1}
-                  />
-                  <Button
-                    size="sm"
-                    onClick={onValidateAiName}
-                    loading={validatingAiName}
-                    disabled={!validateAiName(profileData.aiName)}
-                  >
-                    {UI_TEXT.profile.dialog.validateButton}
-                  </Button>
-                </HStack>
+                <Input
+                  value={profileData.aiName}
+                  onChange={(e) =>
+                    onProfileDataChange({
+                      aiName: e.target.value.toLowerCase(),
+                    })
+                  }
+                  placeholder={UI_TEXT.profile.dialog.aiNamePlaceholder}
+                />
                 <Field.HelperText>
                   {!validateAiName(profileData.aiName) &&
                   profileData.aiName.length > 0
@@ -117,9 +102,8 @@ export default function ProfileCreationModal({
             <Button
               onClick={onCreateProfile}
               loading={saving}
-              disabled={
-                !validateAiName(profileData.aiName) || !aiNameValidated
-              }
+              disabled={!validateAiName(profileData.aiName)}
+              width="full"
             >
               {UI_TEXT.profile.dialog.createButton}
             </Button>
