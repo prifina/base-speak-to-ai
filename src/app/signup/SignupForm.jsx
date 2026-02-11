@@ -174,7 +174,7 @@ function SignupFormContent({ token }) {
       });
       const antibotData = await antibotRes.json();
 
-      if (!antibotData.ok) {
+      if (!antibotData.ok || antibotData.blocked) {
         toaster.create({
           title: "Validation Failed",
           type: "error",

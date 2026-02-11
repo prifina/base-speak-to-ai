@@ -14,9 +14,9 @@ async function handler(req) {
     minElapsedMs: 1500,
   });
 
-  // Honeypot: respond generically to reduce bot feedback loops
+  // Honeypot: respond with ok=true but include a flag for client to check
   if (anti.honeypotTripped) {
-    return NextResponse.json({ ok: true }, { status: 200 });
+    return NextResponse.json({ ok: true, blocked: true }, { status: 200 });
   }
 
   // Token invalid/expired/action mismatch
