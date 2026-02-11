@@ -401,7 +401,7 @@ function LoginContent({ token }) {
               });
               const antibotData = await antibotRes.json();
 
-              if (!antibotData.ok) {
+              if (!antibotData.ok || antibotData.blocked) {
                 setError("Validation failed. Please try again.");
                 setIsBusy(false);
                 return;
