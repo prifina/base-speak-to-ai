@@ -53,3 +53,4 @@ envConfig.sh
 /chakra-nextjs-sidemenu-example/
 .amazonq
 *.code-workspace
+docs/

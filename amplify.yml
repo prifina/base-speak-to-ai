@@ -25,6 +25,14 @@ frontend:
         - env | grep -e NEXT_PUBLIC_APP_ID >> .env.production
         - env | grep -e NEXT_PUBLIC_CAPTCHA_SITE_KEY >> .env.production
         - env | grep -e WEB_SOCKET_URL >> .env.production
+        - env | grep -e NEXT_PUBLIC_TELEMETRY_ENABLED >> .env.production
+        - env | grep -e NEXT_PUBLIC_TELEMETRY_API_URL >> .env.production
+        - env | grep -e TELEMETRY_API_KEY >> .env.production
+        - env | grep -e NEXT_PUBLIC_TELEMETRY_APP_NAME >> .env.production
+        - env | grep -e NEXT_PUBLIC_TELEMETRY_ENV >> .env.production
+        - env | grep -e NEXT_PUBLIC_TELEMETRY_APP_FOLDER >> .env.production
+        - env | grep -e NEXT_PUBLIC_TELEMETRY_APP_BRANCH >> .env.production
+        - env | grep -e NEXT_PUBLIC_TELEMETRY_APP_REPOSITORY >> .env.production
         - npm run build
 
   artifacts:
