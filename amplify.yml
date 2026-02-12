@@ -34,6 +34,9 @@ frontend:
         - env | grep -e NEXT_PUBLIC_TELEMETRY_APP_BRANCH >> .env.production
         - env | grep -e NEXT_PUBLIC_TELEMETRY_APP_REPOSITORY >> .env.production
         - npm run build
+    postBuild:
+      commands:
+        - node scripts/upload-sourcemaps.js
 
   artifacts:
     baseDirectory: .next
