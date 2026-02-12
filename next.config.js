@@ -11,6 +11,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: false,
   },
+  productionBrowserSourceMaps: true,
   webpack: (config, { isServer, dev }) => {
     if (dev) {
       config.cache = {
