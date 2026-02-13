@@ -33,6 +33,7 @@ frontend:
         - env | grep -e NEXT_PUBLIC_TELEMETRY_APP_FOLDER >> .env.production
         - env | grep -e NEXT_PUBLIC_TELEMETRY_APP_BRANCH >> .env.production
         - env | grep -e NEXT_PUBLIC_TELEMETRY_APP_REPOSITORY >> .env.production
+        - env | grep -e AB_SECRET >> .env.production
         - npm run build
     postBuild:
       commands:
