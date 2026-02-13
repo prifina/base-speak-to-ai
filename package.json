@@ -17,7 +17,7 @@
     "@aws-sdk/lib-dynamodb": "^3.954.0",
     "@chakra-ui/react": "^3.2.2",
     "@emotion/react": "^11.13.5",
-    "@prifina-dev/next-telemetry": "^1.0.18",
+    "@prifina-dev/next-telemetry": "^1.0.19",
     "aws-amplify": "^6.15.9",
     "cookie": "^1.1.1",
     "jose": "^6.1.3",
