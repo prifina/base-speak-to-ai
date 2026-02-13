@@ -4,7 +4,7 @@ import {
   ListUsersCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
 import { transformCognitoUser } from "@/lib/cognitoUserTransform";
-import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
+import { withTelemetryRoute, captureException } from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -49,6 +49,7 @@ async function handler(request) {
 
     return NextResponse.json({ available: !exists });
   } catch (error) {
+    await captureException(error, { kind: "route_handler", runtime: "node", route: "/api/check-email" });
     console.error("Error checking email availability:", error);
     return NextResponse.json(
       { error: "Failed to check email availability" },

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestIAM } from "@/lib/graphqlRequestIAM";
-import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
+import { withTelemetryRoute, captureException } from "@prifina-dev/next-telemetry/server";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +21,7 @@ async function handler() {
 
     return NextResponse.json({ health: data?.health });
   } catch (err) {
+    await captureException(err, { kind: "route_handler", runtime: "node", route: "/api/health" });
     console.log("Error", err);
     return NextResponse.json({ error: "Health check failed" }, { status: 500 });
   }

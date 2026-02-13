@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestUserPool } from "@/lib/graphqlRequestUserPool";
 import { handleApiError } from "@/lib/apiErrorHandler";
-import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
+import { withTelemetryRoute, captureException } from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -40,6 +40,7 @@ async function handler(request) {
 
     return NextResponse.json({ url: data.getPortalSession?.url || null });
   } catch (err) {
+    await captureException(err, { kind: "route_handler", runtime: "node", route: "/api/get-portal-session" });
     return handleApiError(err, "get portal session failed");
   }
 }
