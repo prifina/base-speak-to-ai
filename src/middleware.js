@@ -26,14 +26,18 @@ const PROTECTED_API_PATHS = [
   "/api/get-portal-session",
   "/api/validate-ai-name",
   "/api/get-participant-knowledgebase",
+  "/api/protected",
 ];
 const PUBLIC_API_PATHS = [
   "/api/auth",
-  "/api/verify-captcha",
   "/api/check-email",
   "/api/get-cognito-user",
   "/api/get-event",
   "/api/get-participant",
+  "/api/get-knowledgebase-user",
+  "/api/health",
+  "/api/user-health",
+  "/api/validate-antibot",
 ];
 
 export function middleware(req) {

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleApiError } from "@/lib/apiErrorHandler";
-import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
+import { withTelemetryRoute, captureException } from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -34,6 +34,7 @@ async function handler(request) {
     const uploadStatus = await response.json();
     return NextResponse.json({ uploadStatus });
   } catch (err) {
+    await captureException(err, { kind: "route_handler", runtime: "node", route: "/api/process-upload" });
     return handleApiError(err, "process upload failed");
   }
 }

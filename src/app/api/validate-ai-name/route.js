@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestUserPool } from "@/lib/graphqlRequestUserPool";
 import { handleApiError } from "@/lib/apiErrorHandler";
-import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
+import { withTelemetryRoute, captureException } from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -39,6 +39,7 @@ async function handler(request) {
       return NextResponse.json({ available: true }, { status: 404 });
     }
   } catch (err) {
+    await captureException(err, { kind: "route_handler", runtime: "node", route: "/api/validate-ai-name" });
     return handleApiError(err, "AI name validation failed");
   }
 }

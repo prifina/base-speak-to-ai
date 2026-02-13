@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestIAM } from "@/lib/graphqlRequestIAM";
 import { transformCognitoUser } from "@/lib/cognitoUserTransform";
-import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
+import { withTelemetryRoute, captureException } from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -65,6 +65,7 @@ async function handler(request) {
 
     return NextResponse.json(userInfo);
   } catch (error) {
+    await captureException(error, { kind: "route_handler", runtime: "node", route: "/api/get-cognito-user" });
     console.error("[GET-COGNITO-USER] Error:", error);
     console.error("[GET-COGNITO-USER] Error stack:", error.stack);
 

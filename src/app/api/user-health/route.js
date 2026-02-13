@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestUserPool } from "@/lib/graphqlRequestUserPool";
 import { handleApiError } from "@/lib/apiErrorHandler";
-import { withTelemetryRoute } from "@prifina-dev/next-telemetry/server";
+import { withTelemetryRoute, captureException } from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,6 +17,7 @@ async function handler() {
     const data = await graphqlRequestUserPool({ query });
     return NextResponse.json({ health: data?.health });
   } catch (err) {
+    await captureException(err, { kind: "route_handler", runtime: "node", route: "/api/user-health" });
     return handleApiError(err, "Health check failed");
   }
 }
