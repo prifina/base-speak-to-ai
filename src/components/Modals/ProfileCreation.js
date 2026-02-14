@@ -7,6 +7,8 @@ import {
   Input,
   Textarea,
   Button,
+  Image,
+  Flex,
 } from "@chakra-ui/react";
 import { UI_TEXT } from "@/lib/uiStrings";
 
@@ -23,9 +25,17 @@ export default function ProfileCreationModal({
       <Dialog.Backdrop />
       <Dialog.Positioner>
         <Dialog.Content>
-          <Dialog.Header>
-            <Dialog.Title>{UI_TEXT.profile.dialog.title}</Dialog.Title>
-          </Dialog.Header>
+          <Flex direction="column" align="center" mt={6} mb={2}>
+            <Image
+              src="/assets/ai-twin-create.svg"
+              alt="AI Twin"
+              width="60px"
+              height="60px"
+              mb={4}
+            />
+            <Dialog.Title textAlign="center" fontWeight="bold">{UI_TEXT.profile.dialog.title}</Dialog.Title>
+          </Flex>
+          <Dialog.Header display="none" />
           <Dialog.Body>
             <VStack spacing={4} align="stretch">
               <Field.Root

@@ -38,6 +38,7 @@ const PUBLIC_API_PATHS = [
   "/api/health",
   "/api/user-health",
   "/api/validate-antibot",
+  "/api/update-participant",
 ];
 
 export function middleware(req) {

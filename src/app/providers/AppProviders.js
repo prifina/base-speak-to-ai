@@ -2,6 +2,7 @@
 "use client";
 
 import { useContext, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { ChakraProvider } from "@chakra-ui/react";
 import { system } from "@/theme/system";
 import AuthProvider, { AuthContext } from "./AuthProvider";
@@ -13,7 +14,11 @@ import {
 
 function ConditionalUserMenu() {
   const { user } = useContext(AuthContext);
-  return user ? <UserMenuFloating /> : null;
+  const pathname = usePathname();
+  const hideOnPaths = ["/", "/login", "/signup"];
+  
+  if (!user || hideOnPaths.includes(pathname)) return null;
+  return <UserMenuFloating />;
 }
 
 export default function AppProviders({ children }) {

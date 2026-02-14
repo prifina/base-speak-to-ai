@@ -13,7 +13,7 @@ function HomePageContent() {
   const [eventData, setEventData] = useState(null);
   const [participantData, setParticipantData] = useState(null);
   const [preferredUsername, setPreferredUsername] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (eventId && participantId) {
@@ -54,6 +54,8 @@ function HomePageContent() {
           console.error("Error fetching data:", error);
           setLoading(false);
         });
+    } else {
+      setLoading(false);
     }
   }, [eventId, participantId]);
 
