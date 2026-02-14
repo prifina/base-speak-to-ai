@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, Suspense } from "react";
+import { useState, useCallback, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   AbsoluteCenter,
@@ -59,9 +59,17 @@ function SignupFormContent({ token }) {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [hasVerifiedEmail, setHasVerifiedEmail] = useState(false);
   const [knowledgebaseId, setKnowledgebaseId] = useState(null);
+  const hasInitialized = useRef(false);
 
   useEffect(() => {
-    configureAmplify();
+    if (!hasInitialized.current) {
+      hasInitialized.current = true;
+      configureAmplify();
+      signOut({ global: false }).catch(() => {});
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem("prifina-base");
+      }
+    }
   }, []);
 
   useEffect(() => {
