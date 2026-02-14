@@ -39,9 +39,11 @@ import { configureAmplify } from "@/lib/amplify";
 function SignupFormContent({ token }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { usernameAvailable } = useStore(
+  const { usernameAvailable, setKnowledgebaseId: setStoreKnowledgebaseId, isLoggedIn } = useStore(
     useShallow((state) => ({
       usernameAvailable: state.usernameAvailable,
+      setKnowledgebaseId: state.setKnowledgebaseId,
+      isLoggedIn: state.isLoggedIn,
     })),
   );
   const [formData, setFormData] = useState({
@@ -205,6 +207,7 @@ function SignupFormContent({ token }) {
             name: formData.username,
             email: formData.email,
             "custom:authenticator_status": "2",
+            ...(knowledgebaseId && { "custom:knowledgebaseId": knowledgebaseId }),
           },
         },
       };
@@ -252,21 +255,33 @@ function SignupFormContent({ token }) {
         description: UI_TEXT.signup.messages.accountVerified,
       });
 
-      await signOut();
-
-      let loginUrl = "/login";
-      const params = new URLSearchParams();
-      if (formData.username) {
-        params.append("username", formData.username);
+      // Update participant with cognitoId if from event signup
+      const eventId = searchParams.get("eventId");
+      const participantId = searchParams.get("participantId");
+      
+      if (eventId && participantId && cognitoUsername) {
+        try {
+          await fetch("/api/update-participant", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              eventId,
+              participantId,
+              cognitoId: cognitoUsername,
+            }),
+          });
+        } catch (error) {
+          console.error("Error updating participant:", error);
+        }
       }
+
       if (knowledgebaseId) {
-        params.append("knowledgebaseId", knowledgebaseId);
-      }
-      if (params.toString()) {
-        loginUrl += `?${params.toString()}`;
+        setStoreKnowledgebaseId(knowledgebaseId);
       }
 
-      router.push(loginUrl);
+      await isLoggedIn();
+
+      router.push("/home");
       return true;
     } catch (error) {
       console.error("VERIFY ERROR:", error);
