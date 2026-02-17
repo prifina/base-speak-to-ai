@@ -192,6 +192,7 @@ function HomePageContent() {
     authLoaded,
     setUserStatus,
     language,
+    setUserId,
   ]);
 
   const loading = !authLoaded || state.loading;
@@ -423,7 +424,11 @@ function HomePageContent() {
       />
 
       {!showProfileDialog && state.user?.userId && (
-        <HStack gap="20px" mb="20px" mr={cognitoId && cognitoId !== "" ? "80px" : "65px"}>
+        <HStack
+          gap="20px"
+          mb="20px"
+          mr={cognitoId && cognitoId !== "" ? "80px" : "65px"}
+        >
           {!isMobile && (
             <Box cursor="pointer" onClick={onOpen}>
               <MdOutlineQrCode2 size="80px" />
