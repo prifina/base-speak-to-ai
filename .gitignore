@@ -54,3 +54,4 @@ envConfig.sh
 .amazonq
 *.code-workspace
 docs/
+npmjs/
