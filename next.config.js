@@ -12,6 +12,7 @@ const nextConfig = {
     ignoreDuringBuilds: false,
   },
   productionBrowserSourceMaps: true,
+  transpilePackages: ["@prifina-dev/auth-components"],
   webpack: (config, { isServer, dev }) => {
     if (dev) {
       config.cache = {
@@ -23,8 +24,14 @@ const nextConfig = {
     config.infrastructureLogging = {
       level: "error",
     };
+    config.resolve.symlinks = false;
+    config.module.rules.push({
+      test: /\.svg$/,
+      type: "asset/resource",
+    });
     return config;
   },
+
   // async redirects() {
   //   return [
   //     {
@@ -111,15 +118,13 @@ const nextConfig = {
     unoptimized: true,
   },
   env: {
-    MY_REGION: process.env.MY_REGION,
-    SPEAK_TO_CDN: process.env.SPEAK_TO_CDN,
-    UPLOAD_BUCKET: process.env.UPLOAD_BUCKET,
     COGNITO_USER_POOL_ID: process.env.COGNITO_USER_POOL_ID,
     COGNITO_CLIENT_ID: process.env.COGNITO_CLIENT_ID,
     COGNITO_IDENTITY_POOL_ID: process.env.COGNITO_IDENTITY_POOL_ID,
     GRAPHQL_API: process.env.GRAPHQL_API,
-    WEB_SOCKET_URL: process.env.WEB_SOCKET_URL,
+    MY_REGION: process.env.MY_REGION,
   },
+
   // async headers() {
   //   //value: process.env.NODE_ENV === 'development' ?
   //   //default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; connect-src 'self' wss://pfq5y76gf8.execute-api.us-east-1.amazonaws.com/Prod https://prifina-ai-source-docs.s3.us-east-1.amazonaws.com http://localhost:3330/api/v1/;

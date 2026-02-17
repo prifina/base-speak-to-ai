@@ -55,3 +55,4 @@ envConfig.sh
 *.code-workspace
 docs/
 npmjs/
+backup/

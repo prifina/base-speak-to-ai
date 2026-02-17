@@ -1,5 +1,6 @@
-import { signAntiBotToken } from "@/lib/antibot/antibotToken";
-import SignupForm from "./SignupForm";
+//import { signAntiBotToken } from "@/lib/antibot/antibotToken";
+import { signAntiBotToken } from "@prifina-dev/auth-components";
+import SignupPageClient from "./SignupPageClient";
 
 export const dynamic = "force-dynamic";
 
@@ -9,5 +10,5 @@ export default function SignupPage() {
     ttlMs: 10 * 60 * 1000,
   });
 
-  return <SignupForm token={token} />;
+  return <SignupPageClient token={token} />;
 }
