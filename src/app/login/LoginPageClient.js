@@ -16,7 +16,8 @@ import useStore from "@/lib/sessionStore";
 import { AuthContext } from "@/app/providers/AuthProvider";
 import { configureAmplify } from "@/lib/amplify";
 
-function LoginContent({ token }) {
+export default function LoginPageClient({ token }) {
+  //function LoginContent({ token }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/home";
@@ -65,6 +66,7 @@ function LoginContent({ token }) {
     />
   );
 }
+/*
 export default function LoginPageClient({ token }) {
   return (
     <Suspense fallback={<Loading />}>
@@ -72,3 +74,4 @@ export default function LoginPageClient({ token }) {
     </Suspense>
   );
 }
+  */

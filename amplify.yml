@@ -6,35 +6,17 @@ frontend:
         - npm ci
     build:
       commands:
-        - env
-        - env | grep -e MY_ACCESS_KEY >> .env.production
-        - env | grep -e MY_SECRET_KEY >> .env.production
-        - env | grep -e MY_REGION >> .env.production
-        - env | grep -e CAPTCHA_SECRET_KEY >> .env.production
-        - env | grep -e CORE_API_URL >> .env.production
-        - env | grep -e CORE_API_KEY >> .env.production
-        - env | grep -e TIMER_API_URL >> .env.production
-        - env | grep -e TIMER_API_KEY >> .env.production
-        - env | grep -e COGNITO_USER_POOL_ID >> .env.production
-        - env | grep -e COGNITO_CLIENT_ID >> .env.production
-        - env | grep -e COGNITO_IDENTITY_POOL_ID >> .env.production
-        - env | grep -e GRAPHQL_API >> .env.production
-        - env | grep -e SPEAK_TO_CDN >> .env.production
-        - env | grep -e UPLOAD_BUCKET >> .env.production
-        - env | grep -e NEXT_PUBLIC_SPEAK_TO_USER >> .env.production
-        - env | grep -e NEXT_PUBLIC_APP_ID >> .env.production
-        - env | grep -e NEXT_PUBLIC_CAPTCHA_SITE_KEY >> .env.production
-        - env | grep -e WEB_SOCKET_URL >> .env.production
-        - env | grep -e NEXT_PUBLIC_TELEMETRY_ENABLED >> .env.production
-        - env | grep -e NEXT_PUBLIC_TELEMETRY_API_URL >> .env.production
-        - env | grep -e TELEMETRY_API_KEY >> .env.production
-        - env | grep -e NEXT_PUBLIC_TELEMETRY_API_KEY >> .env.production
-        - env | grep -e NEXT_PUBLIC_TELEMETRY_APP_NAME >> .env.production
-        - env | grep -e NEXT_PUBLIC_TELEMETRY_ENV >> .env.production
-        - env | grep -e NEXT_PUBLIC_TELEMETRY_APP_FOLDER >> .env.production
-        - env | grep -e NEXT_PUBLIC_TELEMETRY_APP_BRANCH >> .env.production
-        - env | grep -e NEXT_PUBLIC_TELEMETRY_APP_REPOSITORY >> .env.production
-        - env | grep -e AB_SECRET >> .env.production
+        - env | grep -e "MY_" >> .env.production
+        - env | grep -e "CORE_API_" >> .env.production
+        - env | grep -e "TIMER_API_" >> .env.production
+        - env | grep -e "COGNITO_" >> .env.production
+        - echo "UPLOAD_BUCKET=$UPLOAD_BUCKET" >> .env.production
+        - echo "WEB_SOCKET_URL=$WEB_SOCKET_URL" >>.env.production
+        - echo "SPEAK_TO_CDN=$SPEAK_TO_CDN" >> .env.production
+        - echo "TELEMETRY_API_KEY=$TELEMETRY_API_KEY" >> .env.production
+        - echo "GRAPHQL_API=$GRAPHQL_API" >> .env.production
+        - echo "AB_SECRET=$AB_SECRET" >> .env.production
+        - env | grep -e "NEXT_PUBLIC_" >> .env.production
         - npm run build
     postBuild:
       commands:
