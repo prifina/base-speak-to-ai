@@ -23,6 +23,7 @@ import {
   Dialog,
   Button,
   Textarea,
+  Alert,
 } from "@chakra-ui/react";
 import { MdOutlineQrCode2 } from "react-icons/md";
 import { UI_TEXT } from "@/lib/uiStrings";
@@ -69,6 +70,8 @@ function HomePageContent() {
     setKnowledgebaseId,
     setUserId,
     verifiedEmail,
+    isManaging,
+    managedKnowledgebaseId,
   } = useStore(
     useShallow((state) => ({
       cognitoId: state.cognitoId,
@@ -79,6 +82,8 @@ function HomePageContent() {
       setKnowledgebaseId: state.setKnowledgebaseId,
       setUserId: state.setUserId,
       verifiedEmail: state.verifiedEmail,
+      isManaging: state.managedUser.isManaging,
+      managedKnowledgebaseId: state.managedUser.knowledgebaseId,
     })),
   );
 
@@ -107,16 +112,26 @@ function HomePageContent() {
 
   const { open: isOpen, onOpen, onClose } = useDisclosure();
   const effectCalled = useRef(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
+      // Use managed user's knowledgebaseId if managing, otherwise use own
+      const activeKnowledgebaseId = isManaging ? managedKnowledgebaseId : knowledgebaseId;
+      
       console.log(
         "[HOME] Fetching data with knowledgebaseId:",
-        knowledgebaseId,
+        activeKnowledgebaseId,
+        "isManaging:",
+        isManaging,
       );
       const [userRes, configRes] = await Promise.all([
         authFetch(
-          `/api/user-knowledgebase?knowledgebaseId=${knowledgebaseId}`,
+          `/api/user-knowledgebase?knowledgebaseId=${activeKnowledgebaseId}`,
           { method: "GET" },
         ),
         authFetch(`/api/get-config?language=${language}`, { method: "GET" }),
@@ -129,7 +144,7 @@ function HomePageContent() {
         console.log("ERROR RES ", errorData);
         if (userRes.status === 404) {
           const participantRes = await authFetch(
-            `/api/get-participant-knowledgebase?knowledgebaseId=${knowledgebaseId}`,
+            `/api/get-participant-knowledgebase?knowledgebaseId=${activeKnowledgebaseId}`,
             { method: "GET" },
           );
 
@@ -160,10 +175,15 @@ function HomePageContent() {
       if (data.user?.userId) {
         setUserId(data.user.userId);
       }
+      // Add cache-busting to avatar URL
+      const userData = { ...data.user };
+      if (userData.avatar && !userData.avatar.includes('?t=')) {
+        userData.avatar = `${userData.avatar}?t=${Date.now()}`;
+      }
       setState({
         loading: false,
-        user: data.user,
-        editedUser: data.user,
+        user: userData,
+        editedUser: userData,
         config: configData.config,
       });
     }
@@ -176,7 +196,8 @@ function HomePageContent() {
       effectCalled.current,
     );
     if (!effectCalled.current && authLoaded) {
-      if (!knowledgebaseId) {
+      const activeKnowledgebaseId = isManaging ? managedKnowledgebaseId : knowledgebaseId;
+      if (!activeKnowledgebaseId) {
         // Show profile creation dialog
         setShowProfileDialog(true);
         setState({ loading: false });
@@ -193,6 +214,8 @@ function HomePageContent() {
     setUserStatus,
     language,
     setUserId,
+    isManaging,
+    managedKnowledgebaseId,
   ]);
 
   const loading = !authLoaded || state.loading;
@@ -224,22 +247,37 @@ function HomePageContent() {
         });
       } else {
         console.log("AVATAR UPLOADED", result.url);
-        const fileExtension = result.fileName.split(".").pop();
-        // Add cache-busting parameter to force browser to reload the image
+        // The fileName already has the correct extension from the processed file
         const cacheBustingUrl = `${result.url}?t=${Date.now()}`;
-        setState({
-          editedUser: {
-            ...state.editedUser,
-            avatar: cacheBustingUrl,
-            avatarKey: `avatars/${result.fileName}`,
-            mimeType: `image/${fileExtension}`,
-          },
+        const updatedUser = {
+          ...state.editedUser,
+          avatar: cacheBustingUrl,
+          avatarKey: `avatars/${result.fileName}`,
+          mimeType: "image/webp",
+        };
+        
+        setState({ editedUser: updatedUser });
+        
+        // Auto-save after avatar upload
+        const saveRes = await authFetch("/api/update-user", {
+          method: "POST",
+          body: JSON.stringify(updatedUser),
         });
-        toaster.create({
-          title: "Avatar uploaded",
-          type: "success",
-          description: "Your avatar has been updated successfully",
-        });
+        
+        if (saveRes.ok) {
+          setState({ user: updatedUser });
+          toaster.create({
+            title: "Avatar uploaded",
+            type: "success",
+            description: "Your avatar has been updated successfully",
+          });
+        } else {
+          toaster.create({
+            title: "Avatar uploaded but not saved",
+            type: "warning",
+            description: "Please click Save to persist changes",
+          });
+        }
       }
     };
 
@@ -428,6 +466,7 @@ function HomePageContent() {
           gap="20px"
           mb="20px"
           mr={cognitoId && cognitoId !== "" ? "80px" : "65px"}
+          align="center"
         >
           {!isMobile && (
             <Box cursor="pointer" onClick={onOpen}>
@@ -447,6 +486,12 @@ function HomePageContent() {
               >{`${process.env.NEXT_PUBLIC_SPEAK_TO_USER}/${state.user.userId}`}</Text>
             </Link>
           </Box>
+          {mounted && isManaging && (
+            <Alert.Root status="warning" size="md" width="auto">
+              <Alert.Indicator />
+              <Alert.Title>Managed</Alert.Title>
+            </Alert.Root>
+          )}
         </HStack>
       )}
 
