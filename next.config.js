@@ -123,6 +123,7 @@ const nextConfig = {
     COGNITO_IDENTITY_POOL_ID: process.env.COGNITO_IDENTITY_POOL_ID,
     GRAPHQL_API: process.env.GRAPHQL_API,
     MY_REGION: process.env.MY_REGION,
+    SPEAK_TO_CDN: process.env.SPEAK_TO_CDN,
   },
 
   // async headers() {

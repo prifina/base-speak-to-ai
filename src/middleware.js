@@ -27,6 +27,7 @@ const PROTECTED_API_PATHS = [
   "/api/validate-ai-name",
   "/api/get-participant-knowledgebase",
   "/api/protected",
+  "/api/validate-managed-user",
 ];
 const PUBLIC_API_PATHS = [
   "/api/auth",

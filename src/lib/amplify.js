@@ -9,7 +9,7 @@ let configured = false;
 
 export function configureAmplify() {
   if (configured) return;
-  console.log("CONFIGURE ", getAmplifyConfig());
+  //console.log("CONFIGURE ", getAmplifyConfig());
   Amplify.configure(getAmplifyConfig(), { ssr: true }); // puts tokens in cookies :contentReference[oaicite:2]{index=2}
 
   cognitoUserPoolsTokenProvider.setKeyValueStorage(

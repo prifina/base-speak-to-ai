@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   HStack,
@@ -25,11 +26,17 @@ import { UI_TEXT } from "@/lib/uiStrings";
 
 export function UserMenuFloating() {
   const router = useRouter();
-  const { userId } = useStore(
+  const [mounted, setMounted] = useState(false);
+  const { userId, isManaging } = useStore(
     useShallow((state) => ({
       userId: state.userId,
+      isManaging: state.managedUser.isManaging,
     }))
   );
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const APPS = [
     {
@@ -77,7 +84,7 @@ export function UserMenuFloating() {
         }}
       >
         <Menu.Trigger asChild>
-          <UserMenuAvatar />
+          <UserMenuAvatar disabled={mounted && isManaging} />
         </Menu.Trigger>
 
         <Portal>

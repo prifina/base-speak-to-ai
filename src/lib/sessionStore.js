@@ -45,6 +45,14 @@ const usePersistentStore = create((set, get) => {
     verifiedEmail: "",
     userStatus: null,
     queueStatus: undefined,
+    // Managed user context for admin features
+    managedUser: {
+      userId: "",
+      knowledgebaseId: "",
+      isManaging: false,
+      originalUserId: "",
+      originalKnowledgebaseId: "",
+    },
     setLoginName: (name) => {
       set({ loginName: name });
     },
@@ -267,6 +275,49 @@ const usePersistentStore = create((set, get) => {
     setSocketUpdate: (obj) => {
       set(() => ({ socketUpdate: obj }));
     },
+    // Managed user functions
+    setManagedUser: (userId, knowledgebaseId) => {
+      const state = get();
+      set({
+        managedUser: {
+          userId,
+          knowledgebaseId,
+          isManaging: true,
+          originalUserId: state.userId,
+          originalKnowledgebaseId: state.knowledgebaseId,
+        },
+      });
+    },
+    clearManagedUser: () => {
+      const state = get();
+      const { originalUserId, originalKnowledgebaseId } = state.managedUser;
+      set({
+        userId: originalUserId,
+        knowledgebaseId: originalKnowledgebaseId,
+        managedUser: {
+          userId: "",
+          knowledgebaseId: "",
+          isManaging: false,
+          originalUserId: "",
+          originalKnowledgebaseId: "",
+        },
+      });
+    },
+    getActiveUserId: () => {
+      const state = get();
+      return state.managedUser.isManaging
+        ? state.managedUser.userId
+        : state.userId;
+    },
+    getActiveKnowledgebaseId: () => {
+      const state = get();
+      return state.managedUser.isManaging
+        ? state.managedUser.knowledgebaseId
+        : state.knowledgebaseId;
+    },
+    isManagingUser: () => {
+      return get().managedUser.isManaging;
+    },
   };
 
   // Function to save the state to sessionStorage
@@ -286,6 +337,11 @@ const usePersistentStore = create((set, get) => {
         setConnectionId,
         setQueueStatus,
         setUserStatus,
+        setManagedUser,
+        clearManagedUser,
+        getActiveUserId,
+        getActiveKnowledgebaseId,
+        isManagingUser,
         ...stateToSave
       } = state;
       sessionStorage.setItem("prifina-base", JSON.stringify(stateToSave));
@@ -321,6 +377,11 @@ if (typeof window !== "undefined") {
       setConnectionId,
       setQueueStatus,
       setUserStatus,
+      setManagedUser,
+      clearManagedUser,
+      getActiveUserId,
+      getActiveKnowledgebaseId,
+      isManagingUser,
       ...stateToSave
     } = state;
     sessionStorage.setItem("prifina-base", JSON.stringify(stateToSave));
