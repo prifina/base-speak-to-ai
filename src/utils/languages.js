@@ -32,7 +32,8 @@ export const LANGUAGE_TAGS = [
   "hi",
   "bn",
   "ur",
-  "zh",
+  "zh-Hans",
+  "zh-Hant",
   "ja",
   "ko",
 ];
