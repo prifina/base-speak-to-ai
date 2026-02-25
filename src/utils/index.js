@@ -87,19 +87,28 @@ export function buildLanguageOptions(
 ) {
   const dn = new Intl.DisplayNames([uiLocale], { type: "language" });
 
-  // Normalize, de-dupe, and label
   const unique = Array.from(new Set(languageTags));
 
-  return (
-    unique
-      .map((tag) => {
-        const base = tag.split("-")[0]; // "pt-BR" -> "pt"
-        const name = dn.of(base) || base; // fallback
-        return { tag, name };
-      })
-      // Sort by display name for dropdown UX
-      .sort((a, b) => a.name.localeCompare(b.name, uiLocale))
-  );
+  return unique
+    .map((tag) => {
+      let name;
+      // Special handling for Chinese variants
+      if (tag.startsWith("zh-")) {
+        const script = tag.split("-")[1];
+        if (script === "Hans") {
+          name = "Chinese (Simplified)";
+        } else if (script === "Hant") {
+          name = "Chinese (Traditional)";
+        } else {
+          name = dn.of(tag) || tag;
+        }
+      } else {
+        const base = tag.split("-")[0];
+        name = dn.of(base) || base;
+      }
+      return { tag, name };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name, uiLocale));
 }
 
 export function getLanguageName(
