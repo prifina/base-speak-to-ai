@@ -109,6 +109,7 @@ export default function DailyReportPage() {
           email: state.email,
           dailyReport: state.dailyReport,
           hour30: state.hour30,
+          grouping: state.hour30.split(":")[0],
         }),
       });
 

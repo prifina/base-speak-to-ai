@@ -49,6 +49,7 @@ async function handler(request) {
         query GetUserKnowledgebase($knowledgebaseId: ID!) {
           getUserKnowledgebase(knowledgebaseId: $knowledgebaseId) {
             user {
+              userId
               hour30
               dailyReport
               email
