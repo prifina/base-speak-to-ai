@@ -28,6 +28,7 @@ export default function SessionsPage() {
   const [endDate, setEndDate] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(["10"]);
+  const [showOriginal, setShowOriginal] = useState({});
   const effectCalled = useRef(false);
 
   const dateRangeOptions = createListCollection({
@@ -38,6 +39,7 @@ export default function SessionsPage() {
       { label: UI_TEXT.insights.sessions.dateRangeOptions.last6Months, value: "180" },
       { label: UI_TEXT.insights.sessions.dateRangeOptions.lastYear, value: "365" },
       { label: UI_TEXT.insights.sessions.dateRangeOptions.allTime, value: "all" },
+      { label: "Custom", value: "custom" },
     ],
   });
 
@@ -99,14 +101,17 @@ export default function SessionsPage() {
 
   const handleQuickRangeChange = (details) => {
     setQuickRange(details.value);
-    setStartDate("");
-    setEndDate("");
-    setCurrentPage(1);
-    effectCalled.current = false;
+    if (details.value[0] !== "custom") {
+      setStartDate("");
+      setEndDate("");
+      setCurrentPage(1);
+      effectCalled.current = false;
+    }
   };
 
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
+    setQuickRange(["custom"]);
     if (e.target.value && endDate) {
       setCurrentPage(1);
       effectCalled.current = false;
@@ -115,6 +120,7 @@ export default function SessionsPage() {
 
   const handleEndDateChange = (e) => {
     setEndDate(e.target.value);
+    setQuickRange(["custom"]);
     if (startDate && e.target.value) {
       setCurrentPage(1);
       effectCalled.current = false;
@@ -187,93 +193,98 @@ export default function SessionsPage() {
           </VStack>
         </Flex>
       )}
-      <Flex mb="20px" align="center" gap="12px" wrap="wrap">
-        <Text fontSize="14px" fontWeight={500}>{UI_TEXT.insights.sessions.dateRange}:</Text>
-        <Select.Root
-          collection={dateRangeOptions}
-          value={quickRange}
-          onValueChange={handleQuickRangeChange}
-          size="sm"
-          width="150px"
-        >
-          <Select.HiddenSelect />
-          <Select.Control>
-            <Select.Trigger>
-              <Select.ValueText placeholder="Select range" />
-            </Select.Trigger>
-            <Select.IndicatorGroup>
-              <Select.Indicator />
-            </Select.IndicatorGroup>
-          </Select.Control>
-          <Portal>
-            <Select.Positioner>
-              <Select.Content>
-                {dateRangeOptions.items.map((option) => (
-                  <Select.Item item={option} key={option.value}>
-                    {option.label}
-                    <Select.ItemIndicator />
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select.Positioner>
-          </Portal>
-        </Select.Root>
-        <Text fontSize="14px" color="#989898">{UI_TEXT.insights.sessions.dateRangeOr}</Text>
-        <Input
-          type="date"
-          value={startDate}
-          onChange={handleStartDateChange}
-          size="sm"
-          width="150px"
-        />
-        <Text fontSize="14px">-</Text>
-        <Input
-          type="date"
-          value={endDate}
-          onChange={handleEndDateChange}
-          size="sm"
-          width="150px"
-        />
+      <Flex mb="20px" align="center" gap="12px" wrap="wrap" justify="space-between">
+        <Flex align="center" gap="12px">
+          <Select.Root
+            collection={dateRangeOptions}
+            value={quickRange}
+            onValueChange={handleQuickRangeChange}
+            size="sm"
+            width="200px"
+          >
+            <Select.HiddenSelect />
+            <Select.Control>
+              <Select.Trigger>
+                <Select.ValueText placeholder="Select range" />
+              </Select.Trigger>
+              <Select.IndicatorGroup>
+                <Select.Indicator />
+              </Select.IndicatorGroup>
+            </Select.Control>
+            <Portal>
+              <Select.Positioner>
+                <Select.Content>
+                  {dateRangeOptions.items.map((option) => (
+                    <Select.Item item={option} key={option.value}>
+                      {option.label}
+                      <Select.ItemIndicator />
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Positioner>
+            </Portal>
+          </Select.Root>
+          {quickRange[0] === "custom" && (
+            <>
+              <Input
+                type="date"
+                value={startDate}
+                onChange={handleStartDateChange}
+                size="sm"
+                width="150px"
+                placeholder="Start date"
+              />
+              <Input
+                type="date"
+                value={endDate}
+                onChange={handleEndDateChange}
+                size="sm"
+                width="150px"
+                placeholder="End date"
+              />
+            </>
+          )}
+        </Flex>
+        <Flex align="center" gap="12px">
+          <Button size="sm" variant="outline" onClick={handleExport} colorPalette="teal">
+            {UI_TEXT.insights.sessions.exportButton}
+          </Button>
+          <Text fontSize="12px" color="#7C7C7C">{UI_TEXT.insights.sessions.itemsPerPage}:</Text>
+          <Select.Root
+            collection={pageSizeOptions}
+            value={pageSize}
+            onValueChange={handlePageSizeChange}
+            size="sm"
+            width="80px"
+          >
+            <Select.HiddenSelect />
+            <Select.Control>
+              <Select.Trigger>
+                <Select.ValueText />
+              </Select.Trigger>
+              <Select.IndicatorGroup>
+                <Select.Indicator />
+              </Select.IndicatorGroup>
+            </Select.Control>
+            <Portal>
+              <Select.Positioner>
+                <Select.Content>
+                  {pageSizeOptions.items.map((option) => (
+                    <Select.Item item={option} key={option.value}>
+                      {option.label}
+                      <Select.ItemIndicator />
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Positioner>
+            </Portal>
+          </Select.Root>
+        </Flex>
       </Flex>
       {sessions.length > 0 ? (
         <>
-          <Flex justify="space-between" align="center" mb="16px">
-            <Text>{UI_TEXT.insights.sessions.title} - {formatDateRange()}</Text>
-            <Flex align="center" gap="12px">
-              <Button size="sm" variant="outline" onClick={handleExport}>
-                {UI_TEXT.insights.sessions.exportButton}
-              </Button>
-              <Text fontSize="12px" color="#7C7C7C">{UI_TEXT.insights.sessions.itemsPerPage}:</Text>
-              <Select.Root
-                collection={pageSizeOptions}
-                value={pageSize}
-                onValueChange={handlePageSizeChange}
-                size="sm"
-                width="80px"
-              >
-                <Select.HiddenSelect />
-                <Select.Control>
-                  <Select.Trigger>
-                    <Select.ValueText />
-                  </Select.Trigger>
-                  <Select.IndicatorGroup>
-                    <Select.Indicator />
-                  </Select.IndicatorGroup>
-                </Select.Control>
-                <Portal>
-                  <Select.Positioner>
-                    <Select.Content>
-                      {pageSizeOptions.items.map((option) => (
-                        <Select.Item item={option} key={option.value}>
-                          {option.label}
-                          <Select.ItemIndicator />
-                        </Select.Item>
-                      ))}
-                    </Select.Content>
-                  </Select.Positioner>
-                </Portal>
-              </Select.Root>
-            </Flex>
+          <Flex mb="16px">
+            <Text fontSize="20px" fontWeight={600}>{UI_TEXT.insights.sessions.title}</Text>
           </Flex>
           <Flex overflowY="auto">
             <Flex width="100%" overflowY="auto" direction="column" gap="20px">
@@ -282,22 +293,39 @@ export default function SessionsPage() {
                   {/* Session Header */}
                   <Box mb="16px" pb="12px" borderBottomWidth="1px">
                     <Flex justify="space-between" align="center" mb="8px">
-                      <Text fontSize="14px" fontWeight={600} color="#212529">
-                        {new Date(session.startTime + 'Z').toLocaleString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: false,
-                        })}
-                        {" - "}
-                        {new Date(session.endTime + 'Z').toLocaleString("en-US", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: false,
-                        })}
-                      </Text>
+                      <Flex align="center" gap="12px">
+                        <Text fontSize="14px" fontWeight={600} color="#212529">
+                          {new Date(session.startTime + 'Z').toLocaleString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: false,
+                          })}
+                          {" - "}
+                          {new Date(session.endTime + 'Z').toLocaleString("en-US", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: false,
+                          })}
+                        </Text>
+                        {session.sessionLanguage && (
+                          <>
+                            <Text fontSize="12px" color="teal.600" bg="teal.50" px="8px" py="2px" borderRadius="4px">
+                              Translated from {session.sessionLanguage}
+                            </Text>
+                            <Button
+                              size="xs"
+                              variant="ghost"
+                              color="teal.600"
+                              onClick={() => setShowOriginal(prev => ({ ...prev, [session.sessionId]: !prev[session.sessionId] }))}
+                            >
+                              {showOriginal[session.sessionId] ? "Show translated" : "Show original"}
+                            </Button>
+                          </>
+                        )}
+                      </Flex>
                       <Text fontSize="12px" color="#989898">
                         {UI_TEXT.insights.sessions.duration}: {session.durationMin} min
                       </Text>
@@ -330,7 +358,7 @@ export default function SessionsPage() {
                         </Text>
                         <Flex align="center" gap="8px" mb="8px">
                           <Text fontWeight={600} color="#212529">
-                            {message.statement}
+                            {session.sessionLanguage && !showOriginal[session.sessionId] ? message.translated_statement : message.statement}
                           </Text>
                           {message.example_click && (
                             <Text fontSize="10px" color="#7C7C7C" fontStyle="italic">
@@ -351,7 +379,7 @@ export default function SessionsPage() {
                             '& pre': { backgroundColor: '#f5f5f5', padding: '1em', borderRadius: '5px', overflowX: 'auto' },
                           }}
                         >
-                          <ReactMarkdown>{message.answer}</ReactMarkdown>
+                          <ReactMarkdown>{session.sessionLanguage && !showOriginal[session.sessionId] ? message.translated_answer : message.answer}</ReactMarkdown>
                         </Box>
                         <Flex gap="12px" fontSize="12px" color="#989898">
                           <Text>{UI_TEXT.insights.sessions.score}: {Math.round(message.score * 100)}%</Text>

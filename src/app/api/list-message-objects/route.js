@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { graphqlRequestUserPool } from "@/lib/graphqlRequestUserPool";
 import { handleApiError } from "@/lib/apiErrorHandler";
-import { withTelemetryRoute, captureException } from "@prifina-dev/next-telemetry/server";
+import {
+  withTelemetryRoute,
+  captureException,
+} from "@prifina-dev/next-telemetry/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -55,6 +58,10 @@ async function handler(request) {
             statement
             example_click
             quality
+            translated_answer
+            translated_statement
+            translation_language
+            user_language
           }
           nextToken
         }
@@ -75,7 +82,7 @@ async function handler(request) {
           nextToken: currentNextToken,
         },
       });
-
+      //console.log("ITEMS ", data.listMessageObjects);
       allItems = allItems.concat(data.listMessageObjects.items);
       currentNextToken = data.listMessageObjects.nextToken;
     } while (currentNextToken);
@@ -109,6 +116,17 @@ async function handler(request) {
           (m) => m.score === 0,
         ).length;
 
+        // Determine sessionLanguage
+        const messageWithTranslation = sortedMessages.find(
+          (m) => m.translation_language,
+        );
+        const sessionLanguage =
+          messageWithTranslation &&
+          messageWithTranslation.user_language !==
+            messageWithTranslation.translation_language
+            ? messageWithTranslation.user_language
+            : "";
+
         return {
           sessionId,
           messages: sortedMessages,
@@ -118,13 +136,18 @@ async function handler(request) {
           messageCount: sortedMessages.length,
           avgScore,
           zeroScoreCount,
+          ...(sessionLanguage && { sessionLanguage }),
         };
       })
       .sort((a, b) => new Date(b.endTime) - new Date(a.endTime));
 
     return NextResponse.json({ sessions });
   } catch (err) {
-    await captureException(err, { kind: "route_handler", runtime: "node", route: "/api/list-message-objects" });
+    await captureException(err, {
+      kind: "route_handler",
+      runtime: "node",
+      route: "/api/list-message-objects",
+    });
     return handleApiError(err, "list message objects failed");
   }
 }

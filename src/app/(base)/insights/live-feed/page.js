@@ -27,6 +27,7 @@ import { UI_TEXT } from "@/lib/uiStrings";
 import ReactMarkdown from "react-markdown";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import { Button } from "@chakra-ui/react";
 
 export default function LiveFeedPage() {
   const authFetch = useAuthFetch();
@@ -44,6 +45,7 @@ export default function LiveFeedPage() {
   const [lastFetchTime, setLastFetchTime] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(["10"]);
+  const [showOriginal, setShowOriginal] = useState({});
   const userIdRef = useRef(null);
   const lastFetchTimeRef = useRef(null);
   const effectCalled = useRef(false);
@@ -249,29 +251,50 @@ export default function LiveFeedPage() {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {paginatedMessages.map((message) => (
+                  {paginatedMessages.map((message) => {
+                    const hasTranslation = message.translationLanguage && message.userLanguage && 
+                      message.translationLanguage !== message.userLanguage && 
+                      message.translatedStatement && message.translatedAnswer;
+                    
+                    return (
                     <Table.Row key={message.id}>
                       <Table.Cell>
                         <Box flexDirection="column">
-                          <Text
-                            fontSize="12px"
-                            color="#989898"
-                            fontWeight={600}
-                            mb="12px"
-                          >
-                            {new Date(Number(message.created_at))
-                              .toLocaleString("en-US", {
-                                year: "numeric",
-                                month: "short",
-                                day: "numeric",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                hour12: false,
-                              })
-                              .toUpperCase()}
-                          </Text>
+                          <Flex align="center" gap="12px" mb="12px">
+                            <Text
+                              fontSize="12px"
+                              color="#989898"
+                              fontWeight={600}
+                            >
+                              {new Date(Number(message.created_at))
+                                .toLocaleString("en-US", {
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: false,
+                                })
+                                .toUpperCase()}
+                            </Text>
+                            {hasTranslation && (
+                              <>
+                                <Text fontSize="12px" color="teal.600" bg="teal.50" px="8px" py="2px" borderRadius="4px">
+                                  Translated from {message.userLanguage}
+                                </Text>
+                                <Button
+                                  size="xs"
+                                  variant="ghost"
+                                  color="teal.600"
+                                  onClick={() => setShowOriginal(prev => ({ ...prev, [message.id]: !prev[message.id] }))}
+                                >
+                                  {showOriginal[message.id] ? "Show translated" : "Show original"}
+                                </Button>
+                              </>
+                            )}
+                          </Flex>
                           <Text mb="12px" fontWeight={600} color="#212529">
-                            {message.statement}
+                            {hasTranslation && !showOriginal[message.id] ? message.translatedStatement : message.statement}
                           </Text>
                           <Box maxH="200px" overflowY="auto" color="#555555">
                             <ReactMarkdown
@@ -333,22 +356,23 @@ export default function LiveFeedPage() {
                                   ),
                               }}
                             >
-                              {message.answer}
+                              {hasTranslation && !showOriginal[message.id] ? message.translatedAnswer : message.answer}
                             </ReactMarkdown>
                           </Box>
-                          <Text
-                            fontSize="14px"
-                            color="#989898"
-                            fontWeight={600}
-                            mt="12px"
-                          >
-                            {UI_TEXT.insights.messages.score}:{" "}
-                            {Math.round(message.score * 100)}%
-                          </Text>
+                          <Flex gap="12px" fontSize="14px" color="#989898" fontWeight={600} mt="12px">
+                            <Text>
+                              {UI_TEXT.insights.messages.score}:{" "}
+                              {Math.round(message.score * 100)}%
+                            </Text>
+                            {message.quality && (
+                              <Text>{UI_TEXT.insights.sessions.quality}: {message.quality}</Text>
+                            )}
+                          </Flex>
                         </Box>
                       </Table.Cell>
                     </Table.Row>
-                  ))}
+                  );
+                  })}
                 </Table.Body>
               </Table.Root>
             </Flex>
