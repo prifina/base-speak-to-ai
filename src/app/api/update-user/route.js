@@ -61,6 +61,7 @@ async function handler(request) {
         $exampleQuestions: [String]
         $hubDescription: String
         $hour30: String
+        $grouping: String
       ) {
         updateUser(
           userId: $userId
@@ -97,6 +98,7 @@ async function handler(request) {
           exampleQuestions: $exampleQuestions
           hubDescription: $hubDescription
           hour30: $hour30
+          grouping: $grouping
         ) {
           userId
         }
